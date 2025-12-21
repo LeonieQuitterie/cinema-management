@@ -29,6 +29,11 @@ app.use('/api/movies', commentRoutes);
 const cinemaRoutes = require("./routes/cinemaRoutes");
 app.use("/api/cinemas", cinemaRoutes);
 
+// app.js hoặc server.js
+
+const bookedSeatRoutes = require('./routes/bookedSeatRoutes');
+// Route cuối cùng: GET /api/showtimes/:showtimeId/booked-seats
+app.use('/api/showtimes/:showtimeId', bookedSeatRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

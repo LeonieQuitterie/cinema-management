@@ -41,6 +41,7 @@ import com.cinema.models.Seat;
 import com.cinema.models.SeatLayout;
 import com.cinema.models.SeatStatus;
 import com.cinema.models.Showtime;
+import com.cinema.utils.BookedSeatApiClient;
 import com.cinema.utils.CinemaApiClient;
 
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -565,19 +566,11 @@ public class CinemaShowTimeController {
 
             SeatSelectionController controller = loader.getController();
 
-            // Mock ghế đã đặt (40% random) - TODO: Lấy từ API booking
-            List<String> bookedSeats = new ArrayList<>();
-            Random rand = new Random();
-            SeatLayout layout = screen.getSeatLayout();
-            if (layout != null && layout.getSeats() != null) {
-                for (List<Seat> row : layout.getSeats()) {
-                    for (Seat s : row) {
-                        if (s != null && rand.nextDouble() < 0.4) {
-                            bookedSeats.add(s.getSeatNumber());
-                        }
-                    }
-                }
-            }
+            // === LẤY GHẾ ĐÃ ĐẶT THẬT TỪ API ===
+            List<String> bookedSeats = BookedSeatApiClient.getBookedSeats(showtime.getId());
+
+            // Nếu có lỗi, bookedSeats sẽ là danh sách rỗng → không có ghế nào bị đánh dấu
+            // booked
             showtime.setBookedSeats(bookedSeats);
 
             controller.setShowData(cinema, screen, showtime);

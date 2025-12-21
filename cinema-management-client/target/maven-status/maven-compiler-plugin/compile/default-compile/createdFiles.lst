@@ -88,6 +88,7 @@ com\cinema\controllers\admin\cinema\CinemaDetailController.class
 com\cinema\models\Seat.class
 com\cinema\controllers\admin\cinema\CinemaDetailController$1.class
 com\cinema\controllers\admin\schedule\ScheduleFormController$DateSchedule.class
+com\cinema\utils\BookedSeatApiClient.class
 com\cinema\utils\RatingStatsResponse$RatingStatsData.class
 com\cinema\data\MovieDetailMockData$DuneMockMovie.class
 com\cinema\controllers\admin\fnb\FnbMenuController$3.class

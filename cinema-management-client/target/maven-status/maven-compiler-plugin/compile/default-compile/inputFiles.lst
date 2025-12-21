@@ -36,6 +36,7 @@ D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controlle
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Customer.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\adapters\LocalDateAdapter.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\ComboOrderItem.java
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\BookedSeatApiClient.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Movie.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\fnb\FnbFormController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\movie\MovieListController.java
