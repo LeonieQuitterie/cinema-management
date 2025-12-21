@@ -3,65 +3,107 @@ const db = require("../config/database");
 
 class CinemaService {
   /**
-   * Lấy danh sách rạp kèm phòng chiếu và sơ đồ ghế
-   * @param {Object} filters - { city, cinemaId }
-   * @returns {Array} Danh sách Cinema với cấu trúc giống mock
+   * Lấy danh sách rạp đang chiếu phim (từ hôm nay trở đi)
+   * @param {string} movieId - ID của phim
+   * @returns {Array} Danh sách Cinema kèm showtimes
    */
-  static async getCinemasWithScreens(filters = {}) {
+  static async getCinemasByMovieId(movieId) {
     try {
-      // 1. Query cinemas
-      let cinemaQuery = `
-        SELECT 
-          id, 
-          name, 
-          address, 
-          city, 
-          logo_url as logoUrl
-        FROM cinemas
-        WHERE 1=1
-      `;
-      const cinemaParams = [];
+      // 1. Lấy tên phim
+      const [movies] = await db.query(
+        `SELECT title FROM movies WHERE id = ?`,
+        [movieId]
+      );
 
-      if (filters.city) {
-        cinemaQuery += ` AND city = ?`;
-        cinemaParams.push(filters.city);
+      if (movies.length === 0) {
+        throw new Error("Không tìm thấy phim");
       }
 
-      if (filters.cinemaId) {
-        cinemaQuery += ` AND id = ?`;
-        cinemaParams.push(filters.cinemaId);
-      }
+      const movieTitle = movies[0].title;
+      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-      cinemaQuery += ` ORDER BY name`;
+      // 2. Query tất cả rạp đang chiếu phim này (từ hôm nay)
+      const [cinemas] = await db.query(
+        `SELECT DISTINCT
+          c.id,
+          c.name,
+          c.address,
+          c.city,
+          c.logo_url as logoUrl
+        FROM cinemas c
+        INNER JOIN screens sc ON c.id = sc.cinema_id
+        INNER JOIN showtimes st ON sc.id = st.screen_id
+        INNER JOIN movies m ON st.movie_id = m.id
+        WHERE m.title = ?
+          AND DATE(st.start_time) >= ?
+        ORDER BY c.city, c.name`,
+        [movieTitle, today]
+      );
 
-      const [cinemas] = await db.query(cinemaQuery, cinemaParams);
-
-      // 2. Lấy screens cho tất cả cinemas
       if (cinemas.length === 0) {
         return [];
       }
 
       const cinemaIds = cinemas.map(c => c.id);
+
+      // 3. Lấy screens của các rạp này
       const [screens] = await db.query(
-        `SELECT 
-          id,
-          name,
-          cinema_id as cinemaId,
-          row_count as rows,
-          column_count as columns,
-          total_seats as totalSeats
-        FROM screens
-        WHERE cinema_id IN (?)
-        ORDER BY cinema_id, name`,
-        [cinemaIds]
+        `SELECT DISTINCT
+          sc.id,
+          sc.name,
+          sc.cinema_id as cinemaId,
+          sc.row_count as rowCount,
+          sc.column_count as columnCount,
+          sc.total_seats as totalSeats
+        FROM screens sc
+        INNER JOIN showtimes st ON sc.id = st.screen_id
+        INNER JOIN movies m ON st.movie_id = m.id
+        WHERE sc.cinema_id IN (?)
+          AND m.title = ?
+          AND DATE(st.start_time) >= ?
+        ORDER BY sc.cinema_id, sc.name`,
+        [cinemaIds, movieTitle, today]
       );
 
-      // 3. Lấy tất cả seats cho các screens
+      // 4. THÊM MỚI: Lấy showtimes
       if (screens.length > 0) {
         const screenIds = screens.map(s => s.id);
+        
+        const [showtimes] = await db.query(
+          `SELECT 
+            st.id,
+            st.screen_id as screenId,
+            st.start_time as startTime,
+            st.end_time as endTime,
+            st.base_price as basePrice,
+            st.format
+          FROM showtimes st
+          INNER JOIN movies m ON st.movie_id = m.id
+          WHERE st.screen_id IN (?)
+            AND m.title = ?
+            AND DATE(st.start_time) >= ?
+          ORDER BY st.start_time`,
+          [screenIds, movieTitle, today]
+        );
+
+        // Group showtimes theo screenId
+        const showtimesByScreen = {};
+        showtimes.forEach(st => {
+          if (!showtimesByScreen[st.screenId]) {
+            showtimesByScreen[st.screenId] = [];
+          }
+          showtimesByScreen[st.screenId].push({
+            id: st.id,
+            startTime: st.startTime,
+            endTime: st.endTime,
+            basePrice: parseFloat(st.basePrice),
+            format: st.format
+          });
+        });
+
+        // 5. Lấy seats
         const [seats] = await db.query(
           `SELECT 
-            id,
             screen_id as screenId,
             seat_number as seatNumber,
             seat_type as seatType,
@@ -74,7 +116,7 @@ class CinemaService {
           [screenIds]
         );
 
-        // Group seats by screenId
+        // Group seats theo screenId
         const seatsByScreen = {};
         seats.forEach(seat => {
           if (!seatsByScreen[seat.screenId]) {
@@ -83,18 +125,27 @@ class CinemaService {
           seatsByScreen[seat.screenId].push(seat);
         });
 
-        // 4. Build SeatLayout cho mỗi screen
+        // 6. Build SeatLayout và gắn showtimes
         screens.forEach(screen => {
           const screenSeats = seatsByScreen[screen.id] || [];
           screen.seatLayout = this.buildSeatLayout(
-            screen.rows,
-            screen.columns,
+            screen.rowCount,
+            screen.columnCount,
             screenSeats
           );
+          
+          // Gắn showtimes vào screen
+          screen.showtimes = showtimesByScreen[screen.id] || [];
+          
+          // Đổi tên để match với Java model
+          screen.rows = screen.rowCount;
+          screen.columns = screen.columnCount;
+          delete screen.rowCount;
+          delete screen.columnCount;
         });
       }
 
-      // 5. Group screens by cinemaId
+      // 7. Group screens theo cinemaId
       const screensByCinema = {};
       screens.forEach(screen => {
         if (!screensByCinema[screen.cinemaId]) {
@@ -103,7 +154,7 @@ class CinemaService {
         screensByCinema[screen.cinemaId].push(screen);
       });
 
-      // 6. Gắn screens vào cinemas
+      // 8. Gắn screens vào cinemas
       cinemas.forEach(cinema => {
         cinema.screens = screensByCinema[cinema.id] || [];
       });
@@ -111,27 +162,20 @@ class CinemaService {
       return cinemas;
 
     } catch (error) {
-      console.error("Error in getCinemasWithScreens:", error);
+      console.error("Error in getCinemasByMovieId:", error);
       throw error;
     }
   }
 
   /**
-   * Build ma trận ghế từ danh sách seats
-   * @param {number} rows - Số hàng
-   * @param {number} columns - Số cột  
-   * @param {Array} seats - Danh sách ghế
-   * @returns {Object} SeatLayout { rows, columns, seats: [[Seat]] }
+   * Build ma trận ghế
    */
   static buildSeatLayout(rows, columns, seats) {
-    // Khởi tạo ma trận rỗng (null = lối đi)
     const seatMatrix = [];
     for (let i = 0; i < rows; i++) {
-      const row = new Array(columns).fill(null);
-      seatMatrix.push(row);
+      seatMatrix.push(new Array(columns).fill(null));
     }
 
-    // Đặt ghế vào đúng vị trí
     seats.forEach(seat => {
       const { rowIndex, colIndex } = seat;
       if (rowIndex >= 0 && rowIndex < rows && colIndex >= 0 && colIndex < columns) {
@@ -150,41 +194,6 @@ class CinemaService {
       columns,
       seats: seatMatrix
     };
-  }
-
-  /**
-   * Lấy thông tin 1 rạp cụ thể
-   */
-  static async getCinemaById(cinemaId) {
-    const cinemas = await this.getCinemasWithScreens({ cinemaId });
-    return cinemas.length > 0 ? cinemas[0] : null;
-  }
-
-  /**
-   * Lấy danh sách rạp theo thành phố (không kèm seat layout - nhẹ hơn)
-   */
-  static async getCinemasByCity(city) {
-    try {
-      const [cinemas] = await db.query(
-        `SELECT 
-          c.id,
-          c.name,
-          c.address,
-          c.city,
-          c.logo_url as logoUrl,
-          COUNT(s.id) as screenCount
-        FROM cinemas c
-        LEFT JOIN screens s ON c.id = s.cinema_id
-        WHERE c.city = ?
-        GROUP BY c.id, c.name, c.address, c.city, c.logo_url
-        ORDER BY c.name`,
-        [city]
-      );
-      return cinemas;
-    } catch (error) {
-      console.error("Error in getCinemasByCity:", error);
-      throw error;
-    }
   }
 }
 

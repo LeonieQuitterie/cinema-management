@@ -197,7 +197,7 @@ public class MovieDetailController {
         }
 
         loadRatingBars();
-        loadCast(); // tạm giữ mock
+        loadCast(); 
         loadComments(); // tạm giữ mock
 
     }

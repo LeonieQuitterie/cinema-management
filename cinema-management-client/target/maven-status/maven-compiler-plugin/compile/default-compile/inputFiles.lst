@@ -52,6 +52,7 @@ D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controlle
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\MovieListResponse.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\BookingConfirmationController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\booking\BookingDetailController.java
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\CinemaApiClient.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\adapters\LocalDateTimeAdapter.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\SeatLayout.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\movie\MovieFormController.java

@@ -1,6 +1,5 @@
 package com.cinema.controllers.cinema;
 
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,12 +27,18 @@ import com.cinema.models.Showtime;
 
 public class SeatSelectionController {
 
-    @FXML private Button backButton;
-    @FXML private Label cinemaNameLabel;
-    @FXML private GridPane seatGridPane;
-    @FXML private Label selectedSeatsLabel;
-    @FXML private Label totalPriceLabel;
-    @FXML private Button continueButton;
+    @FXML
+    private Button backButton;
+    @FXML
+    private Label cinemaNameLabel;
+    @FXML
+    private GridPane seatGridPane;
+    @FXML
+    private Label selectedSeatsLabel;
+    @FXML
+    private Label totalPriceLabel;
+    @FXML
+    private Button continueButton;
 
     // Mock data
     private Screen currentScreen;
@@ -44,13 +49,13 @@ public class SeatSelectionController {
     @FXML
     public void initialize() {
         currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
-        
+
         // Load mock data
         loadMockData();
-        
+
         // Render seat grid
         renderSeatGrid();
-        
+
         // Update UI
         updatePriceSummary();
     }
@@ -60,30 +65,29 @@ public class SeatSelectionController {
         currentShowtime = new Showtime();
         currentShowtime.setId("ST001");
         currentShowtime.setBasePrice(75000); // 75k cho ghế thường
-        
+
         // Ghế đã được đặt (mock)
         currentShowtime.getBookedSeats().addAll(Arrays.asList(
-            "A3", "A4", "B5", "C6", "C7", "D8", "E4", "E5", "F6", "G7"
-        ));
+                "A3", "A4", "B5", "C6", "C7", "D8", "E4", "E5", "F6", "G7"));
 
         // Tạo mock screen với seat layout
         SeatLayout layout = createMockSeatLayout();
-        
+
         currentScreen = new Screen();
         currentScreen.setId("SCR001");
         currentScreen.setName("Phòng 1");
         currentScreen.setSeatLayout(layout);
-        
+
         // Set cinema name
         cinemaNameLabel.setText("CGV Vincom Đà Nẵng - " + currentScreen.getName());
     }
 
-       private SeatLayout createMockSeatLayout() {
+    private SeatLayout createMockSeatLayout() {
         int rows = 10;
         int cols = 14;
         SeatLayout layout = new SeatLayout(rows, cols);
 
-        String[] rowNames = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        String[] rowNames = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         double basePrice = currentShowtime.getBasePrice();
 
         for (int row = 0; row < rows; row++) {
@@ -97,7 +101,8 @@ public class SeatSelectionController {
 
                 // === TÍNH SỐ GHẾ THẬT (bỏ qua 2 cột lối đi) ===
                 int actualCol = col > 2 ? col - 1 : col;
-                if (col > 11) actualCol = col - 2;
+                if (col > 11)
+                    actualCol = col - 2;
 
                 String leftSeatNum = rowNames[row] + String.format("%02d", actualCol + 1);
 
@@ -107,15 +112,14 @@ public class SeatSelectionController {
                     String coupleSeatNumber = leftSeatNum + "-" + rightSeatNum;
 
                     Seat coupleSeat = new Seat(
-                        coupleSeatNumber,
-                        SeatType.COUPLE,
-                        basePrice * SeatType.COUPLE.getPriceMultiplier(),
-                        row, col
-                    );
+                            coupleSeatNumber,
+                            SeatType.COUPLE,
+                            basePrice * SeatType.COUPLE.getPriceMultiplier(),
+                            row, col);
 
                     // Cả 2 ô cùng trỏ về 1 đối tượng Seat → click ô nào cũng chọn cả đôi
-                    layout.setSeat(row, col, coupleSeat);      // ô trái
-                    layout.setSeat(row, col + 1, coupleSeat);  // ô phải
+                    layout.setSeat(row, col, coupleSeat); // ô trái
+                    layout.setSeat(row, col + 1, coupleSeat); // ô phải
 
                     col++; // bỏ qua cột kế tiếp
                     continue;
@@ -141,27 +145,27 @@ public class SeatSelectionController {
     private void renderSeatGrid() {
         seatGridPane.getChildren().clear();
         SeatLayout layout = currentScreen.getSeatLayout();
-        
-        String[] rowNames = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-        
+
+        String[] rowNames = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+
         for (int row = 0; row < layout.getRows(); row++) {
             // Thêm row label (A, B, C...)
             Label rowLabel = new Label(rowNames[row]);
             rowLabel.getStyleClass().add("row-label");
             rowLabel.setAlignment(Pos.CENTER);
             seatGridPane.add(rowLabel, 0, row);
-            
+
             for (int col = 0; col < layout.getColumns(); col++) {
                 Seat seat = layout.getSeat(row, col);
-                
+
                 if (seat == null || seat.getSeatNumber() == null || seat.getSeatNumber().isEmpty()) {
                     // Lối đi - để trống
                     continue;
                 }
-                
+
                 // Tạo seat button
                 StackPane seatPane = createSeatButton(seat);
-                
+
                 seatGridPane.add(seatPane, col + 1, row);
             }
         }
@@ -171,17 +175,17 @@ public class SeatSelectionController {
         StackPane seatPane = new StackPane();
         Label seatLabel = new Label(seat.getSeatNumber());
         seatLabel.getStyleClass().add("seat-label");
-        
+
         seatPane.getChildren().add(seatLabel);
         seatPane.getStyleClass().add("seat");
-        
+
         // Xác định trạng thái ghế
         if (currentShowtime.isSeatBooked(seat.getSeatNumber())) {
             seat.setStatus(SeatStatus.BOOKED);
             seatPane.getStyleClass().add("seat-booked");
         } else {
             seat.setStatus(SeatStatus.AVAILABLE);
-            
+
             // Thêm style theo loại ghế
             switch (seat.getSeatType()) {
                 case VIP:
@@ -193,11 +197,11 @@ public class SeatSelectionController {
                 default:
                     seatPane.getStyleClass().add("seat-available");
             }
-            
+
             // Thêm click handler
             seatPane.setOnMouseClicked(event -> handleSeatClick(seat, seatPane));
         }
-        
+
         return seatPane;
     }
 
@@ -205,7 +209,7 @@ public class SeatSelectionController {
         if (seat.getStatus() == SeatStatus.BOOKED) {
             return; // Không cho phép chọn ghế đã đặt
         }
-        
+
         if (seat.getStatus() == SeatStatus.SELECTED) {
             // Bỏ chọn
             seat.setStatus(SeatStatus.AVAILABLE);
@@ -219,7 +223,7 @@ public class SeatSelectionController {
             }
             selectedSeats.add(seat);
         }
-        
+
         updatePriceSummary();
     }
 
@@ -238,13 +242,13 @@ public class SeatSelectionController {
                 }
             }
             selectedSeatsLabel.setText("Ghế: " + seatsText.toString());
-            
+
             // Tính tổng tiền
             double totalPrice = 0;
             for (Seat seat : selectedSeats) {
                 totalPrice += seat.getPrice();
             }
-            
+
             totalPriceLabel.setText(currencyFormat.format(totalPrice) + " đ");
             continueButton.setDisable(false);
         }
@@ -261,12 +265,11 @@ public class SeatSelectionController {
         try {
             // Load trang chọn combo
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/views/cinema/combo-selection.fxml")
-            );
+                    getClass().getResource("/views/cinema/combo-selection.fxml"));
             Parent newRoot = loader.load();
 
             // Lấy Stage hiện tại và chuyển trang mượt (không nháy fullscreen)
-            Stage stage = (Stage) continueButton.getScene().getWindow();  // hoặc tên button của bạn
+            Stage stage = (Stage) continueButton.getScene().getWindow(); // hoặc tên button của bạn
             Scene currentScene = stage.getScene();
             boolean wasFullScreen = stage.isFullScreen();
 
@@ -277,7 +280,7 @@ public class SeatSelectionController {
             if (wasFullScreen) {
                 Platform.runLater(() -> {
                     stage.setFullScreen(true);
-                    stage.setFullScreenExitHint("");  // ẩn dòng "Press ESC to exit full screen"
+                    stage.setFullScreenExitHint(""); // ẩn dòng "Press ESC to exit full screen"
                 });
             }
 
@@ -290,15 +293,30 @@ public class SeatSelectionController {
         }
     }
 
-
     public void setShowData(Cinema cinema, Screen screen, Showtime showtime) {
         this.currentScreen = screen;
         this.currentShowtime = showtime;
         this.selectedSeats.clear();
 
-        // Cập nhật tiêu đề rạp
-        String time = extractTimeFromName(screen.getName());
-        cinemaNameLabel.setText(cinema.getName() + " - " + screen.getName().split(" • ")[0] + " • " + time);
+        // === HIỂN THỊ TIÊU ĐỀ ĐÚNG VỚI DỮ LIỆU THẬT ===
+        String cinemaName = cinema.getName();
+        String screenName = screen.getName(); // tên phòng thuần, không có giờ nữa
+        String timeRange = "";
+
+        if (showtime != null && showtime.getStartTime() != null && showtime.getEndTime() != null) {
+            String start = showtime.getStartTime().toLocalTime().toString(); // ví dụ: 19:00
+            String end = showtime.getEndTime().toLocalTime().toString(); // ví dụ: 21:15
+            timeRange = start + " - " + end;
+
+            // Nếu có định dạng (2D/3D)
+            if (showtime.getFormat() != null && !showtime.getFormat().isEmpty()) {
+                timeRange += " (" + showtime.getFormat() + ")";
+            }
+        } else {
+            timeRange = "Không rõ giờ";
+        }
+
+        cinemaNameLabel.setText(cinemaName + " • " + screenName + " • " + timeRange);
 
         // Render lại sơ đồ ghế với dữ liệu mới
         renderSeatGrid();

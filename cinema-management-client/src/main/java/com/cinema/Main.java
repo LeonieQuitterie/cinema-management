@@ -13,8 +13,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Load FXML file
-            FXMLLoader loader = new
-            FXMLLoader(getClass().getResource("/views/customer/customer-home.fxml"));
+            // FXMLLoader loader = new
+            // FXMLLoader(getClass().getResource("/views/customer/customer-home.fxml"));
+
             // FXMLLoader loader = new
             // FXMLLoader(getClass().getResource("/views/cinema/seat-selection.fxml"));
             // FXMLLoader loader = new
@@ -23,7 +24,7 @@ public class Main extends Application {
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-confirmation.fxml"));
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-success.fxml"));
             
-            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
 
                         
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/auth/login.fxml"));

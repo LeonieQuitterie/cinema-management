@@ -72,78 +72,20 @@
             <!-- CINEMA CHAIN FILTER -->
             <VBox spacing="10">
                 <Label text="Chọn cụm rạp" styleClass="section-label"/>
-                <ScrollPane fitToHeight="true" styleClass="filter-scroll">
-                    <HBox spacing="15" styleClass="filter-container">
+                <ScrollPane fitToHeight="true" styleClass="filter-scroll" fitToWidth="true">
+                    <HBox fx:id="cinemaChainContainer" spacing="15" styleClass="filter-container">
                         <padding>
-                            <Insets top="5" bottom="5"/>
+                            <Insets top="5" bottom="5" left="10" right="10"/>
                         </padding>
-
-                        <!-- Cinema Logo 1 - CGV -->
-                        <VBox styleClass="cinema-logo-button, cinema-logo-selected" alignment="CENTER">
-                            <padding>
-                                <Insets top="10" right="15" bottom="10" left="15"/>
-                            </padding>
-                            <Label text="CGV" styleClass="cinema-logo-text">
-                                <font>
-                                    <javafx.scene.text.Font name="System Bold" size="16"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Cinema Logo 2 - Lotte -->
-                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
-                            <padding>
-                                <Insets top="10" right="15" bottom="10" left="15"/>
-                            </padding>
-                            <Label text="LOTTE" styleClass="cinema-logo-text">
-                                <font>
-                                    <javafx.scene.text.Font name="System Bold" size="16"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Cinema Logo 3 - Galaxy -->
-                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
-                            <padding>
-                                <Insets top="10" right="15" bottom="10" left="15"/>
-                            </padding>
-                            <Label text="GALAXY" styleClass="cinema-logo-text">
-                                <font>
-                                    <javafx.scene.text.Font name="System Bold" size="16"/>
-                                </font>
-                            </Label>
-                        </VBox>
-
-                        <!-- Cinema Logo 4 - BHD -->
-                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
-                            <padding>
-                                <Insets top="10" right="15" bottom="10" left="15"/>
-                            </padding>
-                            <Label text="BHD STAR" styleClass="cinema-logo-text">
-                                <font>
-                                    <javafx.scene.text.Font name="System Bold" size="14"/>
-                                </font>
-                            </Label>
-                        </VBox>
                     </HBox>
                 </ScrollPane>
             </VBox>
 
             <!-- LOCATION FILTER -->
             <HBox spacing="15" alignment="CENTER_RIGHT">
-
-                <ComboBox promptText="Chọn khu vực" styleClass="location-combo" prefWidth="250">
-                    <items>
-                        <FXCollections fx:factory="observableArrayList">
-                            <java.lang.String fx:value="Đà Nẵng"/>
-                            <java.lang.String fx:value="Hà Nội"/>
-                            <java.lang.String fx:value="TP. Hồ Chí Minh"/>
-                            <java.lang.String fx:value="Cần Thơ"/>
-                        </FXCollections>
-                    </items>
-                </ComboBox>
+                <!-- THÊM fx:id và XÓA hard-coded items -->
+                <ComboBox fx:id="locationCombo" promptText="Chọn khu vực" styleClass="location-combo" prefWidth="250"/>
             </HBox>
-
 
             <!-- DIVIDER -->
             <Separator styleClass="section-divider"/>
