@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.cinema.controllers.cinema.SeatSelectionController"
+      styleClass="main-container" 
+      stylesheets="@../../styles/seat-selection.css">
+
+    <!-- HEADER: Back Button + Cinema Name -->
+    <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="20" right="100" bottom="20" left="100"/>
+        </padding>
+        
+        <Button fx:id="backButton" styleClass="back-button" text="←" onAction="#handleBackButton">
+            <font>
+                <javafx.scene.text.Font size="24"/>
+            </font>
+        </Button>
+        
+        <Label fx:id="cinemaNameLabel" text="CGV Vincom Đà Nẵng - Phòng 1" styleClass="cinema-name-header">
+            <font>
+                <javafx.scene.text.Font name="System Bold" size="18"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <!-- MAIN CONTENT SCROLL -->
+    <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+        <VBox spacing="30" styleClass="content-container">
+            <padding>
+               <Insets top="20" right="100" bottom="20" left="100"/>
+            </padding>
+
+            <!-- SCREEN SECTION -->
+            <VBox spacing="15" alignment="CENTER" styleClass="screen-section">
+                <!-- Screen Arc (Curved Line) -->
+                <StackPane prefHeight="60">
+                    <Arc fx:id="screenArc" centerX="0" centerY="0" radiusX="400" radiusY="50" 
+                         startAngle="0" length="180" type="OPEN" 
+                         styleClass="screen-arc" fill="transparent"/>
+                </StackPane>
+                
+                <Label text="MÀN HÌNH" styleClass="screen-label">
+                    <font>
+                        <javafx.scene.text.Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+            </VBox>
+
+            <!-- SEAT GRID SECTION -->
+            <VBox spacing="20" alignment="TOP_CENTER" styleClass="seat-grid-section">
+                <GridPane fx:id="seatGridPane" hgap="8" vgap="8" alignment="CENTER" 
+                          styleClass="seat-grid"/>
+            </VBox>
+
+            <!-- LEGEND SECTION -->
+            <HBox spacing="30" alignment="CENTER" styleClass="legend-section">
+                <padding>
+                    <Insets top="20" bottom="20"/>
+                </padding>
+
+                <!-- Available Seat -->
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="legend-seat, seat-available" prefWidth="35" prefHeight="35">
+                        <Label text="A1" styleClass="seat-label-small"/>
+                    </StackPane>
+                    <Label text="Ghế trống" styleClass="legend-text"/>
+                </HBox>
+
+                <!-- Selected Seat -->
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="legend-seat, seat-selected" prefWidth="35" prefHeight="35">
+                        <Label text="B2" styleClass="seat-label-small"/>
+                    </StackPane>
+                    <Label text="Bạn đã chọn" styleClass="legend-text"/>
+                </HBox>
+
+                <!-- Booked Seat -->
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="legend-seat, seat-booked" prefWidth="35" prefHeight="35">
+                        <Label text="C3" styleClass="seat-label-small"/>
+                    </StackPane>
+                    <Label text="Đã được đặt" styleClass="legend-text"/>
+                </HBox>
+
+                <!-- VIP Seat -->
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="legend-seat, seat-vip" prefWidth="35" prefHeight="35">
+                        <Label text="D4" styleClass="seat-label-small"/>
+                    </StackPane>
+                    <Label text="Ghế VIP" styleClass="legend-text"/>
+                </HBox>
+
+                <!-- Couple Seat -->
+                <HBox spacing="10" alignment="CENTER">
+                    <StackPane styleClass="legend-seat, seat-couple" prefWidth="70" prefHeight="35">
+                        <Label text="E1-E2" styleClass="seat-label-small"/>
+                    </StackPane>
+                    <Label text="Ghế Đôi" styleClass="legend-text"/>
+                </HBox>
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- FOOTER: Price Summary + Continue Button -->
+    <VBox styleClass="footer-bar" spacing="15">
+        <padding>
+              <Insets top="20" right="100" bottom="20" left="100"/>
+        </padding>
+
+        <!-- Price Summary -->
+        <HBox spacing="20" alignment="CENTER">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Tạm tính" styleClass="price-label">
+                    <font>
+                        <javafx.scene.text.Font size="14"/>
+                    </font>
+                </Label>
+                <Label fx:id="selectedSeatsLabel" text="Chưa chọn ghế" styleClass="selected-seats-info">
+                    <font>
+                        <javafx.scene.text.Font size="12"/>
+                    </font>
+                </Label>
+            </VBox>
+
+            <Label fx:id="totalPriceLabel" text="0 đ" styleClass="total-price-label">
+                <font>
+                    <javafx.scene.text.Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+        </HBox>
+
+        <!-- Continue Button -->
+        <Button fx:id="continueButton" text="TIẾP TỤC" styleClass="login-button-primary" 
+                onAction="#handleContinue" maxWidth="Infinity" disable="true">
+            <font>
+                <javafx.scene.text.Font name="System Bold" size="16"/>
+            </font>
+            <padding>
+                <Insets top="15" bottom="15"/>
+            </padding>
+        </Button>
+    </VBox>
+
+</VBox>

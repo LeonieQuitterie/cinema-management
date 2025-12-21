@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox spacing="0" styleClass="form-container" prefWidth="700" maxHeight="800" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cinema.controllers.admin.fnb.FnbFormController">
+    
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="form-header">
+        <padding>
+            <Insets top="25" right="25" bottom="20" left="25"/>
+        </padding>
+        
+        <Label fx:id="formTitleLabel" text="THÊM COMBO MỚI" styleClass="form-title"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button text="×" styleClass="btn-close" onAction="#closeForm"/>
+    </HBox>
+    
+<HBox style="-fx-padding: 0 25;">
+    <Separator HBox.hgrow="ALWAYS" styleClass="separator"/>
+</HBox>
+
+    
+    <!-- Form Content -->
+    <ScrollPane fitToWidth="true" styleClass="form-scroll" VBox.vgrow="ALWAYS" minHeight="400" maxHeight="550">
+        <VBox spacing="20" styleClass="form-content">
+            <padding>
+                <Insets top="25" right="25" bottom="25" left="25"/>
+            </padding>
+            
+            <!-- Image Upload Section -->
+            <VBox spacing="10" styleClass="form-group">
+                <Label text="Ảnh combo *" styleClass="form-label"/>
+                
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <VBox spacing="10" alignment="CENTER" styleClass="image-preview-container">
+                        <ImageView fx:id="imagePreview" fitWidth="150" fitHeight="150" preserveRatio="true" styleClass="image-preview"/>
+                        <Label fx:id="imageNameLabel" text="Chưa chọn ảnh" styleClass="image-name-label"/>
+                    </VBox>
+                    
+                    <VBox spacing="10">
+                        <Button text="Chọn ảnh" styleClass="btn-secondary" onAction="#handleChooseImage"/>
+                        <Button text="Xóa ảnh" styleClass="btn-danger-outline" onAction="#handleRemoveImage"/>
+                        <Label text="Định dạng: JPG, PNG" styleClass="hint-label"/>
+                        <Label text="Kích thước tối đa: 5MB" styleClass="hint-label"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <!-- Name Field -->
+            <VBox spacing="8" styleClass="form-group">
+                <Label text="Tên combo *" styleClass="form-label"/>
+                <TextField fx:id="nameField" promptText="VD: Combo 1 - Bắp + Nước" styleClass="form-input"/>
+                <Label fx:id="nameErrorLabel" styleClass="error-label" managed="false" visible="false"/>
+            </VBox>
+            
+            <!-- Category Field -->
+            <VBox spacing="8" styleClass="form-group">
+                <Label text="Danh mục *" styleClass="form-label"/>
+                <ComboBox fx:id="categoryCombo" promptText="Chọn danh mục" prefWidth="300" styleClass="form-combo"/>
+                <Label fx:id="categoryErrorLabel" styleClass="error-label" managed="false" visible="false"/>
+            </VBox>
+            
+            <!-- Price Field -->
+            <VBox spacing="8" styleClass="form-group">
+                <Label text="Giá bán (VNĐ) *" styleClass="form-label"/>
+                <TextField fx:id="priceField" promptText="VD: 120000" styleClass="form-input"/>
+                <Label fx:id="priceErrorLabel" styleClass="error-label" managed="false" visible="false"/>
+            </VBox>
+            
+            <!-- Description Field -->
+            <VBox spacing="8" styleClass="form-group">
+                <Label text="Mô tả" styleClass="form-label"/>
+                <TextArea fx:id="descriptionArea" promptText="Nhập mô tả chi tiết về combo..." 
+                          prefHeight="80" wrapText="true" styleClass="form-textarea"/>
+                <Label text="Tối đa 500 ký tự" styleClass="hint-label"/>
+            </VBox>
+            
+            <!-- Available Status -->
+            <VBox spacing="8" styleClass="form-group">
+                <Label text="Trạng thái" styleClass="form-label"/>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <CheckBox fx:id="availableCheckbox" text="Đang bán (hiển thị cho khách hàng)" 
+                              selected="true" styleClass="form-checkbox"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Hidden ID Field -->
+            <TextField fx:id="idField" visible="false" managed="false"/>
+            
+        </VBox>
+    </ScrollPane>
+    
+<HBox style="-fx-padding: 0 25;">
+    <Separator HBox.hgrow="ALWAYS" styleClass="separator"/>
+</HBox>
+
+
+    
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER" styleClass="form-actions">
+        <padding>
+            <Insets top="20" right="25" bottom="25" left="25"/>
+        </padding>
+        
+        <Button text="Hủy" styleClass="btn-cancel" onAction="#closeForm" prefWidth="120"/>
+        <Button fx:id="saveButton" text="Lưu" styleClass="btn-primary" onAction="#handleSave" prefWidth="120"/>
+    </HBox>
+    
+</VBox>

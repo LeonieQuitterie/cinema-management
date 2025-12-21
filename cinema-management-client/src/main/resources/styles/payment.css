@@ -1,0 +1,347 @@
+/* ==================== ROOT & GENERAL ==================== */
+.payment-root {
+    -fx-background-color: #0a0e27;
+}
+
+.payment-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.payment-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.payment-scroll .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.payment-scroll .scroll-bar .thumb {
+    -fx-background-color: #334466;
+    -fx-background-radius: 10;
+}
+
+.payment-scroll .scroll-bar .thumb:hover {
+    -fx-background-color: #445577;
+}
+
+
+/* Header */
+.header-bar {
+    -fx-background-color: #16213e;
+    -fx-border-color: #334466;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8888ff;
+    -fx-font-size: 28px;
+    -fx-cursor: hand;
+    -fx-padding: 5 15 5 0;
+    -fx-background-radius: 8;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(136, 136, 255, 0.1);
+}
+
+
+/* ==================== HEADER ==================== */
+.payment-header {
+    -fx-background-color: linear-gradient(to bottom, #16213e, #0a0e27);
+    -fx-border-color: #334466;
+    -fx-border-width: 0 0 2 0;
+}
+
+.app-name-label {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 10, 0.5, 0, 0);
+}
+
+/* ==================== CONTAINER ==================== */
+.payment-container {
+    -fx-background-color: transparent;
+}
+
+/* ==================== TIÊU ĐỀ & MÃ ĐẶT VÉ ==================== */
+.payment-title {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.2), 8, 0.3, 0, 2);
+}
+
+.booking-code-container {
+    -fx-background-color: linear-gradient(to right, #16213e, #1a2847);
+    -fx-padding: 15 100 15 100;
+    -fx-background-radius: 12;
+    -fx-border-color: #ff3366;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 12, 0.5, 0, 0);
+
+        -fx-min-width: 820;
+    -fx-max-width: 1020;
+}
+
+.booking-code-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #cccccc;
+    -fx-font-weight: 600;
+}
+
+.booking-code-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+    -fx-font-family: "Courier New", monospace;
+}
+
+/* ==================== SECTIONS ==================== */
+.order-summary-section,
+.payment-section {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 25;
+    -fx-border-color: #334466;
+    -fx-border-radius: 16;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0.4, 0, 5);
+    -fx-min-width: 400;
+    -fx-max-width: 500;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ==================== THÔNG TIN PHIM ==================== */
+.movie-info-box {
+    -fx-background-color: #1a2847;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-border-color: #334466;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.movie-poster {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.5, 0, 3);
+    -fx-background-radius: 8;
+}
+
+.movie-title-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.info-icon {
+    -fx-font-size: 14px;
+    -fx-min-width: 20;
+}
+
+.info-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #cccccc;
+}
+
+/* ==================== TỔNG TIỀN ==================== */
+.payment-separator {
+    -fx-background-color: #334466;
+    -fx-padding: 1 0 1 0;
+}
+
+.total-price-box {
+    -fx-background-color: linear-gradient(to right, rgba(255,51,102,0.15), rgba(255,107,107,0.15));
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-border-color: #ff3366;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+.total-label {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cccccc;
+}
+
+.total-price {
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.5), 8, 0.5, 0, 0);
+}
+
+/* ==================== HƯỚNG DẪN ==================== */
+.instruction-box {
+    -fx-background-color: rgba(136,136,255,0.1);
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-border-color: #8888ff;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+}
+
+.instruction-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #aaaaff;
+}
+
+.instruction-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #cccccc;
+    -fx-line-spacing: 2;
+}
+
+/* ==================== QR CODE ==================== */
+.qr-container {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-background-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 20, 0.5, 0, 5);
+}
+
+.qr-image {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0.3, 0, 2);
+}
+
+.qr-instruction {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #16213e;
+}
+
+/* ==================== THÔNG TIN NGÂN HÀNG ==================== */
+.bank-info-box {
+    -fx-background-color: #1a2847;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-border-color: #334466;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.bank-info-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 10 0;
+}
+
+.bank-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #999999;
+    -fx-min-width: 130;
+}
+
+.bank-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #cccccc;
+}
+
+.bank-value-highlight {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.bank-value-amount {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4CAF50;
+}
+
+.copy-button {
+    -fx-background-color: #8888ff;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.copy-button:hover {
+    -fx-background-color: #aaaaff;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ==================== ĐỒNG HỒ ĐẾM NGƯỢC ==================== */
+.countdown-box {
+    -fx-background-color: rgba(255,165,0,0.15);
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-border-color: #FFA500;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
+
+.countdown-icon {
+    -fx-font-size: 20px;
+}
+
+.countdown-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #cccccc;
+    -fx-font-weight: 600;
+}
+
+.countdown-time {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFA500;
+    -fx-font-family: "Courier New", monospace;
+    -fx-effect: dropshadow(gaussian, rgba(255,165,0,0.5), 8, 0.5, 0, 0);
+}
+
+/* ==================== NÚT XÁC NHẬN ==================== */
+.confirm-payment-button {
+    -fx-background-color: linear-gradient(to right, #4CAF50, #66BB6A);
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 18 40 18 40;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(76,175,80,0.5), 15, 0.5, 0, 5);
+    -fx-alignment: CENTER;
+}
+
+.confirm-payment-button:hover {
+    -fx-background-color: linear-gradient(to right, #66BB6A, #81C784);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.confirm-payment-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* ==================== WARNING ==================== */
+.warning-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #FFA500;
+    -fx-text-alignment: center;
+    -fx-font-style: italic;
+}

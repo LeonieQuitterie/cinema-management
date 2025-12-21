@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.FlowPane?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cinema.controllers.cinema.MovieDetailController"
+            stylesheets="@../../styles/movie-detail.css">
+
+     <!-- TOP: Header -->
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to bottom, #16213e 0%, #0d1520 100%); -fx-padding: 20 100 20 100; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4);">
+            <VBox spacing="20">
+                <!-- HEADER ROW 1: Logo + Search + User -->
+                <HBox alignment="CENTER_LEFT" spacing="40">
+                    <!-- Logo -->
+                    <Label text="CINEMA PRO" styleClass="app-name-label" style="-fx-text-fill: linear-gradient(to right, #ff3366, #ff6b6b); -fx-font-size: 24px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 8, 0.5, 0, 0);"/>
+
+                    <!-- Search Box -->
+                    <HBox alignment="CENTER" spacing="0" HBox.hgrow="ALWAYS" maxWidth="600">
+
+                        <!-- TEXTFIELD -->
+                        <StackPane HBox.hgrow="ALWAYS" maxWidth="600">
+                            <TextField fx:id="searchField" promptText="Tìm phim, rạp, suất chiếu..." prefHeight="45" styleClass="search-field" style="
+                            -fx-background-color: #262641;
+                            -fx-background-radius: 22;
+                            -fx-border-color: #334466;
+                            -fx-border-radius: 22;
+                            -fx-border-width: 1.5;
+                            -fx-padding: 0 18 0 48;
+                            -fx-text-fill: #ffffff;
+                            -fx-prompt-text-fill: #888899;
+                        " />
+                        </StackPane>
+
+                        <!-- SEARCH BUTTON -->
+                        <Button text="" prefWidth="45" prefHeight="45" onAction="#handleSearch" style="
+                            -fx-background-color: transparent;
+                            -fx-background-insets: 0;
+                            -fx-background-radius: 0;
+                            -fx-padding: 0 0 0 8; 
+                            -fx-border-color: transparent;
+                            -fx-focus-color: transparent;
+                            -fx-faint-focus-color: transparent;
+                        ">
+                            <graphic>
+                                <FontIcon iconLiteral="fas-search" iconSize="22" iconColor="#ff6b6b"/>
+                            </graphic>
+                        </Button>
+
+                    </HBox>
+
+
+
+                    <!-- User Menu -->
+                    <HBox alignment="CENTER_RIGHT" spacing="15" HBox.hgrow="ALWAYS">
+                        <!-- Home -->
+                        <Button onAction="#handleHome" fx:id="homeButton" style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-cursor: hand;
+                            -fx-padding: 8 16;
+                            -fx-background-radius: 8;
+                        ">
+                            <graphic>
+                                <HBox spacing="8" alignment="CENTER">
+                                    <FontIcon iconLiteral="fas-home" iconSize="18" iconColor="#ff6b6b"/>
+                                    <Label text="Trang chủ" style="-fx-text-fill: #ff6b6b; -fx-font-size: 14px; -fx-font-weight: 600;"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+
+                        <!-- Cinemas -->
+                        <Button onAction="#handleCinemas" style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-cursor: hand;
+                            -fx-padding: 8 16;
+                            -fx-background-radius: 8;
+                        ">
+                            <graphic>
+                                <HBox spacing="8" alignment="CENTER">
+                                    <FontIcon iconLiteral="fas-building" iconSize="18" iconColor="#ffffff"/>
+                                    <Label text="Rạp" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500;"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+
+
+                        <!-- Schedule -->
+                        <Button onAction="#handleSchedule" style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-cursor: hand;
+                            -fx-padding: 8 16;
+                            -fx-background-radius: 8;
+                        ">
+                            <graphic>
+                                <HBox spacing="8" alignment="CENTER">
+                                    <FontIcon iconLiteral="fas-calendar-alt" iconSize="18" iconColor="#ffffff"/>
+                                    <Label text="Lịch chiếu" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500;"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+
+                        <Button onAction="#handleNotifications" style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-cursor: hand;
+                            -fx-padding: 8 16;
+                            -fx-background-radius: 8;
+                        ">
+                            <graphic>
+                                <HBox spacing="8" alignment="CENTER">
+                                    <FontIcon iconLiteral="fas-bell" iconSize="18" iconColor="#ffffff"/>
+                                    <Label text="Thông báo" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500;"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+                        <!-- Hồ sơ người dùng -->
+                        <Button onAction="#handleProfile" style="
+                            -fx-background-color: transparent;
+                            -fx-border-color: transparent;
+                            -fx-cursor: hand;
+                            -fx-padding: 8 16;
+                            -fx-background-radius: 8;
+                        ">
+                            <graphic>
+                                <HBox spacing="8" alignment="CENTER">
+                                    <FontIcon iconLiteral="fas-user-circle" iconSize="18" iconColor="#ffffff"/>
+                                    <Label text="Tài khoản" style="-fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500;"/>
+                                </HBox>
+                            </graphic>
+                        </Button>
+
+                    </HBox>
+                </HBox>
+
+
+            </VBox>
+        </VBox>
+    </top>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="40" styleClass="main-container">
+
+                <!-- Hero Section -->
+                <VBox styleClass="hero-section">
+                    <HBox styleClass="hero-content">
+                        <StackPane styleClass="poster-container" prefWidth="280" prefHeight="420">
+                            <ImageView fx:id="posterImage" styleClass="poster-image" preserveRatio="true" fitHeight="420" />
+                        </StackPane>
+
+                        <VBox styleClass="movie-info-section">
+                            <Label fx:id="movieTitle" styleClass="movie-title" />
+                            <Label fx:id="movieTitleOriginal" styleClass="movie-title-original" />
+                            <HBox fx:id="genresContainer" styleClass="genres-container" />
+
+                            <HBox styleClass="age-rating-container">
+                                <VBox styleClass="age-rating-box">
+                                    <Label fx:id="ageRatingNumber" styleClass="age-rating-number" />
+                                    <Label fx:id="ageRatingDescription" styleClass="age-rating-description" wrapText="true" />
+                                </VBox>
+                            </HBox>
+
+                            <VBox spacing="12" styleClass="movie-details">
+                                <HBox styleClass="info-item">
+                                    <Label text="Ngày khởi chiếu:" styleClass="info-label" />
+                                    <Label fx:id="releaseDate" styleClass="info-value" />
+                                </HBox>
+                                <HBox styleClass="info-item">
+                                    <Label text="Thời lượng:" styleClass="info-label" />
+                                    <Label fx:id="duration" styleClass="info-value" />
+                                </HBox>
+                                <HBox styleClass="info-item">
+                                    <Label text="Ngôn ngữ:" styleClass="info-label" />
+                                    <Label fx:id="language" styleClass="info-value" />
+                                </HBox>
+                            </VBox>
+
+                            <HBox styleClass="action-buttons">
+                                <Button fx:id="likeButton" text="❤ Thích" styleClass="btn-like" />
+                                <Button fx:id="trailerButton" text="▶ Xem Trailer" styleClass="btn-trailer" />
+                            </HBox>
+                        </VBox>
+
+                        <VBox alignment="CENTER_RIGHT" styleClass="buy-ticket-container">
+                            <Button fx:id="buyTicketButton" text="MUA VÉ NGAY" styleClass="btn-buy-ticket" />
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <!-- Rating Section -->
+                <VBox spacing="25" styleClass="rating-section">
+                    <Label text="Đánh giá &amp; Bình luận" styleClass="section-title" />
+
+                    <HBox styleClass="overall-rating-container" alignment="CENTER_LEFT">
+                        <VBox alignment="CENTER" spacing="8">
+                            <Label fx:id="overallRating" styleClass="overall-rating-number" />
+                      
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <VBox alignment="CENTER_RIGHT" spacing="5">
+                            <Label text="Dựa trên" styleClass="overall-rating-subtitle" />
+                            <Label fx:id="totalReviews" styleClass="total-reviews-text" />
+                        </VBox>
+                    </HBox>
+
+                    <VBox fx:id="ratingBarsContainer" styleClass="rating-bars-container" spacing="10" />
+                </VBox>
+
+                <!-- Synopsis Section -->
+                <VBox spacing="15" styleClass="synopsis-section">
+                    <Label text="Nội dung phim" styleClass="section-title" />
+                    <Label fx:id="synopsisShort" styleClass="synopsis-text" wrapText="true" />
+                    <Label fx:id="synopsisFullContainer" styleClass="synopsis-text" wrapText="true" visible="false" managed="false" />
+                    <Button fx:id="expandButton" text="Xem thêm →" styleClass="btn-expand" />
+                </VBox>
+
+                <!-- Cast Section -->
+                <VBox spacing="25" styleClass="cast-section">
+                    <Label text="Diễn viên" styleClass="section-title" />
+                    <FlowPane fx:id="castGrid" styleClass="cast-grid" hgap="20" vgap="20" />
+                </VBox>
+
+                <!-- Comments Section -->
+                <VBox styleClass="comments-section">
+                    <Label text="Bình luận từ khán giả" styleClass="section-title" />
+
+                    <VBox styleClass="comment-input-box">
+                        <Label text="Để lại đánh giá của bạn" styleClass="input-title" />
+                        <HBox fx:id="ratingStarsInput" styleClass="rating-stars-input" spacing="16" alignment="CENTER_LEFT" />
+                        <TextArea fx:id="commentInput" styleClass="comment-input" wrapText="true" prefRowCount="3" promptText="Chia sẻ suy nghĩ của bạn về bộ phim..." />
+
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                        
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="postCommentButton" text="Đăng bình luận" styleClass="btn-post-comment" />
+                        </HBox>
+                    </VBox>
+
+                    <VBox fx:id="commentsList" styleClass="comments-list" spacing="15" />
+
+                    <HBox alignment="CENTER">
+                        <Button fx:id="loadMoreCommentsButton" text="Xem thêm bình luận" styleClass="btn-load-more" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

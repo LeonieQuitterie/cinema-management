@@ -1,0 +1,294 @@
+/* ==================== MAIN CONTAINER ==================== */
+.main-container {
+    -fx-background-color: #0a0e27;
+    -fx-pref-width: 1200;
+    -fx-pref-height: 900;
+}
+
+.scroll-pane {
+    -fx-background-color: #0a0e27;
+    -fx-background: #0a0e27;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #0a0e27;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #16213e;
+}
+
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: linear-gradient(to bottom, #ff3366, #ff6b6b);
+    -fx-background-radius: 10;
+}
+
+.content-container {
+    -fx-background-color: #0a0e27;
+}
+
+/* ==================== HEADER ==================== */
+.header-bar {
+    -fx-background-color: linear-gradient(to right, #16213e, #1a2744);
+    -fx-border-color: #2a3a5a;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, 2);
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff3366;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+    -fx-padding: 5 15 5 15;
+    -fx-border-color: transparent;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(255, 51, 102, 0.1);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.page-title-header {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 8, 0.4, 0, 0);
+}
+
+/* ==================== WELCOME SECTION ==================== */
+.welcome-section {
+    -fx-padding: 20 0 20 0;
+}
+
+.welcome-title {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 10, 0.5, 0, 0);
+}
+
+.welcome-subtitle {
+    -fx-text-fill: #b8c5d9;
+}
+
+/* ==================== SECTION LABEL ==================== */
+.section-label {
+    -fx-text-fill: #e0e0e0;
+    -fx-padding: 5 0 5 0;
+}
+
+/* ==================== COMBO GRID ==================== */
+.combo-grid {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+/* ==================== COMBO CARD ==================== */
+.combo-card {
+    -fx-background-color: linear-gradient(to bottom right, #16213e, #1a2744);
+    -fx-background-radius: 15;
+    -fx-border-color: #2a3a5a;
+    -fx-border-radius: 15;
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4);
+    -fx-pref-width: 290;
+    -fx-cursor: hand;
+}
+
+.combo-card:hover {
+    -fx-border-color: #3a4a6a;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Combo Image Container */
+.combo-image-container {
+    -fx-background-color: #0e1528;
+    -fx-background-radius: 15 15 0 0;
+    -fx-min-height: 180;
+    -fx-max-height: 180;
+    -fx-alignment: center;
+}
+
+.combo-image {
+    -fx-fit-width: 290;   /* Thay đổi từ 280 -> 290 */
+    -fx-fit-height: 180;  /* Giữ nguyên */
+    -fx-preserve-ratio: false;  /* Thay đổi từ true -> false để ảnh fill đầy */
+    -fx-smooth: true;
+}
+
+.combo-placeholder {
+    -fx-text-fill: #666680;
+    -fx-font-size: 48px;
+}
+
+.combo-info {
+    -fx-padding: 12;      /* Thay đổi từ 15 -> 12 */
+    -fx-spacing: 8;       /* Thay đổi từ 10 -> 8 */
+}
+
+.combo-name {
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-wrap-text: true;
+}
+
+.combo-description {
+    -fx-text-fill: #99aac8;
+    -fx-wrap-text: true;
+    -fx-font-size: 13px;
+}
+
+.combo-price {
+    -fx-text-fill: #ff3366;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 5, 0.5, 0, 0);
+}
+
+/* Quantity Controls */
+.quantity-control {
+    -fx-background-color: rgba(22, 33, 62, 0.5);
+    -fx-background-radius: 10;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 12;
+    -fx-spacing: 12;
+    -fx-alignment: center;
+}
+
+.quantity-button {
+    -fx-background-color: #16213e;
+    -fx-text-fill: #ff3366;
+    -fx-font-size: 22px;           /* Tăng từ 20 -> 22 */
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-border-color: #334466;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-padding: 0;                /* THÊM: Remove default padding */
+    -fx-min-width: 42;             /* Tăng từ 40 -> 42 */
+    -fx-min-height: 42;            /* Tăng từ 40 -> 42 */
+    -fx-max-width: 42;             /* Tăng từ 40 -> 42 */
+    -fx-max-height: 42;            /* Tăng từ 40 -> 42 */
+    -fx-alignment: center;         /* THÊM: Center text */
+}
+.quantity-button:hover {
+    -fx-background-color: #1e2a4a;
+    -fx-border-color: #ff3366;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.quantity-button:disabled {
+    -fx-background-color: #0e1528;
+    -fx-text-fill: #666680;
+    -fx-border-color: #2a2a3a;
+    -fx-opacity: 0.5;
+    -fx-cursor: not-allowed;
+}
+
+.quantity-display {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-min-width: 45;
+    -fx-alignment: center;
+}
+
+/* ==================== FOOTER ==================== */
+.footer-bar {
+    -fx-background-color: linear-gradient(to right, #16213e, #1a2744);
+    -fx-border-color: #2a3a5a;
+    -fx-border-width: 2 0 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 0, -2);
+}
+
+.price-breakdown-label {
+    -fx-text-fill: #b8c5d9;
+    -fx-font-size: 14px;
+}
+
+.price-breakdown-value {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.price-separator {
+    -fx-background-color: #2a3a5a;
+    -fx-padding: 1;
+}
+
+.total-label {
+    -fx-text-fill: #cccccc;
+}
+
+.total-price-label {
+    -fx-text-fill: #ff3366;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 8, 0.5, 0, 0);
+}
+
+/* ==================== COMMON STYLES (from existing) ==================== */
+.app-name-label {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 10, 0.5, 0, 0);
+}
+
+.field-label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.text-field-icon, .text-field-icon:focused {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666680;
+    -fx-background-radius: 12;
+    -fx-padding: 0 15 0 45;
+    -fx-font-size: 14px;
+    -fx-border-color: #334466;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+}
+
+.text-field-icon .image-view {
+    -fx-translate-x: 15;
+}
+
+.login-button-primary {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 10, 0, 0, 4);
+}
+
+.login-button-primary:hover {
+    -fx-background-color: linear-gradient(to right, #ff4466, #ff8877);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.hyperlink-flat {
+    -fx-text-fill: #8888ff;
+    -fx-font-size: 13px;
+}
+
+.hyperlink-flat:hover {
+    -fx-text-fill: #aaaaff;
+    -fx-underline: true;
+}
+
+.icon {
+    -fx-font-family: "FontAwesome";
+    -fx-font-size: 18px;
+    -fx-text-fill: #8888ff;
+    -fx-padding: 0 0 0 15;
+}
+
+.text-field-icon .icon {
+    -fx-translate-y: -1;
+}

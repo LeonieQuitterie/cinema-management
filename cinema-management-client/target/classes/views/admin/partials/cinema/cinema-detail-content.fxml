@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" stylesheets="@/styles/cinema-styles.css" fx:controller="com.cinema.controllers.admin.cinema.CinemaDetailController"
+    xmlns:fx="http://javafx.com/fxml">
+
+    <content>
+        <VBox spacing="30" style="-fx-padding: 40;" styleClass="content-container">
+
+            <!-- Cinema Info Header -->
+            <VBox spacing="15" styleClass="cinema-info-box">
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="🎬" style="-fx-font-size: 36px;"/>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label fx:id="cinemaNameLabel" text="Tên Rạp" styleClass="cinema-detail-title"/>
+                        <Label fx:id="cinemaAddressLabel" text="Địa chỉ" styleClass="cinema-detail-subtitle"/>
+                    </VBox>
+                    <Button text="← Quay lại" onAction="#goBack" styleClass="btn-back"/>
+                </HBox>
+
+                <Separator/>
+
+                <HBox spacing="40">
+                    <VBox spacing="5">
+                        <Label text="Thành phố" styleClass="detail-label"/>
+                        <Label fx:id="cinemaCityLabel" text="-" styleClass="detail-value"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Tổng số phòng" styleClass="detail-label"/>
+                        <Label fx:id="totalScreensLabel" text="0" styleClass="detail-value"/>
+                    </VBox>
+                    <VBox spacing="5">
+                        <Label text="Tổng số ghế" styleClass="detail-label"/>
+                        <Label fx:id="totalSeatsLabel" text="0" styleClass="detail-value"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Screen Management Section -->
+            <VBox spacing="20">
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="DANH SÁCH PHÒNG CHIẾU" styleClass="section-title"/>
+                        <Label text="Quản lý các phòng chiếu trong rạp" styleClass="section-subtitle"/>
+                    </VBox>
+
+                    <!-- Input tên phòng -->
+                    <TextField fx:id="screenNameInput" promptText="Nhập tên phòng (VD: Phòng 1)" prefWidth="220" styleClass="input-field"/>
+
+                    <!-- Thêm nhanh -->
+                    <Button text="Thêm nhanh" onAction="#addScreenQuick" styleClass="btn-secondary"/>
+
+                </HBox>
+
+                <!-- Screens Table -->
+                <TableView fx:id="screenTable" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="screenNameColumn" text="Tên Phòng" prefWidth="200"/>
+                        <TableColumn fx:id="screenIdColumn" text="Mã Phòng" prefWidth="150"/>
+                        <TableColumn fx:id="totalSeatsColumn" text="Số Ghế" prefWidth="120" styleClass="center-column"/>
+                        <TableColumn fx:id="actionColumn" text="Thao Tác" prefWidth="180" styleClass="center-column"/>
+                    </columns>
+
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 40;">
+                            <Label text="🎞️" style="-fx-font-size: 48px;"/>
+                            <Label text="Chưa có phòng chiếu nào" styleClass="placeholder-text"/>
+                            <Label text="Nhấn 'Thêm Phòng Mới' để bắt đầu" styleClass="placeholder-hint"/>
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </VBox>
+    </content>
+</ScrollPane>

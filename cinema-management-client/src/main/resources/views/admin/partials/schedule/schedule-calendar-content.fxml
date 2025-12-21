@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" 
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cinema.controllers.admin.schedule.ScheduleCalendarController"
+            fitToWidth="true"
+            styleClass="schedule-scroll"
+            stylesheets="@/styles/schedule-calendar.css">
+    
+    <VBox styleClass="content-container" spacing="25">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <!-- HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="20">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Text text="QUẢN LÝ LỊCH CHIẾU" styleClass="page-title"/>
+                <Text text="Xem và quản lý lịch chiếu phim theo ngày" styleClass="page-subtitle"/>
+            </VBox>
+            <Button text="+ Thêm Lịch Chiếu" styleClass="btn-add-schedule" 
+                    onAction="#openAddSchedule"/>
+        </HBox>
+        
+        <!-- FILTER BAR -->
+        <VBox styleClass="filter-bar" spacing="15">
+            <!-- Row 1: Date picker + Quick date buttons -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <VBox spacing="5">
+                    <Label text="Chọn ngày:" styleClass="filter-label"/>
+                    <HBox spacing="10">
+                        <Button text="◀" styleClass="btn-nav-date" onAction="#previousDay"/>
+                        <DatePicker fx:id="datePicker" styleClass="date-picker-field" 
+                                    promptText="Chọn ngày"
+                                    onAction="#onDateChanged"/>
+                        <Button text="▶" styleClass="btn-nav-date" onAction="#nextDay"/>
+                    </HBox>
+                </VBox>
+                
+                <VBox spacing="5">
+                    <Label text="Nhanh:" styleClass="filter-label"/>
+                    <HBox spacing="8">
+                        <Button text="Hôm nay" styleClass="btn-quick-date" onAction="#selectToday"/>
+                        <Button text="Ngày mai" styleClass="btn-quick-date" onAction="#selectTomorrow"/>
+                        <Button text="Tuần này" styleClass="btn-quick-date" onAction="#selectThisWeek"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+            
+            <!-- Row 2: Filters -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Rạp chiếu:" styleClass="filter-label"/>
+                    <ComboBox fx:id="cinemaFilter" styleClass="filter-combo" 
+                              promptText="Tất cả rạp" maxWidth="Infinity"/>
+                </VBox>
+                
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Phòng chiếu:" styleClass="filter-label"/>
+                    <ComboBox fx:id="screenFilter" styleClass="filter-combo" 
+                              promptText="Tất cả phòng" maxWidth="Infinity"/>
+                </VBox>
+                
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Phim:" styleClass="filter-label"/>
+                    <ComboBox fx:id="movieFilter" styleClass="filter-combo" 
+                              promptText="Tất cả phim" maxWidth="Infinity"/>
+                </VBox>
+                
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Tìm kiếm:" styleClass="filter-label"/>
+                    <TextField fx:id="searchField" styleClass="search-field" 
+                               promptText="Nhập tên phim..."/>
+                </VBox>
+                
+                <VBox spacing="5">
+                    <Label text=" " styleClass="filter-label"/>
+                    <HBox spacing="8">
+                        <Button text="Lọc" styleClass="btn-filter" onAction="#applyFilters"/>
+                        <Button text="Reset" styleClass="btn-reset" onAction="#resetFilters"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+        
+        <!-- SUMMARY -->
+        <HBox spacing="30" styleClass="summary-bar">
+            <VBox spacing="5" styleClass="summary-item">
+                <Label text="Tổng suất chiếu" styleClass="summary-label"/>
+                <Label fx:id="totalShowtimesLabel" text="0" styleClass="summary-value"/>
+            </VBox>
+            <VBox spacing="5" styleClass="summary-item">
+                <Label text="Đang chiếu" styleClass="summary-label"/>
+                <Label fx:id="ongoingShowtimesLabel" text="0" styleClass="summary-value-active"/>
+            </VBox>
+            <VBox spacing="5" styleClass="summary-item">
+                <Label text="Sắp chiếu" styleClass="summary-label"/>
+                <Label fx:id="upcomingShowtimesLabel" text="0" styleClass="summary-value-pending"/>
+            </VBox>
+            <VBox spacing="5" styleClass="summary-item">
+                <Label text="Đã chiếu" styleClass="summary-label"/>
+                <Label fx:id="completedShowtimesLabel" text="0" styleClass="summary-value-completed"/>
+            </VBox>
+        </HBox>
+        
+        <!-- TABLE -->
+        <VBox spacing="10" VBox.vgrow="ALWAYS">
+            <Label text="Danh sách lịch chiếu" styleClass="section-title"/>
+            
+            <TableView fx:id="showtimeTable" styleClass="schedule-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="dateCol" text="Ngày" prefWidth="100"/>
+                    <TableColumn fx:id="timeCol" text="Giờ chiếu" prefWidth="120"/>
+                    <TableColumn fx:id="movieCol" text="Phim" prefWidth="250"/>
+                    <TableColumn fx:id="cinemaCol" text="Rạp" prefWidth="150"/>
+                    <TableColumn fx:id="screenCol" text="Phòng" prefWidth="100"/>
+                    <TableColumn fx:id="durationCol" text="Thời lượng" prefWidth="100"/>
+                    <TableColumn fx:id="seatsCol" text="Ghế còn/Tổng" prefWidth="120"/>
+                    <TableColumn fx:id="statusCol" text="Trạng thái" prefWidth="120"/>
+                    <TableColumn fx:id="actionCol" text="Thao tác" prefWidth="200"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </VBox>
+</ScrollPane>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="0" 
+styleClass="content-container"
+xmlns:fx="http://javafx.com/fxml" 
+fx:controller="com.cinema.controllers.admin.fnb.FnbMenuController"
+stylesheets="@/styles/fnb-management.css">
+    
+    <!-- Header Section -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="header-section">
+        <padding>
+            <Insets top="30" right="30" bottom="20" left="30"/>
+        </padding>
+        
+        <Label text="QUẢN LÝ COMBO THỨC ĂN" styleClass="page-title"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button text="+ Thêm Combo Mới" styleClass="btn-primary" onAction="#openAddForm"/>
+    </HBox>
+    
+    
+    
+    <!-- Filter and Search Section -->
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="filter-section">
+        <padding>
+            <Insets top="20" right="30" bottom="20" left="30"/>
+        </padding>
+        
+        <Label text="Lọc theo:" styleClass="filter-label"/>
+        
+        <ComboBox fx:id="categoryFilter" promptText="Tất cả danh mục" prefWidth="180" styleClass="filter-combo"/>
+        
+        <ComboBox fx:id="statusFilter" promptText="Tất cả trạng thái" prefWidth="180" styleClass="filter-combo"/>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <TextField fx:id="searchField" promptText="Tìm kiếm theo tên..." prefWidth="250" styleClass="search-field"/>
+        <Button text="Tìm" styleClass="btn-search" onAction="#handleSearch"/>
+        <Button text="Làm mới" styleClass="btn-refresh" onAction="#handleRefresh"/>
+    </HBox>
+    
+    <!-- Statistics Cards -->
+    <HBox spacing="20" alignment="CENTER_LEFT" styleClass="stats-section">
+        <padding>
+            <Insets top="10" right="30" bottom="20" left="30"/>
+        </padding>
+        
+        <VBox spacing="5" styleClass="stat-card">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            <Label text="Tổng số combo" styleClass="stat-label"/>
+            <Label fx:id="totalComboLabel" text="0" styleClass="stat-value"/>
+        </VBox>
+        
+        <VBox spacing="5" styleClass="stat-card">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            <Label text="Đang bán" styleClass="stat-label"/>
+            <Label fx:id="availableComboLabel" text="0" styleClass="stat-value-success"/>
+        </VBox>
+        
+        <VBox spacing="5" styleClass="stat-card">
+            <padding>
+                <Insets top="15" right="20" bottom="15" left="20"/>
+            </padding>
+            <Label text="Tạm ẩn" styleClass="stat-label"/>
+            <Label fx:id="unavailableComboLabel" text="0" styleClass="stat-value-danger"/>
+        </VBox>
+    </HBox>
+    
+    <!-- Table Section -->
+    <VBox VBox.vgrow="ALWAYS" styleClass="table-section">
+        <padding>
+            <Insets top="10" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <TableView fx:id="comboTable" VBox.vgrow="ALWAYS" styleClass="fnb-table">
+            <columns>
+                <TableColumn fx:id="imageColumn" text="Ảnh" prefWidth="100" minWidth="100" maxWidth="100"/>
+                <TableColumn fx:id="nameColumn" text="Tên combo" prefWidth="250" minWidth="150"/>
+                <TableColumn fx:id="categoryColumn" text="Danh mục" prefWidth="150" minWidth="100"/>
+                <TableColumn fx:id="priceColumn" text="Giá" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="descriptionColumn" text="Mô tả" prefWidth="250" minWidth="150"/>
+                <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="actionColumn" text="Thao tác" prefWidth="180" minWidth="150"/>
+            </columns>
+            
+            <placeholder>
+                <VBox alignment="CENTER" spacing="10">
+                    <Label text="Chưa có combo nào" styleClass="empty-table-label"/>
+                    <Label text="Nhấn nút Thêm Combo Mới để bắt đầu" styleClass="empty-table-hint"/>
+                </VBox>
+            </placeholder>
+        </TableView>
+    </VBox>
+    
+</VBox>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" 
+    stylesheets="@/styles/cinema-styles.css, @/styles/seat-map-styles.css" 
+    fx:controller="com.cinema.controllers.admin.cinema.CinemaListController"
+    xmlns:fx="http://javafx.com/fxml">
+
+    <content>
+        <VBox spacing="25" styleClass="content-container">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="QUẢN LÝ RẠP CHIẾU PHIM" styleClass="page-title"/>
+                    <Label text="Quản lý thông tin các rạp và phòng chiếu" styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="+ Thêm Rạp Mới" onAction="#openCinemaForm" styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- Search & Filter -->
+            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-bar">
+                <TextField fx:id="searchField" promptText="Tìm kiếm rạp..." styleClass="search-field" prefWidth="300"/>
+                <ComboBox fx:id="cityFilter" promptText="Thành phố" styleClass="filter-combo" prefWidth="150"/>
+                <Button text="Tìm kiếm" onAction="#searchCinema" styleClass="btn-secondary"/>
+            </HBox>
+
+            <!-- Cinema Table -->
+            <TableView fx:id="cinemaTable"  styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="nameColumn" text="Tên Rạp" prefWidth="250"/>
+                    <TableColumn fx:id="cityColumn" text="Thành Phố" prefWidth="150"/>
+                    <TableColumn fx:id="addressColumn" text="Địa Chỉ" prefWidth="300"/>
+                    <TableColumn fx:id="screenCountColumn" text="Số Phòng" prefWidth="100" styleClass="center-column"/>
+                    <TableColumn fx:id="actionColumn" text="Thao Tác" prefWidth="180" styleClass="center-column"/>
+                </columns>
+
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10" style="-fx-padding: 40;">
+                        <Label text="📽️" style="-fx-font-size: 48px;"/>
+                        <Label text="Chưa có rạp nào" styleClass="placeholder-text"/>
+                        <Label text="Nhấn 'Thêm Rạp Mới' để bắt đầu" styleClass="placeholder-hint"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+
+<HBox alignment="CENTER_LEFT" spacing="20"
+      style="-fx-padding: 40 0 40 0;">
+    
+    <Region style="
+        -fx-border-color: #ff77aa;
+        -fx-border-width: 0 0 2 0;
+        -fx-border-style: segments(10, 7) line-cap round;
+        -fx-opacity: 0.7;"
+        HBox.hgrow="ALWAYS" />
+</HBox>
+
+
+
+            <!-- Header for Seat Map -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="QUẢN LÝ SƠ ĐỒ GHẾ" styleClass="page-title"/>
+                    <Label text="Thiết kế sơ đồ ghế cho các phòng chiếu" styleClass="page-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- Seat Map Section -->
+            <VBox spacing="20" styleClass="seat-map-section">
+
+                <!-- Configuration Panel -->
+                <HBox spacing="30" alignment="CENTER_LEFT" styleClass="config-panel">
+
+                    <!-- Dimensions Input -->
+                    <VBox spacing="10">
+                        <Label text="Kích thước phòng chiếu" styleClass="config-label"/>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="5">
+                                <Label text="Số hàng" styleClass="field-label-small"/>
+                                <TextField fx:id="rowsInput" promptText="8" prefWidth="80" styleClass="dimension-input"/>
+                            </VBox>
+                            <Label text="×" styleClass="multiply-symbol"/>
+                            <VBox spacing="5">
+                                <Label text="Số cột" styleClass="field-label-small"/>
+                                <TextField fx:id="colsInput" promptText="12" prefWidth="80" styleClass="dimension-input"/>
+                            </VBox>
+                            <Button text="Tạo lưới" onAction="#generateGrid" styleClass="btn-generate"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Seat Type Palette -->
+                    <VBox spacing="10">
+                        <Label text="Chọn loại ghế để tô màu" styleClass="config-label"/>
+                        <HBox spacing="12" styleClass="seat-palette">
+                            <Button fx:id="normalSeatBtn" text="Ghế Thường" onAction="#selectNormalSeat" styleClass="seat-type-btn, seat-normal-btn"/>
+                            <Button fx:id="vipSeatBtn" text="Ghế VIP" onAction="#selectVipSeat" styleClass="seat-type-btn, seat-vip-btn"/>
+                            <Button fx:id="coupleSeatBtn" text="Ghế Đôi" onAction="#selectCoupleSeat" styleClass="seat-type-btn, seat-couple-btn"/>
+                        </HBox>
+                        <Label text="Ô không tô màu = Lối đi" styleClass="hint-text"/>
+                    </VBox>
+
+                    <!-- Actions -->
+                    <VBox spacing="10" HBox.hgrow="ALWAYS" alignment="CENTER_RIGHT">
+                        <HBox spacing="10">
+                            <Button text="Đặt lại" onAction="#resetMap" styleClass="btn-reset"/>
+                            <Button text="Lưu sơ đồ" onAction="#saveSeatMap" styleClass="btn-save-map"/>
+                        </HBox>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Seat Map Grid Container -->
+                <VBox styleClass="seat-map-container" VBox.vgrow="ALWAYS">
+
+                    <!-- Screen Label -->
+                    <HBox alignment="CENTER" styleClass="screen-indicator">
+                        <Label text="🎬 MÀN HÌNH 🎬" styleClass="screen-label"/>
+                    </HBox>
+
+                    <!-- Grid ScrollPane -->
+                    <ScrollPane fx:id="gridScrollPane" styleClass="grid-scroll-pane" fitToWidth="true">
+                        <GridPane fx:id="seatGrid" styleClass="seat-grid" alignment="CENTER" hgap="5" vgap="5"/>
+                    </ScrollPane>
+
+                    <!-- Legend -->
+                    <HBox spacing="25" alignment="CENTER" styleClass="seat-legend">
+                        <HBox spacing="8" alignment="CENTER">
+                            <Label styleClass="legend-box, legend-normal"/>
+                            <Label text="Ghế Thường" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER">
+                            <Label styleClass="legend-box, legend-vip"/>
+                            <Label text="Ghế VIP" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER">
+                            <Label styleClass="legend-box, legend-couple"/>
+                            <Label text="Ghế Đôi" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="8" alignment="CENTER">
+                            <Label styleClass="legend-box, legend-empty"/>
+                            <Label text="Lối Đi" styleClass="legend-text"/>
+                        </HBox>
+                    </HBox>
+
+                </VBox>
+
+            </VBox>
+
+            <!-- Summary Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="30" styleClass="summary-bar">
+                <Label fx:id="totalCinemasLabel" text="Tổng số rạp: 0" styleClass="summary-label"/>
+                <Label fx:id="totalScreensLabel" text="Tổng số phòng: 0" styleClass="summary-label"/>
+            </HBox>
+
+        </VBox>
+    </content>
+</ScrollPane>

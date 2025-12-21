@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true"
+            styleClass="movie-scroll"
+            stylesheets="@/styles/movie-styles.css"
+            fx:controller="com.cinema.controllers.admin.movie.MovieListController"
+            xmlns:fx="http://javafx.com/fxml">
+
+
+    <content>
+        <VBox spacing="25" style="-fx-padding: 40;" styleClass="content-container">
+
+            <!-- Header -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="QUẢN LÝ PHIM" styleClass="page-title"/>
+                    <Label text="Quản lý danh sách phim trong hệ thống rạp" styleClass="page-subtitle"/>
+                </VBox>
+                <Button text="+ Thêm Phim Mới" onAction="#openAddMovie" styleClass="btn-primary"/>
+            </HBox>
+
+            <!-- Filter Bar -->
+            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-bar">
+                <TextField fx:id="searchField" promptText="🔍 Tìm theo tên phim..." 
+                           styleClass="input-dark" prefWidth="300"/>
+                
+                <ComboBox fx:id="statusFilter" promptText="Trạng thái" 
+                          styleClass="combo-dark" prefWidth="150"/>
+                
+                <ComboBox fx:id="ageFilter" promptText="Độ tuổi" 
+                          styleClass="combo-dark" prefWidth="120"/>
+                
+                <ComboBox fx:id="genreFilter" promptText="Thể loại" 
+                          styleClass="combo-dark" prefWidth="150"/>
+                
+                <Button text="Tìm kiếm" onAction="#searchMovies" styleClass="btn-secondary"/>
+                <Button text="Làm mới" onAction="#resetFilters" styleClass="btn-reset"/>
+            </HBox>
+
+            <!-- Movie Table -->
+            <TableView fx:id="movieTable" styleClass="data-table">
+                <columns>
+                    <TableColumn fx:id="titleCol" text="Tên Phim" prefWidth="220"/>
+                    <TableColumn fx:id="genresCol" text="Thể Loại" prefWidth="150"/>
+                    <TableColumn fx:id="durationCol" text="Thời Lượng" prefWidth="100" styleClass="center-column"/>
+                    <TableColumn fx:id="releaseCol" text="Ngày Phát Hành" prefWidth="130"/>
+                    <TableColumn fx:id="statusCol" text="Trạng Thái" prefWidth="120"/>
+                    <TableColumn fx:id="ageCol" text="Độ Tuổi" prefWidth="90" styleClass="center-column"/>
+                    <TableColumn fx:id="languageCol" text="Ngôn Ngữ" prefWidth="100"/>
+                    <TableColumn fx:id="ratingCol" text="Đánh Giá" prefWidth="100" styleClass="center-column"/>
+                    <TableColumn fx:id="actionCol" text="Thao Tác" prefWidth="200" styleClass="center-column"/>
+                </columns>
+
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10" style="-fx-padding: 40;">
+                        <Label text="🎬" style="-fx-font-size: 48px;"/>
+                        <Label text="Chưa có phim nào" styleClass="placeholder-text"/>
+                        <Label text="Nhấn 'Thêm Phim Mới' để bắt đầu" styleClass="placeholder-hint"/>
+                    </VBox>
+                </placeholder>
+            </TableView>
+
+            <!-- Summary Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="30" styleClass="summary-bar">
+                <Label fx:id="totalMoviesLabel" text="Tổng số phim: 0" styleClass="summary-label"/>
+                <Label fx:id="nowShowingLabel" text="Đang chiếu: 0" styleClass="summary-label"/>
+                <Label fx:id="comingSoonLabel" text="Sắp chiếu: 0" styleClass="summary-label"/>
+            </HBox>
+
+        </VBox>
+    </content>
+</ScrollPane>

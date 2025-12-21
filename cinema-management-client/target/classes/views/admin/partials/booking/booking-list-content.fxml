@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fx:id="bookingListScroll" styleClass="booking-scroll" stylesheets="/styles/admin-booking.css" 
+            fitToWidth="true"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/17"
+            fx:controller="com.cinema.controllers.admin.booking.BookingListController">
+    
+    <VBox styleClass="booking-container" spacing="25">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+        
+        <!-- HEADER -->
+        <HBox styleClass="booking-header" alignment="CENTER_LEFT">
+            <VBox>
+                <Label text="Quản lý đơn hàng" styleClass="booking-title"/>
+                <Label fx:id="bookingCountLabel" text="0 đơn hàng" styleClass="booking-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="refreshButton" text="Làm mới" styleClass="action-button, refresh-btn" onAction="#handleRefresh"/>
+            <Button fx:id="exportButton" text="Xuất Excel" styleClass="action-button, export-btn" onAction="#handleExport"/>
+        </HBox>
+        
+        <!-- STATS CARDS -->
+        <GridPane styleClass="stats-grid" hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+                <ColumnConstraints percentWidth="20"/>
+            </columnConstraints>
+            
+            <!-- Tổng đơn hàng -->
+            <VBox styleClass="stat-card, stat-total" GridPane.columnIndex="0">
+                <Label text="Tổng đơn hàng" styleClass="stat-label"/>
+                <Label fx:id="totalBookingsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+            
+            <!-- Doanh thu -->
+            <VBox styleClass="stat-card, stat-revenue" GridPane.columnIndex="1">
+                <Label text="Tổng doanh thu" styleClass="stat-label"/>
+                <Label fx:id="totalRevenueLabel" text="0đ" styleClass="stat-value"/>
+            </VBox>
+            
+            <!-- Đã thanh toán -->
+            <VBox styleClass="stat-card, stat-paid" GridPane.columnIndex="2">
+                <Label text="Đã thanh toán" styleClass="stat-label"/>
+                <Label fx:id="paidBookingsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+            
+            <!-- Chờ thanh toán -->
+            <VBox styleClass="stat-card, stat-pending" GridPane.columnIndex="3">
+                <Label text="Chờ thanh toán" styleClass="stat-label"/>
+                <Label fx:id="pendingBookingsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+            
+            <!-- Đã hủy -->
+            <VBox styleClass="stat-card, stat-cancelled" GridPane.columnIndex="4">
+                <Label text="Đã hủy" styleClass="stat-label"/>
+                <Label fx:id="cancelledBookingsLabel" text="0" styleClass="stat-value"/>
+            </VBox>
+        </GridPane>
+        
+        <!-- FILTER AND SEARCH SECTION -->
+        <VBox styleClass="filter-section" spacing="15">
+            
+            <!-- Search Bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Tìm kiếm theo mã đơn, tên KH, SĐT, email..." 
+                          styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="Tìm kiếm" styleClass="search-button" onAction="#handleSearch"/>
+            </HBox>
+            
+            <!-- Filters -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <!-- Trạng thái -->
+                <VBox spacing="5">
+                    <Label text="Trạng thái" styleClass="filter-label"/>
+                    <ComboBox fx:id="statusFilterCombo" styleClass="filter-combo" promptText="Tất cả"/>
+                </VBox>
+                
+                <!-- Ngày đặt -->
+                <VBox spacing="5">
+                    <Label text="Từ ngày" styleClass="filter-label"/>
+                    <DatePicker fx:id="fromDatePicker" styleClass="filter-date"/>
+                </VBox>
+                
+                <VBox spacing="5">
+                    <Label text="Đến ngày" styleClass="filter-label"/>
+                    <DatePicker fx:id="toDatePicker" styleClass="filter-date"/>
+                </VBox>
+                
+                <!-- Rạp -->
+                <VBox spacing="5">
+                    <Label text="Rạp" styleClass="filter-label"/>
+                    <ComboBox fx:id="cinemaFilterCombo" styleClass="filter-combo" promptText="Tất cả"/>
+                </VBox>
+                
+                <!-- Phim -->
+                <VBox spacing="5">
+                    <Label text="Phim" styleClass="filter-label"/>
+                    <ComboBox fx:id="movieFilterCombo" styleClass="filter-combo" promptText="Tất cả"/>
+                </VBox>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <!-- Clear Filters -->
+                <Button text="Xóa bộ lọc" styleClass="clear-filter-btn" onAction="#handleClearFilters"/>
+            </HBox>
+        </VBox>
+        
+        <!-- BOOKING TABLE -->
+        <VBox styleClass="table-container">
+            <TableView fx:id="bookingTable" styleClass="booking-table">
+                <columns>
+                    <TableColumn fx:id="bookingIdColumn" text="Mã đơn" prefWidth="90"/>
+                    <TableColumn fx:id="bookingTimeColumn" text="Ngày đặt" prefWidth="130"/>
+                    <TableColumn fx:id="movieColumn" text="Phim" prefWidth="180"/>
+                    <TableColumn fx:id="cinemaColumn" text="Rạp" prefWidth="150"/>
+                    <TableColumn fx:id="screenColumn" text="Phòng" prefWidth="70"/>
+                    <TableColumn fx:id="showtimeColumn" text="Suất chiếu" prefWidth="130"/>
+                    <TableColumn fx:id="customerColumn" text="Khách hàng" prefWidth="150"/>
+                    <TableColumn fx:id="phoneColumn" text="SĐT" prefWidth="110"/>
+                    <TableColumn fx:id="seatsColumn" text="Ghế" prefWidth="100"/>
+                    <TableColumn fx:id="totalPriceColumn" text="Tổng tiền" prefWidth="110"/>
+                    <TableColumn fx:id="statusColumn" text="Trạng thái" prefWidth="130"/>
+                    <TableColumn fx:id="actionsColumn" text="Thao tác" prefWidth="180"/>
+                </columns>
+            </TableView>
+            
+            <!-- Pagination -->
+            <HBox styleClass="pagination-bar" alignment="CENTER" spacing="10">
+                <Button fx:id="firstPageBtn" text="❮❮" styleClass="page-button" onAction="#handleFirstPage"/>
+                <Button fx:id="prevPageBtn" text="❮" styleClass="page-button" onAction="#handlePrevPage"/>
+                <Label fx:id="pageInfoLabel" text="Trang 1 / 1" styleClass="page-info"/>
+                <Button fx:id="nextPageBtn" text="❯" styleClass="page-button" onAction="#handleNextPage"/>
+                <Button fx:id="lastPageBtn" text="❯❯" styleClass="page-button" onAction="#handleLastPage"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Số dòng mỗi trang:" styleClass="page-label"/>
+                <ComboBox fx:id="rowsPerPageCombo" styleClass="rows-combo"/>
+            </HBox>
+        </VBox>
+        
+    </VBox>
+    
+</ScrollPane>

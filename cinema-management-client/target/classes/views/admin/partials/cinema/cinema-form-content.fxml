@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="form-container" stylesheets="@/styles/cinema-styles.css"
+    xmlns:fx="http://javafx.com/fxml" fx:controller="com.cinema.controllers.admin.cinema.CinemaFormController">
+
+    <!-- Form Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label fx:id="formTitleLabel" text="THÊM RẠP MỚI" styleClass="form-title"/>
+    </HBox>
+
+    <Separator styleClass="form-separator"/>
+
+    <!-- Form Fields -->
+    <ScrollPane fitToWidth="true" styleClass="form-scroll">
+        <VBox spacing="18" style="-fx-padding: 10;">
+
+            <!-- Logo Upload Section -->
+            <VBox spacing="10">
+                <Label text="Logo Rạp" styleClass="field-label-cinema"/>
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <StackPane styleClass="logo-preview-box">
+                        <ImageView fx:id="logoPreview" fitWidth="100" fitHeight="100" preserveRatio="true"/>
+
+                    </StackPane>
+                    <VBox spacing="8">
+                        <Button text="📁 Chọn Logo" onAction="#selectLogo" styleClass="btn-upload"/>
+                        <Label text="PNG, JPG (tối đa 2MB)" styleClass="hint-text"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+
+            <!-- Tên Rạp -->
+            <VBox spacing="8">
+                <Label text="Tên Rạp *" styleClass="field-label-cinema"/>
+                <TextField fx:id="nameField" promptText="VD: Galaxy Nguyễn Du" styleClass="form-input"/>
+            </VBox>
+
+            <!-- Thành Phố (ĐÃ SỬA) -->
+            <VBox spacing="8">
+                <Label text="Thành Phố *" styleClass="field-label-cinema"/>
+                <ComboBox fx:id="cityCombo" promptText="Chọn thành phố" styleClass="form-combo" prefWidth="Infinity"/>
+            </VBox>
+
+            <!-- Địa Chỉ -->
+            <VBox spacing="8">
+                <Label text="Địa Chỉ Chi Tiết *" styleClass="field-label-cinema"/>
+                <TextField fx:id="addressField" promptText="VD: 116 Nguyễn Du, Quận 1" styleClass="form-input"/>
+            </VBox>
+
+            <!-- Số Điện Thoại -->
+            <VBox spacing="8">
+                <Label text="Số Điện Thoại" styleClass="field-label-cinema"/>
+                <TextField fx:id="phoneField" promptText="VD: 1900 xxxx" styleClass="form-input"/>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <Separator styleClass="form-separator"/>
+
+    <!-- Action Buttons -->
+    <HBox spacing="15" alignment="CENTER">
+        <Button text="💾 Lưu Thông Tin" onAction="#saveCinema" styleClass="btn-save" prefWidth="150"/>
+        <Button text="✖ Hủy Bỏ" onAction="#closeModal" styleClass="btn-cancel" prefWidth="150"/>
+    </HBox>
+
+    <!-- Validation Message -->
+    <Label fx:id="validationLabel" styleClass="validation-error" managed="false" visible="false"/>
+
+</VBox>

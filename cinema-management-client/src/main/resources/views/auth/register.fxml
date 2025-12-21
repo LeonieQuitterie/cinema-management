@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.cinema.controllers.auth.RegisterController" prefWidth="480" prefHeight="720" style="-fx-background-color: #0f0f1a;" stylesheets="/styles/register.css">
+
+    <children>
+        <VBox alignment="CENTER" spacing="32" AnchorPane.leftAnchor="40" AnchorPane.rightAnchor="40" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+
+            <!-- Logo + App Name -->
+            <VBox alignment="CENTER" spacing="16" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets top="40" />
+                    <!-- Đây chính là lề trên cho CINEMA PRO -->
+                </padding>
+                <Label text="CINEMA PRO" styleClass="app-name-label" style="-fx-text-fill: #ffffff; -fx-font-size: 28px; -fx-font-weight: bold;"/>
+
+                <Label text="Tạo tài khoản mới" style="-fx-text-fill: #888899; -fx-font-size: 14px;"/>
+            </VBox>
+
+            <!-- Form Container -->
+            <VBox spacing="20" alignment="CENTER" style="-fx-background-color: #1a1a2e; -fx-background-radius: 20; -fx-padding: 40;" maxWidth="380" VBox.vgrow="ALWAYS">
+
+                <!-- Họ và tên -->
+                <StackPane>
+                    <TextField fx:id="fullNameField" promptText="Họ và tên" prefHeight="50" styleClass="text-field-icon"/>
+                    <FontIcon iconLiteral="fas-user" iconSize="18" iconColor="white" mouseTransparent="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </FontIcon>
+                </StackPane>
+
+                <!-- Tên đăng nhập -->
+                <StackPane>
+                    <TextField fx:id="usernameField" promptText="Tên đăng nhập" prefHeight="50" styleClass="text-field-icon"/>
+                    <FontIcon iconLiteral="fas-user-circle" iconSize="18" iconColor="white" mouseTransparent="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </FontIcon>
+                </StackPane>
+
+                <!-- Email -->
+                <StackPane>
+                    <TextField fx:id="emailField" promptText="Email" prefHeight="50" styleClass="text-field-icon"/>
+                    <FontIcon iconLiteral="fas-envelope" iconSize="18" iconColor="white" mouseTransparent="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </FontIcon>
+                </StackPane>
+
+                <!-- Mật khẩu -->
+                <StackPane>
+                    <PasswordField fx:id="passwordField" promptText="Mật khẩu" prefHeight="50" styleClass="text-field-icon"/>
+                    <FontIcon iconLiteral="fas-lock" iconSize="18" iconColor="white" mouseTransparent="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </FontIcon>
+                </StackPane>
+
+                <!-- Nhập lại mật khẩu -->
+                <StackPane>
+                    <PasswordField fx:id="confirmPasswordField" promptText="Nhập lại mật khẩu" prefHeight="50" styleClass="text-field-icon"/>
+                    <FontIcon iconLiteral="fas-lock" iconSize="18" iconColor="white" mouseTransparent="true" StackPane.alignment="CENTER_LEFT">
+                        <StackPane.margin>
+                            <Insets left="15"/>
+                        </StackPane.margin>
+                    </FontIcon>
+                </StackPane>
+
+                <!-- Thông báo lỗi / thành công -->
+                <Label fx:id="messageLabel" text="" textFill="#ff4466" visible="false" managed="true" wrapText="true" alignment="CENTER" style="-fx-font-size: 13px; -fx-padding: 8 0;"/>
+                <!-- Nút Đăng ký -->
+                <Button fx:id="registerButton" text="TẠO TÀI KHOẢN" prefHeight="52" prefWidth="Infinity" styleClass="login-button-primary" onAction="#handleRegister">
+                    <font>
+                        <Font size="16" name="System Bold"/>
+                    </font>
+                </Button>
+
+                <!-- Link quay lại đăng nhập -->
+                <HBox alignment="CENTER" spacing="8" style="-fx-padding: 15 0 0 0;">
+                    <Label text="Đã có tài khoản?" style="-fx-text-fill: #888899; -fx-font-size: 13px;"/>
+                    <Hyperlink text="Đăng nhập ngay" styleClass="hyperlink-flat" onAction="#handleBackToLogin"/>
+                </HBox>
+
+            </VBox>
+
+            <!-- Footer -->
+            <Label text="© 2025 Cinema Pro - Phần mềm quản lý rạp phim" style="-fx-text-fill: #444455; -fx-font-size: 11px;" VBox.vgrow="ALWAYS"/>
+
+        </VBox>
+    </children>
+</AnchorPane>

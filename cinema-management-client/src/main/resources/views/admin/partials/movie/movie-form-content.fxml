@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true"
+            stylesheets="@/styles/movie-styles.css"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cinema.controllers.admin.movie.MovieFormController">
+
+    <content>
+        <VBox spacing="20" style="-fx-padding: 30;" styleClass="form-container">
+
+            <Label fx:id="formTitleLabel" text="THÊM PHIM MỚI" styleClass="form-title"/>
+
+            <!-- Basic Info Section -->
+            <VBox spacing="15" styleClass="form-section">
+                <Label text="THÔNG TIN CƠ BẢN" styleClass="section-header"/>
+                
+                <VBox spacing="8">
+                    <Label text="Tên phim *" styleClass="field-label"/>
+                    <TextField fx:id="titleField" promptText="VD: Avengers: Endgame" 
+                               styleClass="input-field"/>
+                </VBox>
+
+                <VBox spacing="8">
+                    <Label text="Mô tả phim *" styleClass="field-label"/>
+                    <TextArea fx:id="descField" promptText="Nhập mô tả chi tiết về phim..." 
+                              prefRowCount="4" wrapText="true" styleClass="textarea-field"/>
+                </VBox>
+
+                <HBox spacing="15">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Thời lượng (phút) *" styleClass="field-label"/>
+                        <TextField fx:id="durationField" promptText="VD: 120" styleClass="input-field"/>
+                    </VBox>
+                    
+                </HBox>
+
+                <HBox spacing="15">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Trạng thái *" styleClass="field-label"/>
+                        <ComboBox fx:id="statusBox" promptText="Chọn trạng thái" 
+                                  styleClass="combo-field" maxWidth="Infinity"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Độ tuổi *" styleClass="field-label"/>
+                        <ComboBox fx:id="ageBox" promptText="VD: C16" 
+                                  styleClass="combo-field" maxWidth="Infinity"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Ngôn ngữ *" styleClass="field-label"/>
+                        <TextField fx:id="languageField" promptText="VD: Tiếng Anh" 
+                                   styleClass="input-field"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- Genre Section -->
+            <VBox spacing="15" styleClass="form-section">
+                <Label text="THỂ LOẠI PHIM" styleClass="section-header"/>
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <TextField fx:id="genreInputField" promptText="Nhập thể loại (VD: Hành động)" 
+                               styleClass="input-field" HBox.hgrow="ALWAYS"/>
+                    <Button text="Thêm" onAction="#addGenre" styleClass="btn-secondary"/>
+                </HBox>
+                
+                <ListView fx:id="genreListView" prefHeight="100" styleClass="list-view-field"/>
+            </VBox>
+
+            <!-- Media Section -->
+            <VBox spacing="15" styleClass="form-section">
+                <Label text="HÌNH ẢNH  VIDEO" styleClass="section-header"/>
+                
+                <VBox spacing="8">
+                    <Label text="URL Poster *" styleClass="field-label"/>
+                    <TextField fx:id="posterField" promptText="https://example.com/poster.jpg" 
+                               styleClass="input-field"/>
+                </VBox>
+
+                <VBox spacing="8">
+                    <Label text="URL Trailer" styleClass="field-label"/>
+                    <TextField fx:id="trailerField" promptText="https://youtube.com/watch?v=..." 
+                               styleClass="input-field"/>
+                </VBox>
+            </VBox>
+
+            <!-- Actors Section -->
+            <VBox spacing="15" styleClass="form-section">
+                <Label text="DIỄN VIÊN" styleClass="section-header"/>
+                
+                <HBox spacing="10">
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Tên diễn viên" styleClass="field-label"/>
+                        <TextField fx:id="actorNameField" promptText="VD: Robert Downey Jr." 
+                                   styleClass="input-field"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" HBox.hgrow="ALWAYS">
+                        <Label text="Vai diễn" styleClass="field-label"/>
+                        <TextField fx:id="actorRoleField" promptText="VD: Iron Man" 
+                                   styleClass="input-field"/>
+                    </VBox>
+                    
+                    <VBox spacing="8" alignment="BOTTOM_LEFT">
+                        <Button text="Thêm diễn viên" onAction="#addActor" styleClass="btn-secondary"/>
+                    </VBox>
+                </HBox>
+                
+                <ListView fx:id="actorListView" prefHeight="120" styleClass="list-view-field"/>
+            </VBox>
+
+            <!-- Additional Info -->
+            <VBox spacing="15" styleClass="form-section">
+                <Label text="THÔNG TIN BỔ SUNG" styleClass="section-header"/>
+                
+                <VBox spacing="8">
+                    <Label text="Mô tả độ tuổi" styleClass="field-label"/>
+                    <TextField fx:id="ageDescField" 
+                               promptText="VD: Phim dành cho khán giả từ 16 tuổi trở lên" 
+                               styleClass="input-field"/>
+                </VBox>
+            </VBox>
+
+            <!-- Action Buttons -->
+            <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                <Button text="Hủy" onAction="#close" styleClass="btn-cancel"/>
+                <Button text="Lưu Phim" onAction="#save" styleClass="btn-primary"/>
+            </HBox>
+
+        </VBox>
+    </content>
+</ScrollPane>

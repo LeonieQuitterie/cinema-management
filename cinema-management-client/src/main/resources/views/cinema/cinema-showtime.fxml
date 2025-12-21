@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+    xmlns:fx="http://javafx.com/fxml/1" styleClass="main-container" stylesheets="@../../styles/cinema-showtime.css" fx:controller="com.cinema.controllers.cinema.CinemaShowTimeController">
+
+    <!-- HEADER: Back Button + Cinema Name -->
+    <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="20" right="100" bottom="20" left="100"/>
+        </padding>
+
+
+        <Button fx:id="backButton" styleClass="back-button" text="←" onAction="#handleBackButton">
+            <font>
+                <javafx.scene.text.Font size="24"/>
+            </font>
+        </Button>
+
+        <Label fx:id="cinemaNameLabel" text="CGV Vincom Đà Nẵng - Phòng 1" styleClass="cinema-name-header">
+            <font>
+                <javafx.scene.text.Font name="System Bold" size="18"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <!-- MAIN CONTENT - ScrollPane -->
+    <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="100" bottom="50" left="100"/>
+            </padding>
+
+            <!-- DATE FILTER SECTION -->
+            <VBox spacing="10">
+                <Label text="Chọn ngày chiếu" styleClass="section-label"/>
+
+                <ScrollPane fitToHeight="true" fitToWidth="false" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER" pannable="true" styleClass="filter-scroll" fx:id="dateScrollPane">
+
+                    <HBox fx:id="dateContainer" spacing="10" styleClass="filter-container" alignment="CENTER_LEFT">
+                        <padding>
+                            <Insets top="10" right="10" bottom="10" left="0"/>
+                        </padding>
+                    </HBox>
+                </ScrollPane>
+            </VBox>
+
+            <!-- TIME FILTER SECTION -->
+            <VBox spacing="10">
+                <Label text="Khung giờ chiếu" styleClass="section-label"/>
+                <ScrollPane fitToHeight="true" styleClass="filter-scroll">
+                    <HBox fx:id="timeSlotContainer" spacing="10" styleClass="filter-container">
+                        <padding>
+                            <Insets top="5" bottom="5"/>
+                        </padding>
+                    </HBox>
+                </ScrollPane>
+            </VBox>
+
+            <!-- CINEMA CHAIN FILTER -->
+            <VBox spacing="10">
+                <Label text="Chọn cụm rạp" styleClass="section-label"/>
+                <ScrollPane fitToHeight="true" styleClass="filter-scroll">
+                    <HBox spacing="15" styleClass="filter-container">
+                        <padding>
+                            <Insets top="5" bottom="5"/>
+                        </padding>
+
+                        <!-- Cinema Logo 1 - CGV -->
+                        <VBox styleClass="cinema-logo-button, cinema-logo-selected" alignment="CENTER">
+                            <padding>
+                                <Insets top="10" right="15" bottom="10" left="15"/>
+                            </padding>
+                            <Label text="CGV" styleClass="cinema-logo-text">
+                                <font>
+                                    <javafx.scene.text.Font name="System Bold" size="16"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Cinema Logo 2 - Lotte -->
+                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
+                            <padding>
+                                <Insets top="10" right="15" bottom="10" left="15"/>
+                            </padding>
+                            <Label text="LOTTE" styleClass="cinema-logo-text">
+                                <font>
+                                    <javafx.scene.text.Font name="System Bold" size="16"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Cinema Logo 3 - Galaxy -->
+                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
+                            <padding>
+                                <Insets top="10" right="15" bottom="10" left="15"/>
+                            </padding>
+                            <Label text="GALAXY" styleClass="cinema-logo-text">
+                                <font>
+                                    <javafx.scene.text.Font name="System Bold" size="16"/>
+                                </font>
+                            </Label>
+                        </VBox>
+
+                        <!-- Cinema Logo 4 - BHD -->
+                        <VBox styleClass="cinema-logo-button" alignment="CENTER">
+                            <padding>
+                                <Insets top="10" right="15" bottom="10" left="15"/>
+                            </padding>
+                            <Label text="BHD STAR" styleClass="cinema-logo-text">
+                                <font>
+                                    <javafx.scene.text.Font name="System Bold" size="14"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                    </HBox>
+                </ScrollPane>
+            </VBox>
+
+            <!-- LOCATION FILTER -->
+            <HBox spacing="15" alignment="CENTER_RIGHT">
+
+                <ComboBox promptText="Chọn khu vực" styleClass="location-combo" prefWidth="250">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <java.lang.String fx:value="Đà Nẵng"/>
+                            <java.lang.String fx:value="Hà Nội"/>
+                            <java.lang.String fx:value="TP. Hồ Chí Minh"/>
+                            <java.lang.String fx:value="Cần Thơ"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+
+
+            <!-- DIVIDER -->
+            <Separator styleClass="section-divider"/>
+
+            <!-- CINEMA LISTINGS -->
+            <VBox spacing="25" styleClass="cinema-listings" fx:id="cinemaListingsContainer">
+
+                <!-- Các rạp sẽ được thêm động ở đây bởi Controller -->
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+</VBox>

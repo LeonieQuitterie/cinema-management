@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.DropShadow?>
+
+
+<VBox xmlns="http://javafx.com/javafx/17"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cinema.controllers.cinema.ComboSelectionController" styleClass="main-container" stylesheets="@../../styles/combo-selection.css">
+
+    <!-- HEADER: Back Button + Title -->
+    <HBox styleClass="header-bar" spacing="15" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="20" right="100" bottom="20" left="100"/>
+        </padding>
+
+        <Button fx:id="backButton" styleClass="back-button" text="←" onAction="#handleBackButton">
+            <font>
+                <javafx.scene.text.Font size="24"/>
+            </font>
+        </Button>
+
+        <Label text="Combo - Bắp nước" styleClass="page-title-header">
+            <font>
+                <javafx.scene.text.Font name="System Bold" size="18"/>
+            </font>
+        </Label>
+    </HBox>
+
+    <!-- MAIN CONTENT SCROLL -->
+    <ScrollPane fitToWidth="true" styleClass="scroll-pane" VBox.vgrow="ALWAYS">
+        <VBox spacing="25" styleClass="content-container">
+            <padding>
+                <Insets top="20" right="100" bottom="20" left="100"/>
+            </padding>
+
+            <!-- WELCOME MESSAGE -->
+            <VBox spacing="8" alignment="CENTER" styleClass="welcome-section">
+                <Label text="Bắp thơm nước ngọt" styleClass="welcome-title">
+                    <font>
+                        <javafx.scene.text.Font name="System Bold" size="22"/>
+                    </font>
+                </Label>
+                <Label text="Mời bạn xơi nha" styleClass="welcome-subtitle">
+                    <font>
+                        <javafx.scene.text.Font size="16"/>
+                    </font>
+                </Label>
+            </VBox>
+
+            <!-- COMBO GRID -->
+            <VBox spacing="15">
+
+
+
+                <FlowPane fx:id="comboFlowPane" hgap="20" vgap="20" styleClass="combo-grid">
+                    <!-- Combo cards will be added dynamically -->
+                </FlowPane>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- FOOTER: Price Summary + Continue Button -->
+    <VBox styleClass="footer-bar" spacing="15">
+        <padding>
+            <Insets top="20" right="100" bottom="20" left="100"/>
+        </padding>
+
+        <!-- Order Summary -->
+        <VBox spacing="8">
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="Vé phim:" styleClass="price-breakdown-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="ticketPriceLabel" text="0 đ" styleClass="price-breakdown-value"/>
+            </HBox>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="Combo:" styleClass="price-breakdown-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="comboPriceLabel" text="0 đ" styleClass="price-breakdown-value"/>
+            </HBox>
+
+            <Separator styleClass="price-separator"/>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Label text="Tạm tính" styleClass="total-label">
+                    <font>
+                        <javafx.scene.text.Font name="System Bold" size="16"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="totalPriceLabel" text="0 đ" styleClass="total-price-label">
+                    <font>
+                        <javafx.scene.text.Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+
+        <!-- Continue Button -->
+        <Button fx:id="continueButton" text="TIẾP TỤC" styleClass="login-button-primary" onAction="#handleContinue" maxWidth="Infinity">
+            <font>
+                <javafx.scene.text.Font name="System Bold" size="16"/>
+            </font>
+            <padding>
+                <Insets top="15" bottom="15"/>
+            </padding>
+        </Button>
+    </VBox>
+
+</VBox>

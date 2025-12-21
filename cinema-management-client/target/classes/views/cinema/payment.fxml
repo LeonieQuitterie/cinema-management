@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cinema.controllers.cinema.PaymentController"
+            styleClass="payment-root"
+            stylesheets="@../../styles/payment.css">
+
+    <!-- HEADER với nút Back -->
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar" spacing="15">
+            <padding>
+                <Insets top="20" right="100" bottom="20" left="100"/>
+            </padding>
+
+            <Button fx:id="backButton" styleClass="back-button" text="←" onAction="#handleBack"/>
+       
+
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="payment-scroll">
+            <VBox styleClass="payment-container" spacing="30" alignment="TOP_CENTER">
+            <padding>
+                <Insets top="20" right="100" bottom="50" left="100"/>
+            </padding>
+            
+                <!-- TIÊU ĐỀ -->
+                <VBox alignment="CENTER" spacing="15">
+                    <Label text="Thanh toán đơn hàng" styleClass="payment-title"/>
+                    
+                    <!-- MÃ ĐẶT VÉ -->
+                    <HBox alignment="CENTER" spacing="10" styleClass="booking-code-container">
+                        <Label text="Mã đặt vé:" styleClass="booking-code-label"/>
+                        <Label fx:id="bookingCodeLabel" text="BOOK20251209001" styleClass="booking-code-value"/>
+                    </HBox>
+                </VBox>
+
+                <!-- LAYOUT CHÍNH: 2 cột -->
+                <HBox spacing="20" alignment="TOP_CENTER">
+                    
+                    <!-- CỘT TRÁI: THÔNG TIN ĐỚN HÀNG -->
+                    <VBox spacing="20" styleClass="order-summary-section" HBox.hgrow="SOMETIMES">
+                        <Label text="Thông tin đơn hàng" styleClass="section-title"/>
+                        
+                        <!-- THÔNG TIN PHIM -->
+                        <HBox spacing="15" styleClass="movie-info-box">
+                            <ImageView fx:id="moviePosterImage" fitWidth="100" fitHeight="140" 
+                                       preserveRatio="true" styleClass="movie-poster"/>
+                            
+                            <VBox spacing="12" VBox.vgrow="ALWAYS">
+                                <Label fx:id="movieTitleLabel" text="Võ Sĩ Giác Đấu II" 
+                                       styleClass="movie-title-label" wrapText="true"/>
+                                
+                                <VBox spacing="6">
+                                    <HBox spacing="8">
+                                        <Label text="📍" styleClass="info-icon"/>
+                                        <Label fx:id="cinemaInfoLabel" text="CGV Vincom • Phòng 5" 
+                                               styleClass="info-label" wrapText="true"/>
+                                    </HBox>
+                                    
+                                    <HBox spacing="8">
+                                        <Label text="🕐" styleClass="info-icon"/>
+                                        <Label fx:id="showtimeLabel" text="Thứ 3, 09/12/2025 – 20:20" 
+                                               styleClass="info-label" wrapText="true"/>
+                                    </HBox>
+                                    
+                                    <HBox spacing="8">
+                                        <Label text="🎫" styleClass="info-icon"/>
+                                        <Label fx:id="seatsLabel" text="H13" 
+                                               styleClass="info-label" wrapText="true"/>
+                                    </HBox>
+                                    
+                                    <HBox spacing="8">
+                                        <Label text="🍿" styleClass="info-icon"/>
+                                        <Label fx:id="combosLabel" text="Combo Couple ×1, Combo Solo ×2" 
+                                               styleClass="info-label" wrapText="true"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- TỔNG TIỀN -->
+                        <Separator styleClass="payment-separator"/>
+                        
+                        <HBox alignment="CENTER" styleClass="total-price-box">
+                            <Label text="TỔNG TIỀN: " styleClass="total-label"/>
+                            <Label fx:id="totalPriceLabel" text="405.000 đ" styleClass="total-price"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- CỘT PHẢI: THÔNG TIN THANH TOÁN -->
+                    <VBox spacing="25" styleClass="payment-section" HBox.hgrow="SOMETIMES" alignment="CENTER">
+                        
+                        <!-- HƯỚNG DẪN -->
+                        <VBox spacing="10" styleClass="instruction-box">
+                            <Label text="Hướng dẫn thanh toán" styleClass="instruction-title"/>
+                            <Label text="Quý khách vui lòng thanh toán chính xác số tiền bằng một trong các cách sau:" 
+                                   styleClass="instruction-text" wrapText="true"/>
+                        </VBox>
+                        
+                        <!-- MÃ QR SIÊU TO -->
+                        <VBox alignment="CENTER" spacing="15" styleClass="qr-container">
+                            <ImageView fx:id="qrCodeImage" fitWidth="350" fitHeight="350" 
+                                       preserveRatio="true" styleClass="qr-image"/>
+                            <Label text="Quét mã QR để thanh toán" styleClass="qr-instruction"/>
+                        </VBox>
+                        
+                        <!-- THÔNG TIN CHUYỂN KHOẢN -->
+                        <VBox spacing="12" styleClass="bank-info-box">
+                            <Label text="Thông tin chuyển khoản" styleClass="bank-info-title"/>
+                            
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Ngân hàng:" styleClass="bank-label"/>
+                                <Label fx:id="bankNameLabel" text="Vietcombank" styleClass="bank-value"/>
+                            </HBox>
+                            
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Chủ tài khoản:" styleClass="bank-label"/>
+                                <Label fx:id="accountHolderLabel" text="CÔNG TY TNHH CINEMA PRO" 
+                                       styleClass="bank-value" wrapText="true"/>
+                            </HBox>
+                            
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Số tài khoản:" styleClass="bank-label"/>
+                                <Label fx:id="accountNumberLabel" text="9999 8888 7777" styleClass="bank-value"/>
+                            </HBox>
+                            
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Nội dung CK:" styleClass="bank-label"/>
+                                <Label fx:id="transferContentLabel" text="BOOK20251209001" styleClass="bank-value-highlight"/>
+                                <Button fx:id="copyButton" text="📋 Copy" styleClass="copy-button" onAction="#handleCopyTransferContent"/>
+                            </HBox>
+                            
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Số tiền:" styleClass="bank-label"/>
+                                <Label fx:id="amountLabel" text="405.000 đ" styleClass="bank-value-amount"/>
+                            </HBox>
+                        </VBox>
+                        
+                        <!-- ĐỒNG HỒ ĐẾM NGƯỢC -->
+                        <HBox alignment="CENTER" spacing="10" styleClass="countdown-box">
+                            <Label text="⏱" styleClass="countdown-icon"/>
+                            <Label text="Vui lòng thanh toán trong vòng:" styleClass="countdown-label"/>
+                            <Label fx:id="countdownLabel" text="14:59" styleClass="countdown-time"/>
+                        </HBox>
+                        
+                        <!-- NÚT XÁC NHẬN -->
+                        <Button fx:id="confirmPaymentButton" text="✓ Tôi đã thanh toán xong" 
+                                styleClass="confirm-payment-button" onAction="#handleConfirmPayment"/>
+                        
+                        <!-- WARNING -->
+                        <Label text="⚠ Lưu ý: Vui lòng chuyển khoản đúng nội dung để hệ thống tự động xác nhận" 
+                               styleClass="warning-text" wrapText="true"/>
+                    </VBox>
+                    
+                </HBox>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+</BorderPane>

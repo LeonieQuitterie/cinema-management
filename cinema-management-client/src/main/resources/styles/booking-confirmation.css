@@ -1,0 +1,325 @@
+/* Root */
+.root-pane {
+    -fx-background-color: #0a0e27;
+}
+
+/* Header */
+.header-bar {
+    -fx-background-color: #16213e;
+    -fx-border-color: #334466;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8888ff;
+    -fx-font-size: 28px;
+    -fx-cursor: hand;
+    -fx-padding: 5 15 5 0;
+    -fx-background-radius: 8;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(136, 136, 255, 0.1);
+}
+
+/* Scroll Pane */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 5;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #334466;
+    -fx-background-radius: 5;
+}
+
+/* Content */
+.content-container {
+    -fx-background-color: #0a0e27;
+}
+
+/* Warning Box */
+.warning-box {
+    -fx-background-color: rgba(255, 193, 7, 0.1);
+    -fx-border-color: #ffc107;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+
+.warning-icon {
+    -fx-text-fill: #ffc107;
+    -fx-font-size: 24px;
+}
+
+.warning-title {
+    -fx-text-fill: #ffc107;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.warning-text {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+    -fx-line-spacing: 2;
+}
+
+/* Main Info Container */
+.main-info-container {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 30;
+}
+
+/* Movie Info Section */
+.movie-info-section {
+    -fx-spacing: 20;
+}
+
+.poster-container {
+    /* Không cần background, không padding */
+}
+
+/* Đẩy hết bo góc + nền + bóng vào chính ImageView */
+.poster-container > ImageView {
+    -fx-background-color: #0a0e27;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0.3, 0, 5);
+}
+
+.movie-poster {
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0.3, 0, 5);
+}
+
+.cinema-logo {
+    -fx-background-radius: 8;
+}
+
+.cinema-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.movie-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
+.age-rating-badge {
+    -fx-background-color: #ff3366;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 6;
+}
+
+.age-rating-desc {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
+.divider-line {
+    -fx-stroke: #334466;
+    -fx-stroke-width: 1;
+}
+
+.divider-line-thin {
+    -fx-stroke: #334466;
+    -fx-stroke-width: 0.5;
+}
+
+.info-icon {
+    -fx-font-size: 20px;
+}
+
+.info-label {
+    -fx-text-fill: #888888;
+    -fx-font-size: 12px;
+}
+
+.info-value {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+}
+
+.info-value-small {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+/* Section Title */
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Combo Item */
+.combo-item-box {
+    -fx-background-color: #0a0e27;
+    -fx-background-radius: 10;
+    -fx-padding: 12;
+    -fx-border-color: #334466;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.combo-image {
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0.2, 0, 3);
+}
+
+.combo-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.combo-quantity {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 13px;
+}
+
+.combo-price {
+    -fx-text-fill: #ff3366;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* Payment Section */
+.payment-section {
+    -fx-spacing: 20;
+}
+
+.customer-info-box {
+    -fx-background-color: #0a0e27;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-border-color: #334466;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.edit-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8888ff;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+    -fx-border-color: #8888ff;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 6 15 6 15;
+}
+
+.edit-button:hover {
+    -fx-background-color: rgba(136, 136, 255, 0.1);
+    -fx-text-fill: #aaaaff;
+    -fx-border-color: #aaaaff;
+}
+
+.field-label {
+    -fx-text-fill: #888888;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+}
+
+.field-value {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Terms Box */
+.terms-box {
+    -fx-background-color: rgba(136, 136, 255, 0.05);
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #8888ff;
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+}
+
+.terms-text {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 12px;
+    -fx-line-spacing: 2;
+}
+
+/* Payment Summary */
+.payment-summary-box {
+    -fx-background-color: #0a0e27;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-border-color: #334466;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.summary-label {
+    -fx-text-fill: #aaaaaa;
+    -fx-font-size: 14px;
+}
+
+.summary-value {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.total-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.total-value {
+    -fx-text-fill: #ff3366;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Continue Button */
+.continue-button {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-padding: 15 0 15 0;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 12, 0, 0, 4);
+}
+
+.continue-button:hover {
+    -fx-background-color: linear-gradient(to right, #ff4466, #ff8877);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}

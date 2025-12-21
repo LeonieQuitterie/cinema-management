@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cinema.controllers.admin.schedule.ScheduleFormController"
+            styleClass="schedule-form-container"
+            stylesheets="@/styles/schedule-form.css">
+    
+    <!-- HEADER -->
+    <top>
+        <VBox styleClass="form-header" spacing="8">
+            <VBox.margin>
+                <Insets top="20" right="20" left="20"/>
+            </VBox.margin>
+            <Text text="THÊM LỊCH CHIẾU MỚI" styleClass="form-main-title"/>
+            <Text text="Thêm lịch chiếu hàng loạt cho nhiều rạp, phòng và ngày" styleClass="form-main-subtitle"/>
+        </VBox>
+    </top>
+    
+    <!-- MAIN CONTENT -->
+    <center>
+        <ScrollPane styleClass="schedule-form-scroll" fitToWidth="true">
+            <VBox spacing="20">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+                
+                <!-- STEP 1: CHỌN PHIM -->
+                <VBox styleClass="form-section" spacing="15">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="1" styleClass="step-number"/>
+                        <VBox spacing="3">
+                            <Text text="Chọn Phim" styleClass="section-header-text"/>
+                            <Text text="Tìm và chọn phim cần tạo lịch chiếu" styleClass="section-description"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="8">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label text="Tên phim" styleClass="schedule-field-label"/>
+                            <Label text="*" styleClass="required-mark"/>
+                        </HBox>
+                        <TextField fx:id="movieSearchField" styleClass="autocomplete-field"
+                                   promptText="Nhập tên phim để tìm kiếm..."/>
+                        <ListView fx:id="movieSuggestionsList" styleClass="autocomplete-popup"
+                                  visible="false" managed="false" prefHeight="150"/>
+                    </VBox>
+                    
+                    <!-- Movie Info Card (shown after selection) -->
+                    <VBox fx:id="movieInfoCard" styleClass="movie-info-card" spacing="10"
+                          visible="false" managed="false">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label fx:id="selectedMovieTitle" styleClass="movie-title-selected"/>
+                                <Label fx:id="selectedMovieGenres" styleClass="movie-info-text"/>
+                            </VBox>
+                            <VBox spacing="3" alignment="CENTER">
+                                <Label text="Thời lượng" styleClass="movie-info-text"/>
+                                <Label fx:id="selectedMovieDuration" styleClass="movie-duration-text"/>
+                            </VBox>
+                        </HBox>
+                        <Button text="✕ Chọn phim khác" styleClass="btn-remove-time"
+                                onAction="#clearMovieSelection"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- STEP 2: CHỌN RẠP -->
+                <VBox styleClass="form-section" spacing="15">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="2" styleClass="step-number"/>
+                        <VBox spacing="3">
+                            <Text text="Chọn Rạp Chiếu" styleClass="section-header-text"/>
+                            <Text text="Chọn một hoặc nhiều rạp để áp dụng lịch chiếu" styleClass="section-description"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="8">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label text="Danh sách rạp" styleClass="schedule-field-label"/>
+                            <Label text="*" styleClass="required-mark"/>
+                        </HBox>
+                        <ListView fx:id="cinemaListView" styleClass="selection-list"
+                                  prefHeight="180"/>
+                    </VBox>
+                    
+                    <HBox styleClass="selection-summary" spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Đã chọn:" styleClass="summary-text"/>
+                        <Label fx:id="selectedCinemasCount" text="0" styleClass="summary-count"/>
+                        <Label text="rạp" styleClass="summary-text"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- STEP 3: CHỌN PHÒNG -->
+                <VBox styleClass="form-section" spacing="15">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="3" styleClass="step-number"/>
+                        <VBox spacing="3">
+                            <Text text="Chọn Phòng Chiếu" styleClass="section-header-text"/>
+                            <Text text="Chọn phòng từ các rạp đã chọn ở bước 2" styleClass="section-description"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="8">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label text="Danh sách phòng" styleClass="schedule-field-label"/>
+                            <Label text="*" styleClass="required-mark"/>
+                        </HBox>
+                        <ListView fx:id="screenListView" styleClass="selection-list"
+                                  prefHeight="180"/>
+                    </VBox>
+                    
+                    <HBox styleClass="selection-summary" spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Đã chọn:" styleClass="summary-text"/>
+                        <Label fx:id="selectedScreensCount" text="0" styleClass="summary-count"/>
+                        <Label text="phòng" styleClass="summary-text"/>
+                    </HBox>
+                </VBox>
+                
+                <!-- STEP 4: ĐỊNH DẠNG -->
+                <VBox styleClass="form-section" spacing="15">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="4" styleClass="step-number"/>
+                        <VBox spacing="3">
+                            <Text text="Định Dạng Chiếu" styleClass="section-header-text"/>
+                            <Text text="Chọn định dạng chiếu chung cho tất cả suất" styleClass="section-description"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="8">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <Label text="Định dạng" styleClass="schedule-field-label"/>
+                            <Label text="*" styleClass="required-mark"/>
+                        </HBox>
+                        <ComboBox fx:id="formatCombo" styleClass="format-combo"
+                                  promptText="Chọn định dạng chiếu" maxWidth="Infinity"/>
+                    </VBox>
+                </VBox>
+                
+                <!-- STEP 5: NGÀY VÀ GIỜ CHIẾU -->
+                <VBox styleClass="form-section" spacing="15">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="5" styleClass="step-number"/>
+                        <VBox spacing="3">
+                            <Text text="Ngày và Giờ Chiếu" styleClass="section-header-text"/>
+                            <Text text="Thêm các ngày chiếu và khung giờ" styleClass="section-description"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- Date Schedule List Container -->
+                    <VBox fx:id="dateScheduleContainer" spacing="12"/>
+                    
+                    <!-- Add Date Button -->
+                    <Button text="+ Thêm Ngày Chiếu" styleClass="btn-add-date"
+                            onAction="#addDateSchedule" maxWidth="Infinity"/>
+                </VBox>
+                
+                <!-- PREVIEW SECTION -->
+                <VBox fx:id="previewSection" styleClass="preview-section" spacing="15"
+                      visible="false" managed="false">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="XEM TRƯỚC LỊCH CHIẾU" styleClass="preview-title"/>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="Tổng cộng:" styleClass="summary-text"/>
+                                <Label fx:id="totalShowtimesPreview" text="0" styleClass="preview-count"/>
+                                <Label text="suất chiếu sẽ được tạo" styleClass="summary-text"/>
+                            </HBox>
+                        </VBox>
+                        <Button text="✕ Đóng" styleClass="btn-remove-time"
+                                onAction="#closePreview"/>
+                    </HBox>
+                    
+                    <ListView fx:id="previewList" styleClass="preview-list" prefHeight="200"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+    <!-- FOOTER ACTIONS -->
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT" styleClass="form-section">
+            <HBox.margin>
+                <Insets top="0" right="20" bottom="20" left="20"/>
+            </HBox.margin>
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            
+            <Label fx:id="validationMessage" styleClass="validation-message"
+                   visible="false" managed="false" HBox.hgrow="ALWAYS"/>
+            
+            <Button text="Xem Trước" styleClass="btn-preview"
+                    onAction="#showPreview"/>
+            <Button text="Hủy" styleClass="btn-cancel-schedule"
+                    onAction="#cancel"/>
+            <Button text="Lưu Lịch Chiếu" styleClass="btn-save-schedule"
+                    onAction="#saveSchedule"/>
+        </HBox>
+    </bottom>
+</BorderPane>

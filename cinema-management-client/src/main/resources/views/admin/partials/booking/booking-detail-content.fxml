@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox styleClass="booking-detail-container" spacing="20" stylesheets="/styles/admin-booking.css"
+      xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/17"
+      fx:controller="com.cinema.controllers.admin.booking.BookingDetailController">
+    
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+    
+    <!-- HEADER -->
+    <HBox styleClass="detail-header" alignment="CENTER_LEFT">
+        <VBox HBox.hgrow="ALWAYS">
+            <Label fx:id="bookingIdLabel" text="ĐƠN HÀNG #BK001" styleClass="detail-title"/>
+            <Label fx:id="bookingTimeLabel" text="Đặt lúc: 14:30 12/12/2025" styleClass="detail-subtitle"/>
+        </VBox>
+        <Label fx:id="statusBadge" text="Đã thanh toán" styleClass="status-badge"/>
+    </HBox>
+    
+    <Separator styleClass="detail-separator"/>
+    
+    <!-- CONTENT -->
+    <ScrollPane styleClass="detail-scroll" fitToWidth="true">
+        <VBox spacing="20">
+            
+            <!-- MOVIE AND SHOWTIME INFO -->
+            <VBox styleClass="info-section" spacing="15">
+                <Label text="Thông tin phim" styleClass="section-title"/>
+                
+                <HBox spacing="15">
+                    <!-- Poster -->
+                    <VBox styleClass="poster-container">
+                        <ImageView fx:id="moviePosterImage" fitWidth="120" fitHeight="180" preserveRatio="true"/>
+                    </VBox>
+                    
+                    <!-- Movie Details -->
+                    <VBox spacing="8" VBox.vgrow="ALWAYS">
+                        <Label fx:id="movieTitleLabel" text="Avatar 3" styleClass="movie-title"/>
+                        <HBox spacing="20">
+                            <VBox spacing="5">
+                                <Label text="Rạp:" styleClass="info-label"/>
+                                <Label fx:id="cinemaLabel" text="CGV Vincom Center" styleClass="info-value"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Phòng chiếu:" styleClass="info-label"/>
+                                <Label fx:id="screenLabel" text="Phòng 1" styleClass="info-value"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="20">
+                            <VBox spacing="5">
+                                <Label text="Suất chiếu:" styleClass="info-label"/>
+                                <Label fx:id="showtimeLabel" text="20:00 - 12/12/2025" styleClass="info-value"/>
+                            </VBox>
+                            <VBox spacing="5">
+                                <Label text="Định dạng:" styleClass="info-label"/>
+                                <Label fx:id="formatLabel" text="2D Phụ đề" styleClass="info-value"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="20">
+                            <VBox spacing="5">
+                                <Label text="Độ tuổi:" styleClass="info-label"/>
+                                <Label fx:id="ageRatingLabel" text="C13" styleClass="info-value, age-rating"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <Separator styleClass="section-separator"/>
+            
+            <!-- CUSTOMER INFO -->
+            <VBox styleClass="info-section" spacing="12">
+                <Label text="Thông tin khách hàng" styleClass="section-title"/>
+                
+                <GridPane hgap="30" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Họ tên:" styleClass="info-label"/>
+                        <Label fx:id="customerNameLabel" text="Nguyễn Văn A" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Số điện thoại:" styleClass="info-label"/>
+                        <Label fx:id="customerPhoneLabel" text="0901234567" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Email:" styleClass="info-label"/>
+                        <Label fx:id="customerEmailLabel" text="nguyenvana@email.com" styleClass="info-value"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+            
+            <Separator styleClass="section-separator"/>
+            
+            <!-- SEATS INFO -->
+            <VBox styleClass="info-section" spacing="12">
+                <Label text="Thông tin ghế" styleClass="section-title"/>
+                
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <VBox spacing="5">
+                        <Label text="Ghế đã chọn:" styleClass="info-label"/>
+                        <Label fx:id="seatsLabel" text="A5, A6, A7, A8" styleClass="info-value, seats-value"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox spacing="5" alignment="CENTER_RIGHT">
+                        <Label text="Tổng tiền ghế:" styleClass="info-label"/>
+                        <Label fx:id="seatPriceLabel" text="400.000đ" styleClass="info-value, price-value"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <Separator styleClass="section-separator"/>
+            
+            <!-- COMBOS INFO -->
+            <VBox styleClass="info-section" spacing="12">
+                <Label text="Combo bắp nước" styleClass="section-title"/>
+                
+                <VBox fx:id="combosContainer" spacing="8">
+                    <!-- Combo items will be added dynamically -->
+                    <Label text="Không có combo" styleClass="info-value"/>
+                </VBox>
+                
+                <HBox alignment="CENTER_RIGHT">
+                    <VBox spacing="5" alignment="CENTER_RIGHT">
+                        <Label text="Tổng tiền combo:" styleClass="info-label"/>
+                        <Label fx:id="comboPriceLabel" text="0đ" styleClass="info-value, price-value"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <Separator styleClass="section-separator"/>
+            
+            <!-- PAYMENT INFO -->
+            <VBox styleClass="info-section" spacing="12">
+                <Label text="Thông tin thanh toán" styleClass="section-title"/>
+                
+                <GridPane hgap="30" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Trạng thái:" styleClass="info-label"/>
+                        <Label fx:id="paymentStatusLabel" text="Đã thanh toán" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Hạn thanh toán:" styleClass="info-label"/>
+                        <Label fx:id="paymentDeadlineLabel" text="15:00 12/12/2025" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Ngân hàng:" styleClass="info-label"/>
+                        <Label fx:id="bankNameLabel" text="Vietcombank" styleClass="info-value"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Số tài khoản:" styleClass="info-label"/>
+                        <Label fx:id="accountNumberLabel" text="1234567890" styleClass="info-value"/>
+                    </VBox>
+                </GridPane>
+                
+                <!-- Total Price -->
+                <HBox styleClass="total-price-container" alignment="CENTER_RIGHT">
+                    <Label text="TỔNG THANH TOÁN:" styleClass="total-label"/>
+                    <Label fx:id="totalPriceLabel" text="560.000đ" styleClass="total-value"/>
+                </HBox>
+            </VBox>
+            
+        </VBox>
+    </ScrollPane>
+    
+    <Separator styleClass="detail-separator"/>
+    
+    <!-- ACTION BUTTONS -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="In vé" styleClass="action-button, print-btn" onAction="#handlePrintTicket"/>
+        <Button text="Gửi email" styleClass="action-button, email-btn" onAction="#handleSendEmail"/>
+        <Button fx:id="confirmPaymentBtn" text="Xác nhận TT" styleClass="action-button, confirm-btn" 
+                onAction="#handleConfirmPayment" visible="false"/>
+        <Button fx:id="refundBtn" text="Hoàn tiền" styleClass="action-button, refund-btn" 
+                onAction="#handleRefund" visible="false"/>
+        <Button fx:id="cancelBtn" text="Hủy vé" styleClass="action-button, cancel-btn" 
+                onAction="#handleCancel" visible="false"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Đóng" styleClass="action-button, close-btn" onAction="#handleClose"/>
+    </HBox>
+    
+</VBox>

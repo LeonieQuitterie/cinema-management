@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane fx:controller="com.cinema.controllers.admin.MainAdminController" 
+            stylesheets="@/styles/admin-styles.css"
+            styleClass="border-pane"
+            xmlns:fx="http://javafx.com/fxml">
+    <left>
+        <VBox styleClass="sidebar-container" spacing="10" style="-fx-padding: 20;">
+            <Label text="ADMIN PANEL" styleClass="sidebar-title"/>
+            <Separator/>
+            <Button text="Dashboard" onAction="#loadDashboard" styleClass="sidebar-btn"/>
+            <Button text="Quản lý Phim" onAction="#loadMovieList" styleClass="sidebar-btn"/>
+            <Button text="Quản lý Rạp" onAction="#loadCinemaList" styleClass="sidebar-btn"/>
+          
+            <Button text="Lịch Chiếu" onAction="#loadSchedule" styleClass="sidebar-btn"/>
+            <Button text="Báo Cáo" onAction="#loadReport" styleClass="sidebar-btn"/>
+            <Button text="Đơn Hàng" onAction="#loadBooking" styleClass="sidebar-btn"/>
+            <Button text="FB" onAction="#loadFnb" styleClass="sidebar-btn"/>
+        </VBox>
+    </left>
+    <center>
+        <AnchorPane fx:id="contentArea" styleClass="content-area"/>
+    </center>
+</BorderPane>

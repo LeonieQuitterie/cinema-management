@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane fx:id="dashboardScroll" styleClass="dashboard-scroll" stylesheets="/styles/admin-dashboard.css" fitToWidth="true"
+    xmlns:fx="http://javafx.com/fxml/1"
+    xmlns="http://javafx.com/javafx/17" fx:controller="com.cinema.controllers.admin.dashboard.DashboardController">
+
+    <VBox styleClass="dashboard-container" spacing="25">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30"/>
+        </padding>
+
+        <!-- HEADER -->
+        <HBox styleClass="dashboard-header" alignment="CENTER_LEFT">
+            <VBox>
+                <Label text="Dashboard" styleClass="dashboard-title"/>
+                <Label fx:id="currentDateLabel" text="Sunday, December 14, 2025" styleClass="dashboard-subtitle"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="refreshButton" text="Làm mới" styleClass="refresh-button" onAction="#handleRefresh"/>
+        </HBox>
+
+        <!-- STATS CARDS -->
+        <GridPane styleClass="stats-grid" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25" minWidth="200"/>
+                <ColumnConstraints percentWidth="25" minWidth="200"/>
+                <ColumnConstraints percentWidth="25" minWidth="200"/>
+                <ColumnConstraints percentWidth="25" minWidth="200"/>
+            </columnConstraints>
+
+            <!-- Doanh thu hôm nay -->
+            <VBox styleClass="stat-card, stat-card-revenue" GridPane.columnIndex="0">
+                <Label text="Doanh thu hôm nay" styleClass="stat-label"/>
+                <Label fx:id="todayRevenueLabel" text="0đ" styleClass="stat-value"/>
+                <Label fx:id="revenueChangeLabel" text="+0% so với hôm qua" styleClass="stat-change"/>
+            </VBox>
+
+            <!-- Vé đã bán -->
+            <VBox styleClass="stat-card, stat-card-tickets" GridPane.columnIndex="1">
+                <Label text="Vé đã bán hôm nay" styleClass="stat-label"/>
+                <Label fx:id="todayTicketsLabel" text="0" styleClass="stat-value"/>
+                <Label fx:id="ticketsChangeLabel" text="+0% so với hôm qua" styleClass="stat-change"/>
+            </VBox>
+
+            <!-- Khách hàng -->
+            <VBox styleClass="stat-card, stat-card-customers" GridPane.columnIndex="2">
+                <Label text="Tổng khách hàng" styleClass="stat-label"/>
+                <Label fx:id="totalCustomersLabel" text="0" styleClass="stat-value"/>
+                <Label fx:id="newCustomersLabel" text="0 khách mới hôm nay" styleClass="stat-change"/>
+            </VBox>
+
+            <!-- Phim đang chiếu -->
+            <VBox styleClass="stat-card, stat-card-movies" GridPane.columnIndex="3">
+                <Label text="Phim đang chiếu" styleClass="stat-label"/>
+                <Label fx:id="activeMoviesLabel" text="0" styleClass="stat-value"/>
+                <Label fx:id="upcomingMoviesLabel" text="0 phim sắp chiếu" styleClass="stat-change"/>
+            </VBox>
+        </GridPane>
+
+        <!-- MAIN CHARTS ROW 1: Revenue + Payment Status -->
+        <GridPane styleClass="charts-section" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="60"/>
+                <ColumnConstraints percentWidth="40"/>
+            </columnConstraints>
+
+            <!-- Biểu đồ doanh thu 7 ngày -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                <Label text="Doanh thu 7 ngày qua" styleClass="section-title"/>
+                <StackPane fx:id="revenueChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+
+            <!-- Biểu đồ trạng thái thanh toán -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                <Label text="Trạng thái thanh toán" styleClass="section-title"/>
+                <StackPane fx:id="paymentStatusChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+        </GridPane>
+
+        <!-- CHARTS ROW 2: Top Movies + Seat Type Distribution -->
+        <GridPane styleClass="charts-section" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50"/>
+                <ColumnConstraints percentWidth="50"/>
+            </columnConstraints>
+
+            <!-- Top phim bán chạy -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Top 10 phim bán chạy" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="topMoviesPeriodCombo" styleClass="period-combo" promptText="7 ngày qua"/>
+                </HBox>
+                <StackPane fx:id="topMoviesChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+
+            <!-- Phân bố loại ghế -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                <Label text="Phân bố loại ghế đã đặt" styleClass="section-title"/>
+                <StackPane fx:id="seatTypeChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+        </GridPane>
+
+        <!-- CHARTS ROW 3: Booking by Hour + Movie Status -->
+        <GridPane styleClass="charts-section" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="60"/>
+                <ColumnConstraints percentWidth="40"/>
+            </columnConstraints>
+
+            <!-- Đặt vé theo giờ -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                <Label text="Đặt vé theo giờ trong ngày" styleClass="section-title"/>
+                <StackPane fx:id="bookingByHourChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+
+            <!-- Trạng thái phim -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                <Label text="Trạng thái phim" styleClass="section-title"/>
+                <StackPane fx:id="movieStatusChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+        </GridPane>
+
+        <!-- CHARTS ROW 4: Genre Distribution + Top Combos -->
+        <GridPane styleClass="charts-section" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="40"/>
+                <ColumnConstraints percentWidth="60"/>
+            </columnConstraints>
+
+            <!-- Phân bố thể loại phim -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                <Label text="Phân bố thể loại phim" styleClass="section-title"/>
+                <StackPane fx:id="genreChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+
+            <!-- Top combo bán chạy -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Top 10 combo bán chạy" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="comboRevenueLabel" text="Tổng: 0đ" styleClass="table-subtitle"/>
+                </HBox>
+                <StackPane fx:id="topCombosChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+        </GridPane>
+
+        <!-- CHARTS ROW 5: Revenue by Cinema + Rating Breakdown -->
+        <GridPane styleClass="charts-section" hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="60"/>
+                <ColumnConstraints percentWidth="40"/>
+            </columnConstraints>
+
+            <!-- Doanh thu theo rạp -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="0">
+                <Label text="Doanh thu theo rạp" styleClass="section-title"/>
+                <StackPane fx:id="revenueByCinemaChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+
+            <!-- Phân bố đánh giá -->
+            <VBox styleClass="chart-container" GridPane.columnIndex="1">
+                <Label text="Phân bố đánh giá phim" styleClass="section-title"/>
+                <StackPane fx:id="ratingBreakdownChartPane" styleClass="chart-pane" VBox.vgrow="ALWAYS">
+                    <Label text="Đang tải biểu đồ..." styleClass="chart-loading"/>
+                </StackPane>
+            </VBox>
+        </GridPane>
+
+        <!-- TABLE SECTION: Recent Bookings Only -->
+        <VBox styleClass="table-container">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Đặt vé gần đây" styleClass="section-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="recentBookingsCountLabel" text="0 đặt vé hôm nay" styleClass="table-subtitle"/>
+            </HBox>
+
+            <TableView fx:id="recentBookingsTable" styleClass="dashboard-table">
+                <columns>
+                    <TableColumn fx:id="bookingIdColumn" text="Mã vé" prefWidth="80"/>
+                    <TableColumn fx:id="bookingMovieColumn" text="Phim" prefWidth="180"/>
+                    <TableColumn fx:id="bookingCinemaColumn" text="Rạp" prefWidth="150"/>
+                    <TableColumn fx:id="bookingScreenColumn" text="Phòng" prefWidth="80"/>
+                    <TableColumn fx:id="bookingCustomerColumn" text="Khách hàng" prefWidth="130"/>
+                    <TableColumn fx:id="bookingSeatsColumn" text="Ghế" prefWidth="100"/>
+                    <TableColumn fx:id="bookingShowtimeColumn" text="Suất chiếu" prefWidth="130"/>
+                    <TableColumn fx:id="bookingPriceColumn" text="Tổng tiền" prefWidth="110"/>
+                    <TableColumn fx:id="bookingStatusColumn" text="Trạng thái" prefWidth="120"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+    </VBox>
+
+</ScrollPane>

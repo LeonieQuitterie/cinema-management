@@ -1,0 +1,590 @@
+/* Main Container */
+.main-container {
+    -fx-background-color: #0f3460;
+    -fx-padding: 50 100 50 100;
+}
+
+/* Hero Section */
+.hero-section {
+    -fx-background-color: linear-gradient(to bottom, #16213e 0%, #0f3460 100%);
+    -fx-background-radius: 16;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 5);
+}
+
+.hero-content {
+    -fx-spacing: 30;
+    -fx-alignment: TOP_LEFT;
+}
+
+.poster-container {
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 20, 0, 0, 8);
+    -fx-padding: 5;
+}
+
+.poster-image {
+    -fx-background-radius: 12;
+}
+
+.movie-info-section {
+    -fx-spacing: 15;
+    -fx-padding: 10 0 0 0;
+}
+
+.movie-title {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(255, 51, 102, 0.2), 8, 0, 0, 2);
+}
+
+.movie-title-original {
+    -fx-font-size: 16px;
+    -fx-text-fill: #aabbcc;
+    -fx-font-weight: 500;
+}
+
+/* Genres */
+.genres-container {
+    -fx-spacing: 10;
+    -fx-padding: 10 0;
+}
+
+.genre-tag {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 6 16;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(255, 51, 102, 0.3), 8, 0, 0, 2);
+}
+
+/* Age Rating */
+.age-rating-container {
+    -fx-padding: 5 0;
+}
+
+.age-rating-box {
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-spacing: 5;
+    -fx-pref-width: 140;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+}
+
+.age-rating-number {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+}
+
+.age-rating-description {
+    -fx-font-size: 11px;
+    -fx-text-fill: #aabbcc;
+    -fx-wrap-text: true;
+}
+
+/* Movie Details */
+.movie-details {
+    -fx-padding: 15 0 0 0;
+}
+
+.info-item {
+    -fx-spacing: 15;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.info-label {
+    -fx-text-fill: #8899aa;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-min-width: 130;
+}
+
+.info-value {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+}
+
+/* Action Buttons */
+.action-buttons {
+    -fx-spacing: 15;
+    -fx-padding: 20 0 0 0;
+}
+
+.btn-like {
+    -fx-background-color: #1a2a4a;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 24;
+    -fx-background-radius: 12;
+    -fx-border-color: #334466;
+    -fx-border-radius: 12;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.btn-like:hover {
+    -fx-background-color: #243a5a;
+    -fx-border-color: #ff3366;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.btn-trailer {
+    -fx-background-color: linear-gradient(to right, #8888ff, #aaaaff);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 24;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(136, 136, 255, 0.4), 10, 0, 0, 4);
+}
+
+.btn-trailer:hover {
+    -fx-background-color: linear-gradient(to right, #aaaaff, #ccccff);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Buy Ticket Button */
+.buy-ticket-container {
+    -fx-padding: 0 0 0 20;
+}
+
+.btn-buy-ticket {
+    -fx-background-color: linear-gradient(to bottom, #ff3366, #ff5588);
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 20 40;
+    -fx-background-radius: 14;
+    -fx-cursor: hand;
+    -fx-min-width: 180;
+    -fx-effect: dropshadow(gaussian, rgba(255, 51, 102, 0.5), 15, 0, 0, 6);
+}
+
+.btn-buy-ticket:hover {
+    -fx-background-color: linear-gradient(to bottom, #ff4477, #ff6699);
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+}
+
+/* Rating Section */
+.rating-section {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+}
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 0 10 0;
+}
+
+.overall-rating-container {
+    -fx-spacing: 30;
+    -fx-padding: 20;
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 12;
+}
+
+.overall-rating-number {
+    -fx-font-size: 56px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+    -fx-effect: dropshadow(gaussian, rgba(255, 51, 102, 0.3), 8, 0, 0, 2);
+}
+
+.overall-rating-text {
+    -fx-font-size: 18px;
+    -fx-text-fill: #8899aa;
+}
+
+.overall-rating-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #8899aa;
+}
+
+.total-reviews-text {
+    -fx-font-size: 18px;
+    -fx-text-fill: #ff3366;
+    -fx-font-weight: bold;
+}
+
+/* Rating Bars */
+.rating-bars-container {
+    -fx-padding: 10 0;
+}
+
+.rating-bar-row {
+    -fx-spacing: 15;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 0;
+}
+
+.rating-star-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-min-width: 60;
+}
+
+.rating-bar-bg {
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 6;
+}
+
+.rating-bar-fill {
+    -fx-background-radius: 6;
+}
+
+.rating-percentage {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: white;
+    -fx-min-width: 50;
+}
+
+.rating-count {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8899aa;
+}
+
+/* Synopsis Section */
+.synopsis-section {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+}
+
+.synopsis-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #ccddee;
+    -fx-line-spacing: 2;
+}
+
+.btn-expand {
+    -fx-text-fill: #8888ff;
+    -fx-background-color: transparent;
+    -fx-padding: 10 20;
+    -fx-border-color: #8888ff;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-pref-width: 120;
+}
+
+.btn-expand:hover {
+    -fx-background-color: #8888ff;
+    -fx-text-fill: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Cast Section */
+.cast-section {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 35;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+}
+
+.cast-grid {
+    -fx-padding: 10 0;
+}
+
+.cast-card {
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 12;
+    -fx-padding: 15;
+    -fx-pref-width: 160;
+    -fx-cursor: hand;
+}
+
+.cast-card:hover {
+    -fx-background-color: #243a5a;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.cast-image-container {
+    -fx-pref-width: 120;
+    -fx-pref-height: 160;
+    /* tỷ lệ poster đứng */
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #ffffff22;
+    -fx-border-width: 2;
+    -fx-overflow: hidden;
+    /* quan trọng: cắt ảnh theo bo góc */
+}
+
+.cast-image {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+}
+
+.actor-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-text-alignment: CENTER;
+}
+
+.character-name {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8899aa;
+    -fx-text-alignment: CENTER;
+}
+
+/* Comments Section */
+.comments-section {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 16;
+    -fx-padding: 35;
+    -fx-spacing: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+}
+
+.comment-input-box {
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 12;
+    -fx-padding: 25;
+    -fx-spacing: 15;
+}
+
+.input-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+}
+
+/* .star-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffd700;
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+} */
+
+.star-button {
+    -fx-background-color: transparent;
+    -fx-border: none;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 32px;
+    /* to rõ */
+    -fx-text-fill: #cccccc;
+    /* màu sao trống */
+    -fx-focus-traversable: false;
+    /* tránh focus làm lỗi */
+}
+
+/* .star-button:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+} */
+
+.star-button:hover {
+    -fx-text-fill: #ffaa33;
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+    -fx-effect: dropshadow(gaussian, #ffaa33, 10, 0.5, 0, 0);
+}
+
+.star-button:armed,
+.star-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.rating-stars-input>StackPane {
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.rating-stars-input>StackPane:hover {
+    -fx-effect: dropshadow(gaussian, #ffaa33, 15, 0.7, 0, 0);
+}
+
+.rating-stars-input {
+    -fx-padding: 8 0 8 0;
+    /* trên 8, phải 0, dưới 8, trái 0 */
+}
+
+.comment-input {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 6;
+    -fx-font-size: 13px;
+
+    -fx-border-color: #334466;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    /* ép bo góc ngoài */
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666680;
+}
+
+/* Bo góc phần nền bên trong */
+.comment-input .scroll-pane,
+.comment-input .scroll-pane .viewport,
+.comment-input .scroll-pane .content {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 8;
+}
+
+.comment-input:focused {
+    -fx-border-color: #8888ff;
+}
+
+.btn-spoiler-toggle {
+    -fx-text-fill: #ff6b6b;
+    -fx-background-color: transparent;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 8 12;
+}
+
+.btn-spoiler-toggle:hover {
+    -fx-text-fill: #ff8888;
+}
+
+.btn-post-comment {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 24;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 51, 102, 0.3), 8, 0, 0, 2);
+}
+
+.btn-post-comment:hover {
+    -fx-background-color: linear-gradient(to right, #ff4477, #ff7788);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Comments List */
+.comments-list {
+    -fx-padding: 10 0;
+}
+
+.comment-item {
+    -fx-background-color: #1a2a4a;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 12;
+}
+
+.comment-header {
+    -fx-spacing: 12;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.username {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.comment-time {
+    -fx-font-size: 12px;
+    -fx-text-fill: #8899aa;
+}
+
+.comment-rating {
+    -fx-spacing: 5;
+}
+
+.comment-star {
+    -fx-font-size: 14px;
+    -fx-text-fill: #ffd700;
+}
+
+.comment-content {
+    -fx-font-size: 13px;
+    -fx-text-fill: #ccddee;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 1.5;
+}
+
+.comment-actions {
+    -fx-spacing: 12;
+    -fx-padding: 8 0 0 0;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8899aa;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+}
+
+.action-button:hover {
+    -fx-text-fill: #aabbcc;
+}
+
+.btn-load-more {
+    -fx-background-color: #1a2a4a;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 30;
+    -fx-background-radius: 10;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+}
+
+.btn-load-more:hover {
+    -fx-background-color: #243a5a;
+    -fx-border-color: #8888ff;
+}
+
+/* Comment Action Bar */
+.comment-action-bar {
+    -fx-padding: 4 0 0 0;
+    /* indent để thẳng với content */
+}
+
+.action-button {
+    -fx-padding: 6 12 6 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.action-label {
+    -fx-text-fill: #b0b0b0;
+    -fx-font-size: 13px;
+}
+
+/* Reaction Popup */
+.reaction-popup {
+    -fx-background-color: #2a2a2a;
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 2);
+}

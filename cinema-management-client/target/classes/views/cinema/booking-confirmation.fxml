@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Line?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cinema.controllers.cinema.BookingConfirmationController" styleClass="root-pane" stylesheets="@../../styles/booking-confirmation.css">
+
+    <!-- Header -->
+    <top>
+        <HBox alignment="CENTER_LEFT" styleClass="header-bar" spacing="15">
+            <padding>
+                <Insets top="20" right="100" bottom="20" left="100"/>
+            </padding>
+
+            <Button fx:id="backButton" styleClass="back-button" text="←" onAction="#handleBack"/>
+            <Label text="Thông tin thanh toán" styleClass="header-title"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox spacing="20" styleClass="content-container">
+                <padding>
+                    <Insets top="20" right="100" bottom="20" left="100"/>
+                </padding>
+
+                <!-- Warning Box -->
+                <HBox styleClass="warning-box" spacing="12" alignment="CENTER_LEFT">
+                    <padding>
+                        <Insets topRightBottomLeft="15"/>
+                    </padding>
+                    <Label text="⚠" styleClass="warning-icon"/>
+                    <VBox spacing="5">
+                        <Label text="Thông tin đặt vé" styleClass="warning-title"/>
+                        <Label text="Bạn ơi, vé đã mua sẽ không thể hoàn, hủy, đổi vé. Bạn nhớ kiểm tra kỹ thông tin nha!" styleClass="warning-text" wrapText="true"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Main Info Container -->
+                <HBox spacing="30" styleClass="main-info-container">
+                    <!-- Left Side: Movie Info -->
+                    <VBox spacing="20" styleClass="movie-info-section" HBox.hgrow="ALWAYS">
+                        <HBox spacing="20" alignment="TOP_LEFT">
+                            <!-- Poster -->
+                            <VBox styleClass="poster-container" prefWidth="270" prefHeight="400">
+                                <ImageView fx:id="moviePosterImage" preserveRatio="true" smooth="true" fitWidth="270" fitHeight="400" />
+                            </VBox>
+
+                            <!-- Movie Details -->
+                            <VBox spacing="15" VBox.vgrow="ALWAYS">
+                                <!-- Cinema Logo & Name -->
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <ImageView fx:id="cinemaLogoImage" fitWidth="40" fitHeight="40" preserveRatio="true" styleClass="cinema-logo"/>
+                                    <Label fx:id="cinemaNameLabel" styleClass="cinema-name"/>
+                                </HBox>
+
+                                <!-- Movie Title -->
+                                <Label fx:id="movieTitleLabel" styleClass="movie-title" wrapText="true"/>
+
+                                <!-- Age Rating -->
+                                <HBox spacing="8" alignment="CENTER_LEFT">
+                                    <Label fx:id="ageRatingBadge" styleClass="age-rating-badge"/>
+                                    <Label fx:id="ageRatingDescLabel" styleClass="age-rating-desc" wrapText="true"/>
+                                </HBox>
+
+                                <Line endX="250" styleClass="divider-line"/>
+
+                                <!-- Showtime Info -->
+                                <VBox spacing="10">
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="🕐" styleClass="info-icon"/>
+                                        <VBox spacing="2">
+                                            <Label text="Thời gian" styleClass="info-label"/>
+                                            <Label fx:id="showtimeLabel" styleClass="info-value"/>
+                                            <Label fx:id="dateLabel" styleClass="info-value-small"/>
+                                        </VBox>
+                                    </HBox>
+
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="🎬" styleClass="info-icon"/>
+                                        <VBox spacing="2">
+                                            <Label text="Định dạng" styleClass="info-label"/>
+                                            <Label fx:id="formatLabel" styleClass="info-value"/>
+                                        </VBox>
+                                    </HBox>
+
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="📍" styleClass="info-icon"/>
+                                        <VBox spacing="2">
+                                            <Label text="Phòng chiếu" styleClass="info-label"/>
+                                            <Label fx:id="screenLabel" styleClass="info-value"/>
+                                        </VBox>
+                                    </HBox>
+
+                                    <HBox spacing="8" alignment="CENTER_LEFT">
+                                        <Label text="💺" styleClass="info-icon"/>
+                                        <VBox spacing="2">
+                                            <Label text="Số ghế" styleClass="info-label"/>
+                                            <Label fx:id="seatsLabel" styleClass="info-value"/>
+                                        </VBox>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </HBox>
+
+                        <Line endX="500" styleClass="divider-line"/>
+
+                        <!-- Combo Section -->
+                        <VBox spacing="15" fx:id="comboSection">
+                            <Label text="Combo bắp nước" styleClass="section-title"/>
+                            <VBox fx:id="comboListContainer" spacing="10"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Right Side: Customer Info & Payment -->
+                    <VBox spacing="20" styleClass="payment-section" prefWidth="350">
+                        <!-- Customer Info -->
+                        <VBox spacing="15" styleClass="customer-info-box">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="Thông tin người nhận" styleClass="section-title" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="editCustomerButton" text="Chỉnh sửa" styleClass="edit-button" onAction="#handleEditCustomer"/>
+                            </HBox>
+
+                            <VBox spacing="12">
+                                <VBox spacing="5">
+                                    <Label text="Họ và tên" styleClass="field-label"/>
+                                    <Label fx:id="customerNameLabel" styleClass="field-value"/>
+                                </VBox>
+
+                                <VBox spacing="5">
+                                    <Label text="Số điện thoại" styleClass="field-label"/>
+                                    <Label fx:id="customerPhoneLabel" styleClass="field-value"/>
+                                </VBox>
+
+                                <VBox spacing="5">
+                                    <Label text="Email" styleClass="field-label"/>
+                                    <Label fx:id="customerEmailLabel" styleClass="field-value"/>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+
+                        <!-- Terms -->
+                        <VBox spacing="10" styleClass="terms-box">
+                            <Label text="Bằng cách bấm tiếp tục, bạn đồng ý với các điều khoản này của Cinema Pro và chính sách của rạp" styleClass="terms-text" wrapText="true"/>
+                        </VBox>
+
+                        <!-- Payment Summary -->
+                        <VBox spacing="15" styleClass="payment-summary-box">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Vé" styleClass="summary-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="seatPriceLabel" styleClass="summary-value"/>
+                            </HBox>
+
+                            <HBox alignment="CENTER_LEFT" fx:id="comboPriceRow">
+                                <Label text="Combo" styleClass="summary-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="comboPriceLabel" styleClass="summary-value"/>
+                            </HBox>
+
+                            <Line endX="300" styleClass="divider-line-thin"/>
+
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Tạm tính" styleClass="total-label"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="totalPriceLabel" styleClass="total-value"/>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Continue Button -->
+                        <Button fx:id="continueButton" text="Tiếp tục" styleClass="continue-button" maxWidth="Infinity" onAction="#handleContinue"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

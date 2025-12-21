@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox spacing="30" alignment="CENTER" style="-fx-padding: 50;">
+    <Text text="BÁO CÁO THỐNG KÊ" style="-fx-font-size: 32; -fx-font-weight: bold;"/>
+    <Text text="Doanh thu tháng 12/2025: 2.500.000.000 đ"/>
+    <Text text="Tỷ lệ lấp đầy trung bình: 82%"/>
+    <Text text="Top phim ăn khách: Avengers (450 triệu)"/>
+    <Text text="Top giờ chiếu: 19:00 - 21:00"/>
+</VBox>

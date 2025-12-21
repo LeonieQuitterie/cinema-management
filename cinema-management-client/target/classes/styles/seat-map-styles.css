@@ -1,0 +1,322 @@
+/* ==================== SEAT MAP SECTION ==================== */
+.seat-map-section {
+    -fx-background-color: linear-gradient(to bottom, #0f1419, #1a1f2e);
+    -fx-padding: 30;
+    -fx-background-radius: 15;
+    -fx-border-color: #2a3344;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-effect: dropshadow(gaussian, #000000, 15, 0.5, 0, 5);
+}
+
+.section-header {
+    -fx-padding: 0 0 15 0;
+    -fx-border-color: transparent transparent #ff3366 transparent;
+    -fx-border-width: 0 0 2 0;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #ff3366, 5, 0.4, 0, 0);
+}
+
+.section-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #8899aa;
+}
+
+/* ==================== CONFIG PANEL ==================== */
+.seat-map-section .config-panel {
+    -fx-background-color: #1a2332;
+    -fx-padding: 20;
+    -fx-background-radius: 12;
+    -fx-border-color: #2a3344;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+}
+
+.seat-map-section .config-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff3366;
+    -fx-effect: dropshadow(gaussian, #ff3366, 3, 0.3, 0, 0);
+}
+
+.seat-map-section .field-label-small {
+    -fx-font-size: 12px;
+    -fx-text-fill: #aabbcc;
+}
+
+.seat-map-section .dimension-input {
+    -fx-background-color: #0f1419;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #556677;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-background-radius: 8;
+    -fx-border-color: #334455;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 8;
+    -fx-padding: 8;
+}
+
+.seat-map-section .dimension-input:focused {
+    -fx-border-color: #ff3366;
+    -fx-effect: dropshadow(gaussian, #ff3366, 8, 0.4, 0, 0);
+}
+
+.seat-map-section .multiply-symbol {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff6b6b;
+    -fx-translate-y: 10;
+}
+
+/* ==================== SEAT MAP BUTTONS ==================== */
+.seat-map-section .btn-generate {
+    -fx-background-color: linear-gradient(to right, #4466ff, #6688ff);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 20;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-translate-y: 10;
+    -fx-effect: dropshadow(gaussian, #4466ff, 8, 0.4, 0, 3);
+}
+
+.seat-map-section .btn-generate:hover {
+    -fx-background-color: linear-gradient(to right, #5577ff, #7799ff);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.seat-map-section .btn-reset {
+    -fx-background-color: #4a5566;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.seat-map-section .btn-reset:hover {
+    -fx-background-color: #5a6677;
+}
+
+.seat-map-section .btn-save-map {
+    -fx-background-color: linear-gradient(to right, #00cc66, #00ee88);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 25;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, #00cc66, 10, 0.4, 0, 3);
+}
+
+.seat-map-section .btn-save-map:hover {
+    -fx-background-color: linear-gradient(to right, #00dd77, #00ff99);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ==================== SEAT TYPE PALETTE ==================== */
+.seat-map-section .seat-palette {
+    -fx-padding: 5;
+}
+
+.seat-map-section .seat-type-btn {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+}
+
+.seat-map-section .seat-normal-btn {
+    -fx-background-color: #3366cc;
+    -fx-text-fill: white;
+    -fx-border-color: #2255bb;
+}
+
+.seat-map-section .seat-normal-btn:hover,
+.seat-map-section .seat-normal-btn.selected {
+    -fx-background-color: #4477dd;
+    -fx-border-color: #3366ff;
+    -fx-effect: dropshadow(gaussian, #3366cc, 10, 0.5, 0, 0);
+}
+
+.seat-map-section .seat-vip-btn {
+    -fx-background-color: #ffaa00;
+    -fx-text-fill: #1a1f2e;
+    -fx-border-color: #dd9900;
+}
+
+.seat-map-section .seat-vip-btn:hover,
+.seat-map-section .seat-vip-btn.selected {
+    -fx-background-color: #ffbb22;
+    -fx-border-color: #ffcc00;
+    -fx-effect: dropshadow(gaussian, #ffaa00, 10, 0.5, 0, 0);
+}
+
+.seat-map-section .seat-couple-btn {
+    -fx-background-color: #ff3366;
+    -fx-text-fill: white;
+    -fx-border-color: #dd2255;
+}
+
+.seat-map-section .seat-couple-btn:hover,
+.seat-map-section .seat-couple-btn.selected {
+    -fx-background-color: #ff4477;
+    -fx-border-color: #ff5588;
+    -fx-effect: dropshadow(gaussian, #ff3366, 10, 0.5, 0, 0);
+}
+
+.seat-map-section .hint-text {
+    -fx-font-size: 11px;
+    -fx-text-fill: #8899aa;
+    -fx-font-style: italic;
+}
+
+/* ==================== SEAT MAP CONTAINER ==================== */
+.seat-map-section .seat-map-container {
+    -fx-background-color: #0a0e14;
+    -fx-padding: 25;
+    -fx-background-radius: 12;
+    -fx-border-color: #1a2332;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+
+}
+
+.seat-map-section .screen-indicator {
+    -fx-padding: 15;
+    -fx-background-color: linear-gradient(to bottom, #1a2332, transparent);
+    -fx-background-radius: 8 8 0 0;
+    -fx-border-color: transparent transparent #ff3366 transparent;
+    -fx-border-width: 0 0 3 0;
+    -fx-margin: 0 0 20 0;
+}
+
+.seat-map-section .screen-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #ff3366, 10, 0.6, 0, 0);
+}
+
+.seat-map-section .grid-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-min-height: 300;
+    -fx-max-height: 500;
+}
+
+.seat-map-section .grid-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.seat-map-section .seat-grid {
+    -fx-padding: 20;
+    -fx-background-color: #0f1419;
+    -fx-background-radius: 8;
+}
+
+/* ==================== SEAT CELLS ==================== */
+.seat-map-section .seat-cell {
+    -fx-min-width: 35;
+    -fx-min-height: 35;
+    -fx-max-width: 35;
+    -fx-max-height: 35;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, #000000, 3, 0.4, 0, 2);
+}
+
+.seat-map-section .seat-cell-normal {
+    -fx-background-color: #3366cc;
+    -fx-border-color: #2255aa;
+}
+
+.seat-map-section .seat-cell-normal:hover {
+    -fx-background-color: #4477dd;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.seat-map-section .seat-cell-vip {
+    -fx-background-color: #ffaa00;
+    -fx-border-color: #dd9900;
+}
+
+.seat-map-section .seat-cell-vip:hover {
+    -fx-background-color: #ffbb22;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.seat-map-section .seat-cell-couple {
+    -fx-background-color: #ff3366;
+    -fx-border-color: #dd2255;
+}
+
+.seat-map-section .seat-cell-couple:hover {
+    -fx-background-color: #ff4477;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+
+.seat-map-section .seat-cell-empty {
+    -fx-background-color: transparent;
+    -fx-border-color: #334455;
+    -fx-border-style: dashed;
+}
+
+/* ==================== LEGEND ==================== */
+.seat-map-section .seat-legend {
+    -fx-padding: 15 0 0 0;
+    -fx-border-color: #2a3344 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.seat-map-section .legend-box {
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-max-width: 20;
+    -fx-max-height: 20;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-width: 2;
+}
+
+.seat-map-section .legend-normal {
+    -fx-background-color: #3366cc;
+    -fx-border-color: #2255aa;
+}
+
+.seat-map-section .legend-vip {
+    -fx-background-color: #ffaa00;
+    -fx-border-color: #dd9900;
+}
+
+.seat-map-section .legend-couple {
+    -fx-background-color: #ff3366;
+    -fx-border-color: #dd2255;
+}
+
+.seat-map-section .legend-empty {
+    -fx-background-color: transparent;
+    -fx-border-color: #556677;
+    -fx-border-style: dashed;
+}
+
+.seat-map-section .legend-text {
+    -fx-text-fill: #aabbcc;
+    -fx-font-size: 12px;
+}

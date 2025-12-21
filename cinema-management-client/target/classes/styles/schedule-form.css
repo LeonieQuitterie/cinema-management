@@ -1,0 +1,523 @@
+/* ============= FORM CONTAINER ============= */
+.schedule-form-container {
+    -fx-background-color: #0a0e27;
+}
+
+.schedule-form-scroll {
+    -fx-background-color: #0a0e27;
+}
+
+.schedule-form-scroll > .viewport {
+    -fx-background-color: #0a0e27;
+}
+
+/* ============= HEADER ============= */
+.form-header {
+    -fx-background-color: rgba(22,33,62,0.5);
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.form-main-title {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 10, 0.5, 0, 2);
+}
+
+.form-main-subtitle {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 14px;
+}
+
+/* ============= SECTIONS ============= */
+.form-section {
+    -fx-background-color: rgba(22,33,62,0.3);
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.section-header-text {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.section-description {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 12px;
+}
+
+.step-number {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-background-radius: 20;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16;
+}
+
+/* ============= FIELD LABELS ============= */
+.schedule-field-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.required-mark {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ============= AUTOCOMPLETE FIELD ============= */
+.autocomplete-field {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888888;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+}
+
+.autocomplete-field:focused {
+    -fx-border-color: #ff6b6b;
+    -fx-background-color: #1a2540;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 8, 0, 0, 0);
+}
+
+.autocomplete-popup {
+    -fx-background-color: #16213e;
+    -fx-border-color: #ff6b6b;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+}
+
+.autocomplete-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 12 16;
+    -fx-font-size: 13px;
+}
+
+.autocomplete-popup .list-cell:hover {
+    -fx-background-color: rgba(255,107,107,0.2);
+}
+
+.autocomplete-popup .list-cell:selected {
+    -fx-background-color: rgba(255,107,107,0.35);
+    -fx-font-weight: bold;
+}
+
+/* ============= MOVIE INFO CARD ============= */
+.movie-info-card {
+    -fx-background-color: #1a2540;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #ff6b6b;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
+.movie-title-selected {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.movie-info-text {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 13px;
+}
+
+.movie-duration-text {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ============= SELECTION LISTS ============= */
+.selection-list {
+    -fx-background-color: #16213e;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10;
+}
+
+.selection-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+}
+
+.selection-list .list-cell:hover {
+    -fx-background-color: rgba(255,107,107,0.1);
+}
+
+.selection-list .list-cell:selected {
+    -fx-background-color: rgba(255,107,107,0.25);
+    -fx-text-fill: white;
+}
+
+/* CRITICAL: CheckBox styling */
+.selection-list .check-box {
+    -fx-text-fill: white;
+}
+
+.selection-list .check-box .label {
+    -fx-text-fill: white;
+}
+
+.selection-list .check-box .box {
+    -fx-background-color: #0a0e27;
+    -fx-border-color: #ff6b6b;
+    -fx-border-width: 2;
+    -fx-border-radius: 4;
+}
+
+.selection-list .check-box:selected .box {
+    -fx-background-color: #ff6b6b;
+}
+
+.selection-list .check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ============= SELECTION SUMMARY ============= */
+.selection-summary {
+    -fx-background-color: #1a2540;
+    -fx-background-radius: 8;
+    -fx-padding: 10 15;
+}
+
+.summary-count {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.summary-text {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+/* ============= FORMAT COMBO ============= */
+.format-combo {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 10;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+}
+
+.format-combo:focused {
+    -fx-border-color: #ff6b6b;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 8, 0, 0, 0);
+}
+
+.format-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10 14px;
+}
+
+.format-combo .list-cell:hover {
+    -fx-background-color: rgba(255,107,107,0.1);
+}
+
+.format-combo .list-cell:selected {
+    -fx-background-color: rgba(255,107,107,0.25);
+    -fx-text-fill: white;
+}
+
+.format-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.format-combo .arrow {
+    -fx-background-color: #ff3366;
+}
+
+/* ComboBox text */
+.format-combo .text {
+    -fx-fill: white;
+}
+
+/* ComboBox popup */
+.format-combo .list-view {
+    -fx-background-color: #16213e;
+    -fx-border-color: #334466;
+    -fx-border-width: 1.5;
+}
+
+/* ============= DATE PICKER ============= */
+.date-picker-field {
+    -fx-background-color: #16213e;
+    -fx-border-color: #334466;
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 10;
+}
+
+.date-picker-field .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888888;
+    -fx-padding: 10px 14px;
+    -fx-font-size: 14px;
+}
+
+.date-picker-field:focused {
+    -fx-border-color: #ff6b6b;
+    -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 8, 0, 0, 0);
+}
+
+.date-picker-field .arrow-button {
+    -fx-background-color: #ff3366;
+    -fx-background-radius: 0 10px 10px 0;
+}
+
+.date-picker-field .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+/* ============= DATE SCHEDULE ITEMS ============= */
+.date-schedule-item {
+    -fx-background-color: #1a2540;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #334466;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 10;
+}
+
+.date-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.time-slot-field {
+    -fx-background-color: #0a0e27;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #888888;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
+    -fx-border-color: #334466;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+}
+
+.time-slot-field:focused {
+    -fx-border-color: #ff6b6b;
+}
+
+.end-time-label {
+    -fx-text-fill: #4CAF50;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.btn-remove-date {
+    -fx-background-color: rgba(255,70,70,0.2);
+    -fx-text-fill: #ff4646;
+    -fx-font-size: 12px;
+    -fx-padding: 6 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-color: #ff4646;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.btn-remove-date:hover {
+    -fx-background-color: rgba(255,70,70,0.35);
+}
+
+.btn-remove-time {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff4646;
+    -fx-font-size: 12px;
+    -fx-padding: 6 10;
+    -fx-cursor: hand;
+    -fx-font-weight: 600;
+}
+
+.btn-remove-time:hover {
+    -fx-background-color: rgba(255,70,70,0.2);
+}
+
+.btn-add-time {
+    -fx-background-color: rgba(76,175,80,0.2);
+    -fx-text-fill: #4CAF50;
+    -fx-font-size: 12px;
+    -fx-padding: 6 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-border-color: #4CAF50;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.btn-add-time:hover {
+    -fx-background-color: rgba(76,175,80,0.35);
+}
+
+/* ============= ADD DATE BUTTON ============= */
+.btn-add-date {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6496ff;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12 20;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-border-color: #6496ff;
+    -fx-border-width: 2;
+    -fx-border-style: dashed;
+    -fx-border-radius: 10;
+}
+
+.btn-add-date:hover {
+    -fx-background-color: rgba(100,150,255,0.15);
+    -fx-border-style: solid;
+}
+
+/* ============= PREVIEW SECTION ============= */
+.preview-section {
+    -fx-background-color: #1a2540;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-border-color: #ff6b6b;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+}
+
+.preview-title {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.preview-count {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.preview-list {
+    -fx-background-color: #0a0e27;
+    -fx-border-color: #334466;
+    -fx-border-radius: 8;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 8;
+}
+
+.preview-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 8;
+    -fx-font-size: 12px;
+}
+
+/* ============= ACTION BUTTONS ============= */
+.btn-preview {
+    -fx-background-color: linear-gradient(to right, #6496ff, #5577dd);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(100,150,255,0.4), 10, 0, 0, 4);
+}
+
+.btn-preview:hover {
+    -fx-background-color: linear-gradient(to right, #7aa7ff, #6688ee);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.btn-save-schedule {
+    -fx-background-color: linear-gradient(to right, #4CAF50, #45a049);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 30;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(76,175,80,0.4), 10, 0, 0, 4);
+}
+
+.btn-save-schedule:hover {
+    -fx-background-color: linear-gradient(to right, #5CBF60, #55b059);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.btn-cancel-schedule {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff6b6b;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 30;
+    -fx-cursor: hand;
+    -fx-border-color: #ff6b6b;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+.btn-cancel-schedule:hover {
+    -fx-background-color: rgba(255, 107, 107, 0.15);
+    -fx-border-color: #ff8888;
+}
+
+/* ============= VALIDATION ============= */
+.validation-message {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.success-message {
+    -fx-text-fill: #4CAF50;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-background-color: rgba(76,175,80,0.15);
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.schedule-form-container Text {
+    -fx-fill: white;
+}

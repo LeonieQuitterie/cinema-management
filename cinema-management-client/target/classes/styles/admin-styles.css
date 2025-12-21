@@ -1,0 +1,257 @@
+/* ===== ADMIN PANEL STYLES ===== */
+
+/* Root BorderPane */
+.border-pane {
+    -fx-background-color: #0a0e27;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar-container {
+    -fx-background-color: linear-gradient(to bottom, #1a1f3a, #0f1729);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 5, 0);
+}
+
+.sidebar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 8, 0.5, 0, 2);
+}
+
+/* ===== SIDEBAR BUTTONS ===== */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #b8c5d6;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 15 20;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-radius: 0 10 10 0;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-text-fill: white;
+    -fx-border-color: #ff3366;
+    -fx-translate-x: 5;
+}
+
+.sidebar-btn:pressed {
+    -fx-background-color: rgba(255, 51, 102, 0.1);
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Active sidebar button */
+.sidebar-btn.active {
+    -fx-background-color: linear-gradient(to right, rgba(255,51,102,0.15), transparent);
+    -fx-text-fill: #ff3366;
+    -fx-border-color: #ff3366;
+    -fx-font-weight: bold;
+}
+
+/* ===== SEPARATOR ===== */
+
+
+.separator .line {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-border-width: 0;
+}
+
+/* ===== CONTENT AREA ===== */
+.content-area {
+    -fx-background-color: #0a0e27;
+    -fx-background-radius: 0;
+}
+
+/* ===== GENERAL ELEMENTS ===== */
+
+/* Card-style containers */
+.card-container {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #16213e, #1a1f3a);
+    -fx-background-radius: 15;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 12, 0, 0, 4);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-radius: 15;
+    -fx-border-width: 1;
+}
+
+
+/* Section headers */
+.section-header {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 8, 0.5, 0, 2);
+}
+
+/* Sub headers */
+.sub-header {
+    -fx-text-fill: #b8c5d6;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+}
+
+/* ===== BUTTONS ===== */
+
+/* Primary action button */
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, #ff3366, #ff6b6b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.4), 10, 0, 0, 4);
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #ff4477, #ff7c7c);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.btn-primary:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+/* Secondary button */
+.btn-secondary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8888ff;
+    -fx-font-weight: 600;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-border-color: #8888ff;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: rgba(136, 136, 255, 0.1);
+    -fx-text-fill: #aaaaff;
+    -fx-border-color: #aaaaff;
+}
+
+/* Danger button */
+.btn-danger {
+    -fx-background-color: linear-gradient(to right, #e74c3c, #c0392b);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 12;
+    -fx-padding: 12 25;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(231,76,60,0.4), 10, 0, 0, 4);
+}
+
+.btn-danger:hover {
+    -fx-background-color: linear-gradient(to right, #ec7063, #d35400);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== TABLES ===== */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #1a1f3a, #16213e);
+    -fx-background-radius: 12 12 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #b8c5d6;
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-padding: 10 15;
+}
+
+.table-row-cell {
+    -fx-background-color: #16213e;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #1a1f3a;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(255, 51, 102, 0.1);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(255, 51, 102, 0.2);
+    -fx-text-fill: white;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.text-field, .text-area {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #666680;
+    -fx-background-radius: 10;
+    -fx-padding: 12 15;
+    -fx-font-size: 14px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+    -fx-border-width: 1.5;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #ff3366;
+    -fx-effect: dropshadow(gaussian, rgba(255,51,102,0.3), 8, 0, 0, 0);
+}
+
+.combo-box {
+    -fx-background-color: #16213e;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 10;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+}
+
+/* ===== SCROLLBAR ===== */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(255, 51, 102, 0.5);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: rgba(255, 51, 102, 0.7);
+}
+
+.scroll-bar .track {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 5;
+}
