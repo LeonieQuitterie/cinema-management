@@ -10,26 +10,26 @@ class MovieService {
         // Bước 1: Lấy tất cả showtimes từ hôm nay trở đi + thông tin phim
         const [rows] = await db.query(
             `
-    SELECT 
-      m.id,
-      m.title,
-      m.description,
-      m.duration,
-      m.poster_url,
-      m.release_date,
-      m.language,
-      m.age_rating,
-      m.age_rating_description,
-      m.average_rating,
-      m.total_ratings,
-      m.trailer_url,
-      s.start_time,
-      s.end_time
-    FROM showtimes s
-    JOIN movies m ON s.movie_id = m.id
-    WHERE DATE(s.start_time) >= DATE(?)
-    ORDER BY m.release_date DESC, s.start_time
-  `,
+                SELECT 
+                m.id,
+                m.title,
+                m.description,
+                m.duration,
+                m.poster_url,
+                m.release_date,
+                m.language,
+                m.age_rating,
+                m.age_rating_description,
+                m.average_rating,
+                m.total_ratings,
+                m.trailer_url,
+                s.start_time,
+                s.end_time
+                FROM showtimes s
+                JOIN movies m ON s.movie_id = m.id
+                WHERE DATE(s.start_time) >= DATE(?)
+                ORDER BY m.release_date DESC, s.start_time
+            `,
             [today]
         );
 
@@ -78,18 +78,21 @@ class MovieService {
         const movieIds = Array.from(movieMap.keys());
         const [genreRows] = await db.query(
             `
-    SELECT mg.movie_id, g.name
-    FROM movie_genres mg
-    JOIN genres g ON mg.genre_id = g.id
-    WHERE mg.movie_id IN (?)
-  `,
+                SELECT mg.movie_id, g.id, g.name
+                FROM movie_genres mg
+                JOIN genres g ON mg.genre_id = g.id
+                WHERE mg.movie_id IN (?)
+            `,
             [movieIds]
         );
 
         for (let gr of genreRows) {
             const movie = movieMap.get(gr.movie_id);
             if (movie) {
-                movie.genres.push(gr.name);
+                movie.genres.push({
+                    id: gr.id,
+                    name: gr.name
+                });
             }
         }
 

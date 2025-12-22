@@ -13,17 +13,14 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Load FXML file
-            FXMLLoader loader = new
-            FXMLLoader(getClass().getResource("/views/customer/customer-home.fxml"));
-            // FXMLLoader loader = new
-            // FXMLLoader(getClass().getResource("/views/cinema/seat-selection.fxml"));
-            // FXMLLoader loader = new
-            // FXMLLoader(getClass().getResource("/views/cinema/combo-selection.fxml"));
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/customer/customer-home.fxml"));
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/seat-selection.fxml"));
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/combo-selection.fxml"));
 
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-confirmation.fxml"));
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-success.fxml"));
             
-            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
 
                         
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/auth/login.fxml"));
@@ -36,7 +33,8 @@ public class Main extends Application {
             primaryStage.setTitle("Cinema Pro - Hệ thống đặt vé");
             primaryStage.setScene(scene);
             // FULL MÀN HÌNH + KHÔNG CHO RESIZE + KHÔNG CÓ VIỀN (đẹp như app thật)
-            primaryStage.setFullScreen(true); // Full màn hình
+            // primaryStage.setFullScreen(true); // Full màn hình
+            primaryStage.setMaximized(true);
             primaryStage.setFullScreenExitHint(""); // Ẩn dòng "Press ESC to exit full screen"
 
             primaryStage.show();

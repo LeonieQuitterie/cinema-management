@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.cinema.controllers.customer.CustomerHomeController" prefWidth="1200" prefHeight="800" style="-fx-background-color: #0f0f1a;" stylesheets="@../styles/main.css, @../styles/customer-home.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.cinema.controllers.customer.CustomerHomeController" prefWidth="1200" prefHeight="800" style="-fx-background-color: #0f0f1a;" stylesheets="@/styles/main.css, @/styles/customer-home.css">
 
     <!-- TOP: Header -->
     <top>

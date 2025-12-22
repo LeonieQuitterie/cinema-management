@@ -50,6 +50,20 @@
     -fx-effect: dropshadow(gaussian, rgba(255,107,107,0.3), 8, 0, 0, 0);
 }
 
+.text-area {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+}
+
+.text-area .content {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+}
+
+.text-area:focused .content {
+    -fx-background-color: #16213e;
+}
+
 .textarea-field {
     -fx-background-color: #16213e;
     -fx-text-fill: white;
@@ -141,6 +155,28 @@
 }
 
 .date-picker-field .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.date-picker {
+    -fx-background-color: #16213e;
+    -fx-border-color: #2e3b5e;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.date-picker .text-field {
+    -fx-background-color: #16213e;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #8fa3c8;
+    -fx-background-radius: 10;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #16213e;
+}
+
+.date-picker .arrow-button .arrow {
     -fx-background-color: white;
 }
 

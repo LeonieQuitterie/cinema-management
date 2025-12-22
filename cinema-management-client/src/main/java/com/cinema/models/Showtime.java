@@ -1,33 +1,64 @@
 package com.cinema.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Showtime {
     private String id;
+    
+    @SerializedName("movie_id")
     private String movieId;
+    
+    @SerializedName("screen_id")
     private String screenId;
+    
+    @SerializedName("start_time")
     private LocalDateTime startTime;
+    
+    @SerializedName("end_time")
     private LocalDateTime endTime;
-    private double basePrice;              // Giá vé cơ bản
-    private List<String> bookedSeats;      // Danh sách số ghế đã đặt
     
-    public Showtime() {
-        this.bookedSeats = new ArrayList<>();
-    }
+    @SerializedName("base_price")
+    private double basePrice;
     
-    public Showtime(String id, String movieId, String screenId, LocalDateTime startTime, 
-                    LocalDateTime endTime, double basePrice) {
-        this.id = id;
-        this.movieId = movieId;
-        this.screenId = screenId;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.basePrice = basePrice;
-        this.bookedSeats = new ArrayList<>();
-    }
+    private String format;
     
+    // Additional fields from JOIN
+    @SerializedName("movie_title")
+    private String movieTitle;
+    
+    @SerializedName("movie_duration")
+    private Integer movieDuration;
+    
+    @SerializedName("screen_name")
+    private String screenName;
+    
+    @SerializedName("total_seats")
+    private Integer totalSeats;
+    
+    @SerializedName("cinema_id")
+    private String cinemaId;
+    
+    @SerializedName("cinema_name")
+    private String cinemaName;
+    
+    @SerializedName("booked_seats_count")
+    private Integer bookedSeatsCount;
+    
+    @SerializedName("available_seats")
+    private Integer availableSeats;
+    
+    @SerializedName("poster_url")
+    private String posterUrl;
+    
+    // For client use
+    private List<String> bookedSeats;
+    
+    // Constructors
+    public Showtime() {}
+
     // Kiểm tra ghế đã được đặt chưa
     public boolean isSeatBooked(String seatNumber) {
         return bookedSeats.contains(seatNumber);
@@ -44,7 +75,7 @@ public class Showtime {
     public void unbookSeat(String seatNumber) {
         bookedSeats.remove(seatNumber);
     }
-
+    
     // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -63,6 +94,36 @@ public class Showtime {
     
     public double getBasePrice() { return basePrice; }
     public void setBasePrice(double basePrice) { this.basePrice = basePrice; }
+    
+    public String getFormat() { return format; }
+    public void setFormat(String format) { this.format = format; }
+    
+    public String getMovieTitle() { return movieTitle; }
+    public void setMovieTitle(String movieTitle) { this.movieTitle = movieTitle; }
+    
+    public Integer getMovieDuration() { return movieDuration; }
+    public void setMovieDuration(Integer movieDuration) { this.movieDuration = movieDuration; }
+    
+    public String getScreenName() { return screenName; }
+    public void setScreenName(String screenName) { this.screenName = screenName; }
+    
+    public Integer getTotalSeats() { return totalSeats; }
+    public void setTotalSeats(Integer totalSeats) { this.totalSeats = totalSeats; }
+    
+    public String getCinemaId() { return cinemaId; }
+    public void setCinemaId(String cinemaId) { this.cinemaId = cinemaId; }
+    
+    public String getCinemaName() { return cinemaName; }
+    public void setCinemaName(String cinemaName) { this.cinemaName = cinemaName; }
+    
+    public Integer getBookedSeatsCount() { return bookedSeatsCount; }
+    public void setBookedSeatsCount(Integer bookedSeatsCount) { this.bookedSeatsCount = bookedSeatsCount; }
+    
+    public Integer getAvailableSeats() { return availableSeats; }
+    public void setAvailableSeats(Integer availableSeats) { this.availableSeats = availableSeats; }
+    
+    public String getPosterUrl() { return posterUrl; }
+    public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
     
     public List<String> getBookedSeats() { return bookedSeats; }
     public void setBookedSeats(List<String> bookedSeats) { this.bookedSeats = bookedSeats; }

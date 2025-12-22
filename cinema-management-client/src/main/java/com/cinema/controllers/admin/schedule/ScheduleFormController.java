@@ -1,6 +1,11 @@
 package com.cinema.controllers.admin.schedule;
 
 import com.cinema.models.*;
+import com.cinema.utils.admin.CinemaApi;
+import com.cinema.utils.admin.MovieApi;
+import com.cinema.utils.admin.ShowtimeApi;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -48,6 +53,11 @@ public class ScheduleFormController implements Initializable {
     
     // Validation
     @FXML private Label validationMessage;
+
+    // Services
+    private ShowtimeApi showtimeService;
+    private MovieApi movieService;
+    private CinemaApi cinemaService;
     
     // Data
     private List<Movie> allMovies = new ArrayList<>();
@@ -62,10 +72,16 @@ public class ScheduleFormController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        showtimeService = new ShowtimeApi();
+        movieService = new MovieApi();
+        cinemaService = new CinemaApi();
+
         setupMovieSearch();
         setupCinemaSelection();
         setupFormatCombo();
-        loadDummyData();
+        loadMoviesFromAPI();
+        loadCinemasFromAPI();
+        // loadDummyData();
     }
 
     private void setupMovieSearch() {
@@ -121,8 +137,10 @@ public class ScheduleFormController implements Initializable {
             // Show movie info card
             selectedMovieTitle.setText(selectedMovie.getTitle());
             selectedMovieGenres.setText(
-                selectedMovie.getGenres() != null 
-                    ? String.join(", ", selectedMovie.getGenres())
+                selectedMovie.getGenres() != null && !selectedMovie.getGenres().isEmpty()
+                    ? selectedMovie.getGenres().stream()
+                        .map(g -> g.getName())
+                        .collect(Collectors.joining(", "))
                     : "N/A"
             );
             selectedMovieDuration.setText(selectedMovie.getDuration() + " phút");
@@ -206,6 +224,59 @@ public class ScheduleFormController implements Initializable {
             "IMAX 2D",
             "IMAX 3D"
         );
+    }
+
+    private void loadMoviesFromAPI() {
+        movieService.getAllMovies()
+            .thenAccept(movies -> {
+                Platform.runLater(() -> {
+                    allMovies = movies;
+                });
+            })
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    showError("Không thể tải danh sách phim: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
+    }
+
+    private void loadCinemasFromAPI() {
+        System.out.println("🎬 ScheduleFormController: Loading cinemas from API...");
+        cinemaService.getAllCinemas()
+            .thenAccept(cinemas -> {
+                System.out.println("✅ ScheduleFormController: Received " + cinemas.size() + " cinemas");
+                Platform.runLater(() -> {
+                    allCinemas = cinemas;
+
+                    System.out.println("🔄 ScheduleFormController: Adding cinemas to list view...");
+                    
+                    for (Cinema cinema : cinemas) {
+                        System.out.println("  - Cinema: " + cinema.getName() + " (ID: " + cinema.getId() + ")");
+                        System.out.println("    Screens: " + (cinema.getScreens() != null ? cinema.getScreens().size() : 0));
+                        
+                        CheckBox cb = new CheckBox(cinema.getName());
+                        cb.setUserData(cinema);
+                        cb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                            updateSelectedCinemas();
+                            updateScreenList();
+                        });
+                        cinemaListView.getItems().add(cb);
+                    }
+
+                    System.out.println("✅ ScheduleFormController: Cinema list view updated with " + cinemaListView.getItems().size() + " items");
+                });
+            })
+            .exceptionally(ex -> {
+                System.err.println("❌ ScheduleFormController: Error loading cinemas");
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    showError("Không thể tải danh sách rạp: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
     }
 
     @FXML
@@ -358,26 +429,69 @@ public class ScheduleFormController implements Initializable {
         return items;
     }
 
-    @FXML
+   @FXML
     private void saveSchedule() {
         if (!validateForm()) {
             return;
         }
         
-        // TODO: Save to database
-        // For now, just show success message
+        // Generate showtimes
+        List<Showtime> showtimes = new ArrayList<>();
+        String format = formatCombo.getValue();
+        double basePrice = 80000; // Default price
         
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Thành Công");
-        alert.setHeaderText("Đã tạo lịch chiếu thành công!");
-        alert.setContentText("Đã tạo " + generatePreview().size() + " suất chiếu.");
-        alert.showAndWait();
-        
-        if (onSaveCallback != null) {
-            onSaveCallback.run();
+        for (DateSchedule ds : dateSchedules) {
+            LocalDate date = ds.getDate();
+            for (TextField tf : ds.getTimeSlots()) {
+                String timeStr = tf.getText().trim();
+                if (!timeStr.isEmpty()) {
+                    try {
+                        LocalTime time = LocalTime.parse(timeStr, DateTimeFormatter.ofPattern("HH:mm"));
+                        LocalDateTime startTime = LocalDateTime.of(date, time);
+                        LocalDateTime endTime = startTime.plusMinutes(selectedMovie.getDuration());
+                        
+                        for (ScreenWrapper sw : selectedScreens) {
+                            Showtime st = new Showtime();
+                            st.setMovieId(selectedMovie.getId());
+                            st.setScreenId(sw.getScreen().getId());
+                            st.setStartTime(startTime);
+                            st.setEndTime(endTime);
+                            st.setBasePrice(basePrice);
+                            st.setFormat(format);
+                            
+                            showtimes.add(st);
+                        }
+                    } catch (Exception e) {
+                        // Skip invalid time
+                    }
+                }
+            }
         }
         
-        cancel();
+        // Save to API
+        showtimeService.createBulkShowtimes(showtimes)
+            .thenAccept(count -> {
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Thành Công");
+                    alert.setHeaderText("Đã tạo lịch chiếu thành công!");
+                    alert.setContentText("Đã tạo " + count + " suất chiếu.");
+                    alert.showAndWait();
+                    
+                    if (onSaveCallback != null) {
+                        onSaveCallback.run();
+                    }
+                    
+                    cancel();
+                });
+            })
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    showError("Không thể tạo lịch chiếu: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
     }
 
     @FXML
@@ -447,83 +561,91 @@ public class ScheduleFormController implements Initializable {
         validationMessage.setManaged(true);
     }
 
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
     public void setOnSaveCallback(Runnable callback) {
         this.onSaveCallback = callback;
     }
 
-    private void loadDummyData() {
-        // Load movies
-        Movie movie1 = new Movie();
-        movie1.setId("M1");
-        movie1.setTitle("Avengers: Endgame");
-        movie1.setDuration(181);
-        movie1.setGenres(Arrays.asList("Hành động", "Khoa học viễn tưởng"));
-        allMovies.add(movie1);
+    // private void loadDummyData() {
+    //     // Load movies
+    //     Movie movie1 = new Movie();
+    //     movie1.setId("M1");
+    //     movie1.setTitle("Avengers: Endgame");
+    //     movie1.setDuration(181);
+    //     // movie1.setGenres(Arrays.asList("Hành động", "Khoa học viễn tưởng"));
+    //     allMovies.add(movie1);
         
-        Movie movie2 = new Movie();
-        movie2.setId("M2");
-        movie2.setTitle("Spider-Man: No Way Home");
-        movie2.setDuration(148);
-        movie2.setGenres(Arrays.asList("Hành động", "Phiêu lưu"));
-        allMovies.add(movie2);
+    //     Movie movie2 = new Movie();
+    //     movie2.setId("M2");
+    //     movie2.setTitle("Spider-Man: No Way Home");
+    //     movie2.setDuration(148);
+    //     // movie2.setGenres(Arrays.asList("Hành động", "Phiêu lưu"));
+    //     allMovies.add(movie2);
         
-        Movie movie3 = new Movie();
-        movie3.setId("M3");
-        movie3.setTitle("Deadpool & Wolverine");
-        movie3.setDuration(128);
-        movie3.setGenres(Arrays.asList("Hành động", "Hài"));
-        allMovies.add(movie3);
+    //     Movie movie3 = new Movie();
+    //     movie3.setId("M3");
+    //     movie3.setTitle("Deadpool & Wolverine");
+    //     movie3.setDuration(128);
+    //     // movie3.setGenres(Arrays.asList("Hành động", "Hài"));
+    //     allMovies.add(movie3);
         
-        // Load cinemas
-        Cinema cinema1 = new Cinema();
-        cinema1.setId("C1");
-        cinema1.setName("CGV Vincom");
-        cinema1.setScreens(new ArrayList<>());
+    //     // Load cinemas
+    //     Cinema cinema1 = new Cinema();
+    //     cinema1.setId("C1");
+    //     cinema1.setName("CGV Vincom");
+    //     cinema1.setScreens(new ArrayList<>());
         
-        Screen s1 = new Screen();
-        s1.setId("S1");
-        s1.setName("Phòng 1");
-        s1.setTotalSeats(100);
-        cinema1.getScreens().add(s1);
+    //     Screen s1 = new Screen();
+    //     s1.setId("S1");
+    //     s1.setName("Phòng 1");
+    //     s1.setTotalSeats(100);
+    //     cinema1.getScreens().add(s1);
         
-        Screen s2 = new Screen();
-        s2.setId("S2");
-        s2.setName("Phòng 2");
-        s2.setTotalSeats(80);
-        cinema1.getScreens().add(s2);
+    //     Screen s2 = new Screen();
+    //     s2.setId("S2");
+    //     s2.setName("Phòng 2");
+    //     s2.setTotalSeats(80);
+    //     cinema1.getScreens().add(s2);
         
-        allCinemas.add(cinema1);
+    //     allCinemas.add(cinema1);
         
-        Cinema cinema2 = new Cinema();
-        cinema2.setId("C2");
-        cinema2.setName("Lotte Cinema");
-        cinema2.setScreens(new ArrayList<>());
+    //     Cinema cinema2 = new Cinema();
+    //     cinema2.setId("C2");
+    //     cinema2.setName("Lotte Cinema");
+    //     cinema2.setScreens(new ArrayList<>());
         
-        Screen s3 = new Screen();
-        s3.setId("S3");
-        s3.setName("Phòng IMAX");
-        s3.setTotalSeats(150);
-        cinema2.getScreens().add(s3);
+    //     Screen s3 = new Screen();
+    //     s3.setId("S3");
+    //     s3.setName("Phòng IMAX");
+    //     s3.setTotalSeats(150);
+    //     cinema2.getScreens().add(s3);
         
-        Screen s4 = new Screen();
-        s4.setId("S4");
-        s4.setName("Phòng VIP");
-        s4.setTotalSeats(60);
-        cinema2.getScreens().add(s4);
+    //     Screen s4 = new Screen();
+    //     s4.setId("S4");
+    //     s4.setName("Phòng VIP");
+    //     s4.setTotalSeats(60);
+    //     cinema2.getScreens().add(s4);
         
-        allCinemas.add(cinema2);
+    //     allCinemas.add(cinema2);
         
-        // Populate cinema list
-        for (Cinema cinema : allCinemas) {
-            CheckBox cb = new CheckBox(cinema.getName());
-            cb.setUserData(cinema);
-            cb.selectedProperty().addListener((obs, oldVal, newVal) -> {
-                updateSelectedCinemas();
-                updateScreenList();
-            });
-            cinemaListView.getItems().add(cb);
-        }
-    }
+    //     // Populate cinema list
+    //     for (Cinema cinema : allCinemas) {
+    //         CheckBox cb = new CheckBox(cinema.getName());
+    //         cb.setUserData(cinema);
+    //         cb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+    //             updateSelectedCinemas();
+    //             updateScreenList();
+    //         });
+    //         cinemaListView.getItems().add(cb);
+    //     }
+    // }
 
     // Helper classes
     private static class DateSchedule {

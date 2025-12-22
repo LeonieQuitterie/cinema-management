@@ -47,8 +47,8 @@ class CinemaService {
           id,
           name,
           cinema_id as cinemaId,
-          row_count as rows,
-          column_count as columns,
+          row_count as rowCount,
+          column_count as columnCount,
           total_seats as totalSeats
         FROM screens
         WHERE cinema_id IN (?)
@@ -87,8 +87,8 @@ class CinemaService {
         screens.forEach(screen => {
           const screenSeats = seatsByScreen[screen.id] || [];
           screen.seatLayout = this.buildSeatLayout(
-            screen.rows,
-            screen.columns,
+            screen.rowCount,
+            screen.columnCount,
             screenSeats
           );
         });
@@ -123,31 +123,31 @@ class CinemaService {
    * @param {Array} seats - Danh sách ghế
    * @returns {Object} SeatLayout { rows, columns, seats: [[Seat]] }
    */
-  static buildSeatLayout(rows, columns, seats) {
-    // Khởi tạo ma trận rỗng (null = lối đi)
+  static buildSeatLayout(rowCount, columnCount, seats) {
     const seatMatrix = [];
-    for (let i = 0; i < rows; i++) {
-      const row = new Array(columns).fill(null);
-      seatMatrix.push(row);
+    for (let i = 0; i < rowCount; i++) {
+      seatMatrix.push(new Array(columnCount).fill(null));
     }
 
-    // Đặt ghế vào đúng vị trí
     seats.forEach(seat => {
       const { rowIndex, colIndex } = seat;
-      if (rowIndex >= 0 && rowIndex < rows && colIndex >= 0 && colIndex < columns) {
+      if (
+        rowIndex >= 0 && rowIndex < rowCount &&
+        colIndex >= 0 && colIndex < columnCount
+      ) {
         seatMatrix[rowIndex][colIndex] = {
           seatNumber: seat.seatNumber,
           seatType: seat.seatType,
           price: parseFloat(seat.price),
-          rowIndex: seat.rowIndex,
-          colIndex: seat.colIndex
+          rowIndex,
+          colIndex
         };
       }
     });
 
     return {
-      rows,
-      columns,
+      rowCount,
+      columnCount,
       seats: seatMatrix
     };
   }

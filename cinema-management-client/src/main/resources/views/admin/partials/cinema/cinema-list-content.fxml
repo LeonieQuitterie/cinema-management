@@ -71,6 +71,30 @@
             <!-- Seat Map Section -->
             <VBox spacing="20" styleClass="seat-map-section">
 
+                <!-- Cinema Selector Panel -->
+                <VBox spacing="15" styleClass="config-panel">
+                    <Label text="Chọn rạp để thiết kế sơ đồ ghế" styleClass="config-label"/>
+                    <HBox spacing="20" alignment="CENTER_LEFT">
+                        <VBox spacing="5" prefWidth="300">
+                            <Label text="Rạp chiếu phim" styleClass="field-label-small"/>
+                            <ComboBox fx:id="cinemaSelector" prefWidth="300" promptText="-- Chọn rạp --" styleClass="form-combo"/>
+                        </VBox>
+                        
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="🎬" style="-fx-font-size: 20px;"/>
+                                <Label fx:id="selectedCinemaLabel" text="Chưa chọn rạp" styleClass="cinema-name-label" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Label text="🎞️" style="-fx-font-size: 16px;"/>
+                                <Label fx:id="screenCountLabel" text="0 phòng" styleClass="screen-count-label" style="-fx-text-fill: #666;"/>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <Separator/>
+
                 <!-- Configuration Panel -->
                 <HBox spacing="30" alignment="CENTER_LEFT" styleClass="config-panel">
 

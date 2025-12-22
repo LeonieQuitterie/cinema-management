@@ -1,9 +1,13 @@
 package com.cinema.controllers.admin.cinema;
 
 import com.cinema.models.Cinema;
+import com.cinema.models.Screen;
 import com.cinema.models.Seat;
 import com.cinema.models.SeatLayout;
 import com.cinema.models.SeatType;
+import com.cinema.utils.admin.CinemaApi;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,60 +26,61 @@ import javafx.stage.Stage;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class CinemaListController implements Initializable {
 
     // Table fields
-    @FXML
-    private TableView<Cinema> cinemaTable;
-    @FXML
-    private TableColumn<Cinema, String> nameColumn;
-    @FXML
-    private TableColumn<Cinema, String> cityColumn;
-    @FXML
-    private TableColumn<Cinema, String> addressColumn;
-    @FXML
-    private TableColumn<Cinema, Integer> screenCountColumn;
-    @FXML
-    private TableColumn<Cinema, Void> actionColumn;
+    @FXML private TableView<Cinema> cinemaTable;
+    @FXML private TableColumn<Cinema, String> nameColumn;
+    @FXML private TableColumn<Cinema, String> cityColumn;
+    @FXML private TableColumn<Cinema, String> addressColumn;
+    @FXML private TableColumn<Cinema, Integer> screenCountColumn;
+    @FXML private TableColumn<Cinema, Void> actionColumn;
 
-    @FXML
-    private TextField searchField;
-    @FXML
-    private ComboBox<String> cityFilter;
-    @FXML
-    private Label totalCinemasLabel;
-    @FXML
-    private Label totalScreensLabel;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> cityFilter;
+    @FXML private Label totalCinemasLabel;
+    @FXML private Label totalScreensLabel;
 
     // Seat Map fields
-    @FXML
-    private TextField rowsInput;
-    @FXML
-    private TextField colsInput;
-    @FXML
-    private GridPane seatGrid;
-    @FXML
-    private ScrollPane gridScrollPane;
-    @FXML
-    private Button normalSeatBtn;
-    @FXML
-    private Button vipSeatBtn;
-    @FXML
-    private Button coupleSeatBtn;
+    @FXML private TextField rowsInput;
+    @FXML private TextField colsInput;
+    @FXML private GridPane seatGrid;
+    @FXML private ScrollPane gridScrollPane;
+    @FXML private Button normalSeatBtn;
+    @FXML private Button vipSeatBtn;
+    @FXML private Button coupleSeatBtn;
+    @FXML private ComboBox<Cinema> cinemaSelector;
+    @FXML private Label selectedCinemaLabel;
+    @FXML private Label screenCountLabel;
 
     private ObservableList<Cinema> cinemaList = FXCollections.observableArrayList();
+    private ObservableList<Cinema> allCinemas = FXCollections.observableArrayList();
     private SeatLayout currentSeatLayout;
-    private SeatType selectedSeatType = SeatType.STANDARD; // Mặc định là ghế thường
+    private SeatType selectedSeatType = SeatType.STANDARD;
     private boolean isDragging = false;
+
+    // API Service
+    private CinemaApi cinemaApi;
+    private Cinema selectedCinemaForSeats;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cinemaApi = new CinemaApi();
+
         setupTableColumns();
-        loadCinemaData();
         setupActionButtons();
         setupSeatMapButtons();
+        setupFilters();
+        setupCinemaSelector();
+        loadCinemaData();
+        // setupTableColumns();
+        // loadCinemaData();
+        // setupActionButtons();
+        // setupSeatMapButtons();
     }
 
     // ====================== TABLE SETUP ======================
@@ -84,6 +89,8 @@ public class CinemaListController implements Initializable {
         cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
         screenCountColumn.setCellValueFactory(new PropertyValueFactory<>("screenCount"));
+
+        cinemaTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void setupActionButtons() {
@@ -100,17 +107,17 @@ public class CinemaListController implements Initializable {
 
                 viewBtn.setOnAction(event -> {
                     Cinema cinema = getTableView().getItems().get(getIndex());
-                    viewCinemaDetail(cinema);
+                    if (cinema != null) viewCinemaDetail(cinema);
                 });
 
                 editBtn.setOnAction(event -> {
                     Cinema cinema = getTableView().getItems().get(getIndex());
-                    openEditForm(cinema);
+                    if (cinema != null) openEditForm(cinema);
                 });
 
                 deleteBtn.setOnAction(event -> {
                     Cinema cinema = getTableView().getItems().get(getIndex());
-                    deleteCinema(cinema);
+                    if (cinema != null) deleteCinema(cinema);
                 });
             }
 
@@ -122,31 +129,47 @@ public class CinemaListController implements Initializable {
         });
     }
 
+    private void setupFilters() {
+        cityFilter.getItems().addAll(
+            "Tất cả",
+            "Hà Nội",
+            "Hồ Chí Minh",
+            "Đà Nẵng",
+            "Cần Thơ",
+            "Hải Phòng"
+        );
+        cityFilter.setValue("Tất cả");
+        
+        cityFilter.setOnAction(e -> applyFilters());
+    }
+
     // ====================== LOAD DATA ======================
     private void loadCinemaData() {
-        cinemaList.clear();
-        cinemaList.addAll(
-                new Cinema("Galaxy Nguyễn Du", "Hồ Chí Minh", "116 Nguyễn Du, Quận 1", 5),
-                new Cinema("Lotte Cinema Gò Vấp", "Hồ Chí Minh", "242 Nguyễn Văn Lượng, Gò Vấp", 8),
-                new Cinema("CGV Vincom Center", "Hà Nội", "191 Bà Triệu, Hai Bà Trưng", 6),
-                new Cinema("BHD Star Bitexco", "Hồ Chí Minh", "Tầng 3, Bitexco, Quận 1", 4),
-                new Cinema("Mega GS Cao Thắng", "Hồ Chí Minh", "19 Cao Thắng, Quận 3", 7),
-                new Cinema("CGV Aeon Tân Phú", "Hồ Chí Minh", "30 Bờ Bao Tân Thắng, Tân Phú", 9),
-                new Cinema("Galaxy Trần Hưng Đạo", "Hà Nội", "25 Trần Hưng Đạo, Hoàn Kiếm", 5),
-                new Cinema("Lotte Cinema Đà Nẵng", "Đà Nẵng", "Vincom Plaza, Đà Nẵng", 6));
+        System.out.println("🎬 Loading cinemas from API...");
+        
+        cinemaApi.getAllCinemas()
+            .thenAccept(cinemas -> {
+                Platform.runLater(() -> {
+                    System.out.println("✅ Loaded " + cinemas.size() + " cinemas");
+                    allCinemas.clear();
+                    allCinemas.addAll(cinemas);
 
-        // ✅ DEBUG
-        System.out.println("Cinema list size: " + cinemaList.size());
-        System.out.println("Table is null? " + (cinemaTable == null));
-
-        cinemaTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        cinemaTable.setItems(cinemaList);
-
-        // ✅ DEBUG
-        System.out.println("Table items size: " + cinemaTable.getItems().size());
-          cinemaTable.refresh();
-
-        updateSummary();
+                    // Update cinema selector
+                    cinemaSelector.getItems().clear();
+                    cinemaSelector.getItems().addAll(cinemas);
+                    
+                    applyFilters();
+                    updateSummary();
+                });
+            })
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    System.err.println("❌ Error loading cinemas: " + ex.getMessage());
+                    showError("Không thể tải danh sách rạp: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
     }
 
     private void updateSummary() {
@@ -155,6 +178,35 @@ public class CinemaListController implements Initializable {
 
         totalCinemasLabel.setText("Tổng số rạp: " + totalCinemas);
         totalScreensLabel.setText("Tổng số phòng: " + totalScreens);
+    }
+
+    private void applyFilters() {
+        cinemaList.clear();
+        
+        String selectedCity = cityFilter.getValue();
+        String searchText = searchField.getText().toLowerCase().trim();
+        
+        for (Cinema cinema : allCinemas) {
+            // City filter
+            if (!selectedCity.equals("Tất cả") && !cinema.getCity().equals(selectedCity)) {
+                continue;
+            }
+            
+            // Search filter
+            if (!searchText.isEmpty()) {
+                boolean matches = cinema.getName().toLowerCase().contains(searchText) ||
+                                cinema.getCity().toLowerCase().contains(searchText) ||
+                                cinema.getAddress().toLowerCase().contains(searchText);
+                if (!matches) {
+                    continue;
+                }
+            }
+            
+            cinemaList.add(cinema);
+        }
+        
+        cinemaTable.setItems(cinemaList);
+        updateSummary();
     }
 
     // ====================== CINEMA ACTIONS ======================
@@ -215,38 +267,64 @@ public class CinemaListController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Xác Nhận Xóa");
         alert.setHeaderText("Bạn có chắc muốn xóa rạp này?");
-        alert.setContentText(cinema.getName() + " - " + cinema.getAddress());
+        alert.setContentText(
+            cinema.getName() + "\n" +
+            cinema.getAddress() + "\n\n" +
+            "Cảnh báo: Hành động này không thể hoàn tác!"
+        );
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                cinemaList.remove(cinema);
-                updateSummary();
-                showSuccess("Đã xóa rạp thành công!");
+                cinemaApi.deleteCinema(cinema.getId())
+                    .thenAccept(result -> {
+                        Platform.runLater(() -> {
+                            allCinemas.remove(cinema);
+                            cinemaList.remove(cinema);
+                            updateSummary();
+                            showSuccess("Đã xóa rạp thành công!");
+                        });
+                    })
+                    .exceptionally(ex -> {
+                        Platform.runLater(() -> {
+                            if (ex.getMessage().contains("HAS_SCREENS") || 
+                                ex.getMessage().contains("có phòng chiếu")) {
+                                showError("Không thể xóa rạp có phòng chiếu!\nVui lòng xóa tất cả phòng chiếu trước.");
+                            } else if (ex.getMessage().contains("FOREIGN_KEY") || 
+                                       ex.getMessage().contains("liên quan")) {
+                                showError("Không thể xóa rạp có dữ liệu liên quan!");
+                            } else {
+                                showError("Không thể xóa rạp: " + ex.getMessage());
+                            }
+                        });
+                        ex.printStackTrace();
+                        return null;
+                    });
             }
         });
     }
 
     @FXML
     private void searchCinema() {
-        String keyword = searchField.getText().toLowerCase().trim();
+        // String keyword = searchField.getText().toLowerCase().trim();
 
-        if (keyword.isEmpty()) {
-            cinemaTable.setItems(cinemaList); // ✅ Set lại list gốc
-            return;
-        }
+        // if (keyword.isEmpty()) {
+        //     cinemaTable.setItems(cinemaList); // ✅ Set lại list gốc
+        //     return;
+        // }
 
-        // ✅ Tạo filtered list mới
-        ObservableList<Cinema> filtered = FXCollections.observableArrayList();
+        // // ✅ Tạo filtered list mới
+        // ObservableList<Cinema> filtered = FXCollections.observableArrayList();
 
-        for (Cinema cinema : cinemaList) {
-            if (cinema.getName().toLowerCase().contains(keyword) ||
-                    cinema.getCity().toLowerCase().contains(keyword) ||
-                    cinema.getAddress().toLowerCase().contains(keyword)) {
-                filtered.add(cinema);
-            }
-        }
+        // for (Cinema cinema : cinemaList) {
+        //     if (cinema.getName().toLowerCase().contains(keyword) ||
+        //             cinema.getCity().toLowerCase().contains(keyword) ||
+        //             cinema.getAddress().toLowerCase().contains(keyword)) {
+        //         filtered.add(cinema);
+        //     }
+        // }
 
-        cinemaTable.setItems(filtered);
+        // cinemaTable.setItems(filtered);
+        applyFilters();
     }
     // ====================== SEAT MAP METHODS ======================
 
@@ -298,6 +376,115 @@ public class CinemaListController implements Initializable {
         } catch (NumberFormatException e) {
             showError("Vui lòng nhập số hợp lệ!");
         }
+    }
+
+    // ====================== CINEMA SELECTOR FOR SEAT MAP ======================
+    private void setupCinemaSelector() {
+        cinemaSelector.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Cinema item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getName());
+            }
+        });
+        
+        cinemaSelector.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Cinema item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "-- Chọn rạp --" : item.getName());
+            }
+        });
+        
+        cinemaSelector.valueProperty().addListener((obs, oldVal, newVal) -> {
+            onCinemaSelected(newVal);
+        });
+    }
+
+    private void onCinemaSelected(Cinema cinema) {
+        selectedCinemaForSeats = cinema;
+        
+        if (cinema == null) {
+            selectedCinemaLabel.setText("Chưa chọn rạp");
+            screenCountLabel.setText("0 phòng");
+            return;
+        }
+        
+        System.out.println("🎬 Selected cinema for seat map: " + cinema.getName());
+        
+        // Load cinema details with screens
+        cinemaApi.getCinemaById(cinema.getId())
+            .thenAccept(loadedCinema -> {
+                // System.out.println("loaded: "+loadedCinema.getScreens());
+                Platform.runLater(() -> {
+                    
+                    selectedCinemaLabel.setText(loadedCinema.getName());
+                    int screenCount = loadedCinema.getScreens() != null ? loadedCinema.getScreens().size() : 0;
+                    screenCountLabel.setText(screenCount + " phòng");
+                    
+                    // Load first screen's seat layout if exists
+                    if (screenCount > 0) {
+                        Screen firstScreen = loadedCinema.getScreens().get(0);
+                        loadSeatLayoutFromScreen(firstScreen);
+                    }
+                });
+            })
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    showError("Không thể tải thông tin rạp: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
+    }
+
+    private void loadSeatLayoutFromScreen(Screen screen) {
+        System.out.println("📐 Loading seat layout from screen: " + screen.getName());
+        
+        if (screen.getSeatLayout() == null) {
+            showInfo("Thông báo", "Phòng chiếu chưa có sơ đồ ghế.\nBạn có thể tạo mới.");
+            return;
+        }
+        
+        SeatLayout layout = screen.getSeatLayout();
+        
+        // Set dimensions
+        rowsInput.setText(String.valueOf(layout.getRows()));
+        colsInput.setText(String.valueOf(layout.getColumns()));
+        
+        // Generate grid
+        currentSeatLayout = new SeatLayout(layout.getRows(), layout.getColumns());
+        
+        // Load existing seats
+        List<List<Seat>> seats = layout.getSeats();
+        if (seats != null) {
+            for (int row = 0; row < layout.getRows(); row++) {
+                for (int col = 0; col < layout.getColumns(); col++) {
+                    Seat apiSeat = seats.get(row).get(col);
+                    if (apiSeat != null) {
+                        SeatType seatType = apiSeat.getSeatType();
+                        Seat seat = new Seat(
+                            apiSeat.getSeatNumber(),
+                            seatType,
+                            apiSeat.getPrice(),
+                            row,
+                            col
+                        );
+                        currentSeatLayout.setSeat(row, col, seat);
+                    }
+                }
+            }
+        }
+        
+        renderSeatGrid();
+        
+        showInfo("Đã tải sơ đồ ghế", 
+            String.format("Đã tải sơ đồ %d×%d từ %s", 
+                layout.getRows(), 
+                layout.getColumns(), 
+                screen.getName()
+            )
+        );
     }
 
     private void renderSeatGrid() {
@@ -413,15 +600,6 @@ public class CinemaListController implements Initializable {
         return null;
     }
 
-    // ✅ THÊM METHOD HIỂN THỊ CẢNH BÁO (không chặn UI)
-    private void showWarning(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Cảnh báo");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.show(); // Dùng show() thay vì showAndWait()
-    }
-
     private String generateSeatNumber(int row, int col) {
         char rowLetter = (char) ('A' + row);
         int colNumber = col + 1;
@@ -462,48 +640,121 @@ public class CinemaListController implements Initializable {
             showError("Vui lòng tạo sơ đồ ghế trước!");
             return;
         }
-
-        int standardCount = 0;
-        int vipCount = 0;
-        int coupleCount = 0;
-        int aisleCount = 0;
-
+        
+        if (selectedCinemaForSeats == null) {
+            showError("Vui lòng chọn rạp trước!");
+            return;
+        }
+        
+        if (selectedCinemaForSeats.getScreens() == null || selectedCinemaForSeats.getScreens().isEmpty()) {
+            showError("Rạp chưa có phòng chiếu!");
+            return;
+        }
+        
+        // Count seats
+        SeatCount count = new SeatCount();
+        
+        List<CinemaApi.SeatData> seatDataList = new ArrayList<>();
+        
         for (int row = 0; row < currentSeatLayout.getRows(); row++) {
             for (int col = 0; col < currentSeatLayout.getColumns(); col++) {
                 Seat seat = currentSeatLayout.getSeat(row, col);
+                
                 if (seat == null) {
-                    aisleCount++;
+                    count.aisle++;
+                    seatDataList.add(null);
                 } else {
                     switch (seat.getSeatType()) {
-                        case STANDARD:
-                            standardCount++;
-                            break;
-                        case VIP:
-                            vipCount++;
-                            break;
-                        case COUPLE:
-                            coupleCount++;
-                            break;
+                        case STANDARD -> count.standard++;
+                        case VIP -> count.vip++;
+                        case COUPLE -> count.couple++;
                     }
+                    
+                    seatDataList.add(new CinemaApi.SeatData(
+                        seat.getSeatNumber(),
+                        seat.getSeatType().name(),
+                        seat.getPrice()
+                    ));
                 }
             }
         }
-
-        String summary = String.format(
-                "✅ Đã lưu sơ đồ ghế thành công!\n\n" +
-                        "📐 Kích thước: %d hàng × %d cột\n\n" +
-                        "🔵 Ghế thường: %d\n" +
-                        "🟡 Ghế VIP: %d\n" +
-                        "🔴 Ghế đôi: %d\n" +
-                        "⬜ Lối đi: %d",
-                currentSeatLayout.getRows(),
-                currentSeatLayout.getColumns(),
-                standardCount, vipCount, coupleCount, aisleCount);
-
-        showSuccess(summary);
+        
+        // Confirm before saving
+        int screenCount = selectedCinemaForSeats.getScreens().size();
+        String confirmMsg = String.format(
+            "Bạn có chắc muốn áp dụng sơ đồ ghế này cho TẤT CẢ %d phòng chiếu?\n\n" +
+            "📐 Kích thước: %d hàng × %d cột\n" +
+            "🔵 Ghế thường: %d\n" +
+            "🟡 Ghế VIP: %d\n" +
+            "🔴 Ghế đôi: %d\n" +
+            "⬜ Lối đi: %d\n\n" +
+            "Cảnh báo: Sơ đồ ghế cũ sẽ bị thay thế!",
+            screenCount,
+            currentSeatLayout.getRows(),
+            currentSeatLayout.getColumns(),
+            count.standard, count.vip, count.couple, count.aisle
+        );
+        
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác Nhận Lưu");
+        confirmAlert.setHeaderText("Áp dụng cho tất cả phòng chiếu");
+        confirmAlert.setContentText(confirmMsg);
+        
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                // Save via API
+                CinemaApi.SeatLayoutData layoutData = new CinemaApi.SeatLayoutData(
+                    currentSeatLayout.getRows(),
+                    currentSeatLayout.getColumns(),
+                    seatDataList
+                );
+                
+                cinemaApi.updateBulkSeatLayout(selectedCinemaForSeats.getId(), layoutData)
+                    .thenAccept(screensUpdated -> {
+                        Platform.runLater(() -> {
+                            String summary = String.format(
+                                "✅ Đã lưu sơ đồ ghế thành công!\n\n" +
+                                "📍 Rạp: %s\n" +
+                                "🎭 Số phòng đã cập nhật: %d\n" +
+                                "📐 Kích thước: %d hàng × %d cột\n\n" +
+                                "🔵 Ghế thường: %d\n" +
+                                "🟡 Ghế VIP: %d\n" +
+                                "🔴 Ghế đôi: %d\n" +
+                                "⬜ Lối đi: %d",
+                                selectedCinemaForSeats.getName(),
+                                screensUpdated,
+                                currentSeatLayout.getRows(),
+                                currentSeatLayout.getColumns(),
+                                count.standard, count.vip, count.couple, count.aisle
+                            );
+                            
+                            showSuccess(summary);
+                            
+                            // Reload cinema data
+                            loadCinemaData();
+                        });
+                    })
+                    .exceptionally(ex -> {
+                        Platform.runLater(() -> {
+                            showError("Không thể lưu sơ đồ ghế: " + ex.getMessage());
+                        });
+                        ex.printStackTrace();
+                        return null;
+                    });
+            }
+        });
     }
 
     // ====================== HELPERS ======================
+    // ✅ THÊM METHOD HIỂN THỊ CẢNH BÁO (không chặn UI)
+    private void showWarning(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Cảnh báo");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show(); // Dùng show() thay vì showAndWait()
+    }
+    
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Lỗi");
@@ -518,5 +769,20 @@ public class CinemaListController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+    }
+
+    static class SeatCount {
+        int standard;
+        int vip;
+        int couple;
+        int aisle;
     }
 }

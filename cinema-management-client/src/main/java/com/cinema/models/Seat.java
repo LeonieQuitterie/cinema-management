@@ -1,11 +1,17 @@
 package com.cinema.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Seat {
+    @SerializedName("seat_number")
     private String seatNumber;    // VD: "A1", "B5", "C10"
+    @SerializedName("seat_type")
     private SeatType seatType;     // STANDARD, VIP, COUPLE
     private SeatStatus status;     // AVAILABLE, SELECTED, BOOKED
     private double price;          // Giá ghế
+    @SerializedName("row_index")
     private int rowIndex;          // Vị trí hàng trong layout
+    @SerializedName("col_index")
     private int colIndex;          // Vị trí cột trong layout
 
     public Seat() {}

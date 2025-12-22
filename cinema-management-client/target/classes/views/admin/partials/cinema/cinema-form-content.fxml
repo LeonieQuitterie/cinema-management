@@ -27,8 +27,13 @@
 
                     </StackPane>
                     <VBox spacing="8">
-                        <Button text="📁 Chọn Logo" onAction="#selectLogo" styleClass="btn-upload"/>
-                        <Label text="PNG, JPG (tối đa 2MB)" styleClass="hint-text"/>
+                        <!-- <Button text="📁 Chọn Logo" onAction="#selectLogo" styleClass="btn-upload"/>
+                        <Label text="PNG, JPG (tối đa 2MB)" styleClass="hint-text"/> -->
+                        <TextField
+                            fx:id="logoUrlField"
+                            promptText="VD: https://example.com/logo.png"
+                            styleClass="form-input"/>
+                        <Label text="Nhập link ảnh PNG / JPG" styleClass="hint-text"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -53,10 +58,10 @@
             </VBox>
 
             <!-- Số Điện Thoại -->
-            <VBox spacing="8">
+            <!-- <VBox spacing="8">
                 <Label text="Số Điện Thoại" styleClass="field-label-cinema"/>
                 <TextField fx:id="phoneField" promptText="VD: 1900 xxxx" styleClass="form-input"/>
-            </VBox>
+            </VBox> -->
 
         </VBox>
     </ScrollPane>
@@ -65,7 +70,7 @@
 
     <!-- Action Buttons -->
     <HBox spacing="15" alignment="CENTER">
-        <Button text="💾 Lưu Thông Tin" onAction="#saveCinema" styleClass="btn-save" prefWidth="150"/>
+        <Button text="💾 Lưu Thông Tin" fx:id="saveButton" onAction="#saveCinema" styleClass="btn-save" prefWidth="150"/>
         <Button text="✖ Hủy Bỏ" onAction="#closeModal" styleClass="btn-cancel" prefWidth="150"/>
     </HBox>
 

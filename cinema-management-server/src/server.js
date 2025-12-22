@@ -16,7 +16,6 @@ app.get('/api/test', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
-
 // src/server.js
 const movieRoutes = require('./routes/movieRoutes');
 app.use('/api/movies', movieRoutes);
@@ -25,10 +24,20 @@ app.use('/api/movies', movieRoutes);
 const commentRoutes = require('./routes/commentRoutes');
 app.use('/api/movies', commentRoutes);
 
-
 const cinemaRoutes = require("./routes/cinemaRoutes");
 app.use("/api/cinemas", cinemaRoutes);
 
+const adminMovieRoutes = require('./routes/admin/movieRoutes');
+app.use('/api/admin/movies', adminMovieRoutes);
+
+const adminGenreRoutes = require('./routes/admin/genreRoutes');
+app.use('/api/admin/genres', adminGenreRoutes);
+
+const adminShowtimeRoutes = require('./routes/admin/showtimeRoutes');
+app.use('/api/admin/showtimes', adminShowtimeRoutes);
+
+const adminCinemaRoutes = require('./routes/admin/cinemaRoutes');
+app.use('/api/admin/cinemas', adminCinemaRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

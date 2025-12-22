@@ -1,9 +1,11 @@
 package com.cinema.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+import java.util.stream.Collectors;
 
 public class Movie {
     private String id;
@@ -15,7 +17,8 @@ public class Movie {
     @SerializedName("poster_url")
     private String posterUrl;
 
-    private List<String> genres;
+    @SerializedName("genres")
+    private List<Genre> genres;
 
     @SerializedName("release_date")
     private LocalDate releaseDate; // ngày phát hành
@@ -55,10 +58,10 @@ public class Movie {
             return displayName;
         }
     }
-    
-// Default constructor
-public Movie() {
-}
+
+    // Default constructor
+    public Movie() {
+    }
 
     // Constructor
     public Movie(String id,
@@ -67,7 +70,7 @@ public Movie() {
             int duration,
             double rating,
             String posterUrl,
-            List<String> genres,
+            List<Genre> genres,
             LocalDate releaseDate,
             MovieStatus status,
             String language,
@@ -149,11 +152,11 @@ public Movie() {
         this.posterUrl = posterUrl;
     }
 
-    public List<String> getGenres() {
+    public List<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
 
@@ -251,5 +254,16 @@ public Movie() {
 
     public String getRatingFormatted() {
         return String.format("%.1f/10", rating);
+    }
+
+    // Helper method to get genre names as list of strings (for backward
+    // compatibility)
+    public List<String> getGenreNames() {
+        if (genres == null || genres.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return genres.stream()
+                .map(Genre::getName)
+                .collect(Collectors.toList());
     }
 }

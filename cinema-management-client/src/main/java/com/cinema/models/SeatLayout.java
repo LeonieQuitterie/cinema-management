@@ -3,8 +3,12 @@ package com.cinema.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 public class SeatLayout {
+    @SerializedName("row_count")
     private int rows;        // Số hàng
+    @SerializedName("column_count")
     private int columns;     // Số cột
     private List<List<Seat>> seats; // Ma trận ghế: seats[row][col]
     
@@ -60,4 +64,23 @@ public class SeatLayout {
     
     public List<List<Seat>> getSeats() { return seats; }
     public void setSeats(List<List<Seat>> seats) { this.seats = seats; }
+
+    public SeatLayout clone() {
+        SeatLayout copy = new SeatLayout(rows, columns);
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < columns; c++) {
+                Seat seat = getSeat(r, c);
+                if (seat != null) {
+                    copy.setSeat(r, c, new Seat(
+                        seat.getSeatNumber(),
+                        seat.getSeatType(),
+                        seat.getPrice(),
+                        seat.getRowIndex(),
+                        seat.getColIndex()
+                    ));
+                }
+            }
+        }
+        return copy;
+    }
 }

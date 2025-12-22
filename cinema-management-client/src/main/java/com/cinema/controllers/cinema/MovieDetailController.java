@@ -14,6 +14,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import com.cinema.models.Actor;
 import com.cinema.models.Comment;
 import com.cinema.models.CommentReaction;
+import com.cinema.models.Genre;
 import com.cinema.models.Movie;
 import com.cinema.utils.ApiClient;
 import com.cinema.utils.MovieApi;
@@ -164,7 +165,7 @@ public class MovieDetailController {
         }
 
         // Genres
-        loadGenres(movie.getGenres().toArray(new String[0]));
+        loadGenres(movie.getGenres().stream().map(Genre::getName).toArray(String[]::new));
 
         // Age Rating
         ageRatingNumber.setText(movie.getAgeRating());

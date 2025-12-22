@@ -26,13 +26,17 @@
                 <VBox spacing="8">
                     <Label text="Mô tả phim *" styleClass="field-label"/>
                     <TextArea fx:id="descField" promptText="Nhập mô tả chi tiết về phim..." 
-                              prefRowCount="4" wrapText="true" styleClass="textarea-field"/>
+                              prefRowCount="4" wrapText="true" styleClass="input-field"/>
                 </VBox>
 
                 <HBox spacing="15">
                     <VBox spacing="8" HBox.hgrow="ALWAYS">
                         <Label text="Thời lượng (phút) *" styleClass="field-label"/>
                         <TextField fx:id="durationField" promptText="VD: 120" styleClass="input-field"/>
+
+                        <!-- Release Date -->
+                    <Label text="Ngày phát hành:" styleClass="field-label"/>
+                    <DatePicker fx:id="releaseDatePicker" styleClass="input-field" promptText="Chọn ngày phát hành"/>
                     </VBox>
                     
                 </HBox>
@@ -60,15 +64,14 @@
 
             <!-- Genre Section -->
             <VBox spacing="15" styleClass="form-section">
-                <Label text="THỂ LOẠI PHIM" styleClass="section-header"/>
-                
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="genreInputField" promptText="Nhập thể loại (VD: Hành động)" 
-                               styleClass="input-field" HBox.hgrow="ALWAYS"/>
+                <!-- Genres -->
+                <Label text="Thể loại:" styleClass="section-header"/>
+                <HBox spacing="10">
+                    <ComboBox fx:id="genreComboBox" promptText="Chọn thể loại" prefWidth="200" styleClass="input-field"/>
                     <Button text="Thêm" onAction="#addGenre" styleClass="btn-secondary"/>
                 </HBox>
-                
                 <ListView fx:id="genreListView" prefHeight="100" styleClass="list-view-field"/>
+                <Label text="Double-click để xóa" style="-fx-font-size: 10px; -fx-text-fill: #666;"/>
             </VBox>
 
             <!-- Media Section -->
@@ -128,7 +131,7 @@
             <!-- Action Buttons -->
             <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
                 <Button text="Hủy" onAction="#close" styleClass="btn-cancel"/>
-                <Button text="Lưu Phim" onAction="#save" styleClass="btn-primary"/>
+                <Button fx:id="saveButton" text="Lưu Phim" onAction="#save" styleClass="btn-primary"/>
             </HBox>
 
         </VBox>

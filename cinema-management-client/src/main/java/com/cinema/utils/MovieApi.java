@@ -51,6 +51,7 @@ public class MovieApi {
     }
 
     public static List<Movie> getComingSoonMovies() {
+        System.err.println(111);
         return getMoviesByStatus("COMING_SOON");
     }
 

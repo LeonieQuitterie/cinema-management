@@ -132,6 +132,8 @@ public class DashboardController implements Initializable {
                 }
             }
         });
+
+        recentBookingsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
     @FXML

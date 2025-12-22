@@ -2,6 +2,9 @@ package com.cinema.controllers.admin.cinema;
 
 import com.cinema.models.Cinema;
 import com.cinema.models.Screen;
+import com.cinema.utils.admin.CinemaApi;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,42 +19,93 @@ import java.util.ResourceBundle;
 
 public class CinemaDetailController implements Initializable {
 
-    @FXML
-    private Label cinemaNameLabel;
-    @FXML
-    private Label cinemaAddressLabel;
-    @FXML
-    private Label cinemaCityLabel;
-    @FXML
-    private Label totalScreensLabel;
-    @FXML
-    private Label totalSeatsLabel;
+    @FXML private Label cinemaNameLabel;
+    @FXML private Label cinemaAddressLabel;
+    @FXML private Label cinemaCityLabel;
+    @FXML private Label totalScreensLabel;
+    @FXML private Label totalSeatsLabel;
 
-    @FXML
-    private TableView<Screen> screenTable;
-    @FXML
-    private TableColumn<Screen, String> screenNameColumn;
-    @FXML
-    private TableColumn<Screen, String> screenIdColumn;
-    @FXML
-    private TableColumn<Screen, Integer> totalSeatsColumn;
-    @FXML
-    private TableColumn<Screen, Void> actionColumn;
+    @FXML private TableView<Screen> screenTable;
+    @FXML private TableColumn<Screen, String> screenNameColumn;
+    @FXML private TableColumn<Screen, String> screenIdColumn;
+    @FXML private TableColumn<Screen, Integer> totalSeatsColumn;
+    @FXML private TableColumn<Screen, Void> actionColumn;
+
+    @FXML private TextField screenNameInput;
 
     private Cinema cinema;
     private ObservableList<Screen> screenList = FXCollections.observableArrayList();
+    private CinemaApi cinemaApi;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cinemaApi = new CinemaApi();
+
         setupTableColumns();
         setupActionButtons();
     }
 
     public void setCinema(Cinema cinema) {
         this.cinema = cinema;
-        loadCinemaData();
-        loadScreenData();
+
+        // If cinema has ID, load fresh data from API
+        if (cinema.getId() != null) {
+            loadCinemaData(cinema.getId());
+        } else {
+            // Otherwise use provided data
+            displayCinemaData();
+        }
+        // loadCinemaData();
+        // loadScreenData();
     }
+
+    private void loadCinemaData(String cinemaId) {
+        System.out.println("🎬 Loading cinema details: " + cinemaId);
+
+        // cinemaNameLabel.setText(cinema.getName());
+        // cinemaAddressLabel.setText(cinema.getAddress());
+        // cinemaCityLabel.setText(cinema.getCity());
+        // updateSummary();
+        cinemaApi.getCinemaById(cinemaId)
+            .thenAccept(loadedCinema -> {
+                Platform.runLater(() -> {
+                    System.out.println("✅ Cinema loaded: " + loadedCinema.getName());
+                    this.cinema = loadedCinema;
+                    displayCinemaData();
+                });
+            })
+            .exceptionally(ex -> {
+                Platform.runLater(() -> {
+                    System.err.println("❌ Failed to load cinema: " + ex.getMessage());
+                    showError("Không thể tải thông tin rạp: " + ex.getMessage());
+                });
+                ex.printStackTrace();
+                return null;
+            });
+    }
+
+    private void displayCinemaData() {
+        cinemaNameLabel.setText(cinema.getName());
+        cinemaAddressLabel.setText(cinema.getAddress());
+        cinemaCityLabel.setText(cinema.getCity());
+        
+        screenList.clear();
+        if (cinema.getScreens() != null) {
+            screenList.addAll(cinema.getScreens());
+        }
+        screenTable.setItems(screenList);
+        
+        updateSummary();
+    }
+
+    // private void loadScreenData() {
+    //     screenList.clear();
+    //     if (cinema.getScreens() != null) {
+    //         screenList.addAll(cinema.getScreens());
+    //     }
+    //     screenTable.setItems(screenList);
+    //     updateSummary();
+    // }
 
     private void setupTableColumns() {
         screenNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -92,22 +146,6 @@ public class CinemaDetailController implements Initializable {
         });
     }
 
-    private void loadCinemaData() {
-        cinemaNameLabel.setText(cinema.getName());
-        cinemaAddressLabel.setText(cinema.getAddress());
-        cinemaCityLabel.setText(cinema.getCity());
-        updateSummary();
-    }
-
-    private void loadScreenData() {
-        screenList.clear();
-        if (cinema.getScreens() != null) {
-            screenList.addAll(cinema.getScreens());
-        }
-        screenTable.setItems(screenList);
-        updateSummary();
-    }
-
     private void updateSummary() {
         int totalScreens = screenList.size();
         int totalSeats = screenList.stream()
@@ -127,6 +165,32 @@ public class CinemaDetailController implements Initializable {
     private void editScreen(Screen screen) {
         // TODO: Mở form sửa phòng
         showInfo("Chức năng đang phát triển", "Form sửa phòng: " + screen.getName());
+    }
+
+    @FXML
+    private void addScreenQuick() {
+        String screenName = screenNameInput.getText().trim();
+
+        if (screenName.isEmpty()) {
+            showInfo("Thiếu thông tin", "Vui lòng nhập tên phòng chiếu");
+            return;
+        }
+
+        // Tạo Screen đơn giản (Q có thể đổi constructor theo model thật)
+        Screen newScreen = new Screen();
+        newScreen.setName(screenName);
+        newScreen.setId("SCR-" + (screenList.size() + 1));
+        newScreen.setTotalSeats(0);
+
+        // Add vào cinema + table
+        screenList.add(newScreen);
+        cinema.getScreens().add(newScreen);
+
+        // Reset input
+        screenNameInput.clear();
+        updateSummary();
+
+        showSuccess("Đã thêm phòng: " + screenName);
     }
 
     private void deleteScreen(Screen screen) {
@@ -167,33 +231,11 @@ public class CinemaDetailController implements Initializable {
         alert.showAndWait();
     }
 
-    @FXML
-private TextField screenNameInput;
-
-@FXML
-private void addScreenQuick() {
-    String screenName = screenNameInput.getText().trim();
-
-    if (screenName.isEmpty()) {
-        showInfo("Thiếu thông tin", "Vui lòng nhập tên phòng chiếu");
-        return;
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
-
-    // Tạo Screen đơn giản (Q có thể đổi constructor theo model thật)
-    Screen newScreen = new Screen();
-    newScreen.setName(screenName);
-    newScreen.setId("SCR-" + (screenList.size() + 1));
-    newScreen.setTotalSeats(0);
-
-    // Add vào cinema + table
-    screenList.add(newScreen);
-    cinema.getScreens().add(newScreen);
-
-    // Reset input
-    screenNameInput.clear();
-    updateSummary();
-
-    showSuccess("Đã thêm phòng: " + screenName);
-}
-
 }

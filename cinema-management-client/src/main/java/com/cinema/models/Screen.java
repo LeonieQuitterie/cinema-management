@@ -2,12 +2,26 @@ package com.cinema.models;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Screen {
     private String id;
     private String name; // VD: "Phòng 1", "Screen A"
+
+    @SerializedName("cinema_id")
     private String cinemaId;
-    private SeatLayout seatLayout; // Sơ đồ ghế của phòng này
-    private int totalSeats;
+    
+    @SerializedName("row_count")
+    private Integer rowCount;
+    
+    @SerializedName("column_count")
+    private Integer columnCount;
+    
+    @SerializedName("total_seats")
+    private Integer totalSeats;
+    
+    @SerializedName("seat_layout")
+    private SeatLayout seatLayout;
 
     public Screen() {}
 
@@ -50,4 +64,15 @@ public class Screen {
     
     public int getTotalSeats() { return totalSeats; }
     public void setTotalSeats(int totalSeats) { this.totalSeats = totalSeats; }
+    
+    public Integer getRowCount() { return rowCount; }
+    public void setRowCount(Integer rowCount) { this.rowCount = rowCount; }
+    
+    public Integer getColumnCount() { return columnCount; }
+    public void setColumnCount(Integer columnCount) { this.columnCount = columnCount; }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
 }

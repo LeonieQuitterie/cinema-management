@@ -149,7 +149,7 @@ public class CustomerHomeController {
         title.setWrapText(true);
 
         // Thể loại
-        Label genre = new Label(String.join(", ", movie.getGenres()));
+        Label genre = new Label(String.join(", ", movie.getGenreNames()));
         genre.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 18px;");
 
         // Trạng thái (Đang chiếu / Sắp chiếu)
@@ -289,7 +289,7 @@ public class CustomerHomeController {
         genreIcon.setIconSize(12);
         genreIcon.setIconColor(javafx.scene.paint.Color.web("#888899"));
 
-        String genreText = limitText(String.join(", ", movie.getGenres()), 20);
+        String genreText = limitText(String.join(", ", movie.getGenreNames()), 20);
 
         Label genre = new Label(genreText);
         genre.getStyleClass().add("movie-info");
@@ -427,7 +427,7 @@ public class CustomerHomeController {
         genreIcon.setIconSize(12);
         genreIcon.setIconColor(javafx.scene.paint.Color.web("#888899"));
 
-        String genreText = limitText(String.join(", ", movie.getGenres()), 20);
+        String genreText = limitText(String.join(", ", movie.getGenreNames()), 20);
 
         Label genre = new Label(genreText);
         genre.getStyleClass().add("movie-info");
