@@ -32,6 +32,7 @@ public class Main extends Application {
             // Setup stage
             primaryStage.setTitle("Cinema Pro - Hệ thống đặt vé");
             primaryStage.setScene(scene);
+            primaryStage.setMaximized(true);
             // FULL MÀN HÌNH + KHÔNG CHO RESIZE + KHÔNG CÓ VIỀN (đẹp như app thật)
             // primaryStage.setFullScreen(true); // Full màn hình
             primaryStage.setMaximized(true);

@@ -29,6 +29,11 @@ import java.util.ResourceBundle;
 
 import com.cinema.models.*;
 
+// ✅ THÊM: Socket.IO imports
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import org.json.JSONObject;
+
 public class PaymentController implements Initializable {
 
     @FXML
@@ -74,92 +79,199 @@ public class PaymentController implements Initializable {
     private Timeline countdownTimeline;
     private int remainingSeconds = 900; // 15 phút = 900 giây
 
+    // ✅ THÊM: Socket.IO connection
+    private Socket paymentSocket;
+    private Timeline pollingTimeline; // Backup polling
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Tạo mock data
-        currentBooking = createMockBooking();
-
-        // Load dữ liệu lên UI
-        loadBookingData();
-
-        // Bắt đầu đếm ngược
-        startCountdown();
+        System.out.println("PaymentController initialized");
+        System.out.println("⏳ Waiting for booking data...");
+        // ❌ XÓA: Không dùng mock data nữa
+        // currentBooking = createMockBooking();
+        // loadBookingData();
+        // startCountdown();
     }
 
-    private Booking createMockBooking() {
-        Booking booking = new Booking();
+    // ✅ THÊM: Setter để nhận booking từ BookingConfirmationController
+    public void setBooking(Booking booking) {
+        this.currentBooking = booking;
 
-        // Thông tin cơ bản
-        booking.setId("BOOK20251209001");
-        booking.setMovieId("M001");
-        booking.setMovieTitle("Võ Sĩ Giác Đấu II");
-        booking.setMoviePosterUrl("https://i.pinimg.com/736x/a4/ba/63/a4ba6312644cea9548c2df117832d1ea.jpg");
-        booking.setAgeRating("C18");
-        booking.setAgeRatingDescription("Phim dành cho khán giả từ đủ 18 tuổi trở lên");
+        System.out.println("=== PaymentController.setBooking() ===");
+        System.out.println("📌 Received booking: " + booking.getId());
+        System.out.println("📌 Total price: " + booking.getTotalPrice());
+        System.out.println("📌 Cinema: " + booking.getCinemaName());
+        System.out.println("📌 Movie: " + booking.getMovieTitle());
 
-        // Thông tin rạp
-        booking.setCinemaId("C001");
-        booking.setCinemaName("CGV Vincom");
-        booking.setCinemaLogoUrl("https://i.pinimg.com/736x/a4/ba/63/a4ba6312644cea9548c2df117832d1ea.jpg");
-        booking.setScreenName("Phòng 5");
+        // ✅ Load data và start countdown
+        Platform.runLater(() -> {
+            loadBookingData();
+            startCountdown();
+            connectPaymentSocket(); // ✅ Kết nối Socket.IO
+        });
+    }
 
-        // Thời gian
-        LocalDateTime showtime = LocalDateTime.of(2025, 12, 9, 20, 20);
-        booking.setShowtime(showtime);
-        booking.setFormat("2D phụ đề");
-        booking.setBookingTime(LocalDateTime.now());
-        booking.setPaymentDeadline(LocalDateTime.now().plusMinutes(15));
+    // ✅ THÊM: Kết nối Socket.IO để nhận payment updates
+    private void connectPaymentSocket() {
+        try {
+            IO.Options options = new IO.Options();
+            options.transports = new String[] { "websocket" };
+            options.reconnection = true;
+            options.reconnectionAttempts = 5;
+            options.reconnectionDelay = 1000;
 
-        // Ghế
-        booking.setSelectedSeats(Arrays.asList("H13"));
-        booking.setSeatTotalPrice(100000);
+            paymentSocket = IO.socket("http://localhost:3000/payment", options);
 
-        // Combo
-        List<ComboOrderItem> combos = new ArrayList<>();
+            // ✅ Lắng nghe event payment status từ server
+            paymentSocket.on("payment:status", args -> {
+                try {
+                    JSONObject data = (JSONObject) args[0];
+                    String status = data.getString("status");
+                    String bookingId = data.getString("bookingId");
 
-        FoodCombo comboCouple = new FoodCombo();
-        comboCouple.setId("FC001");
-        comboCouple.setName("Combo Couple");
-        comboCouple.setDescription("2 Bắp lớn + 2 Nước lớn");
-        comboCouple.setPrice(150000);
-        comboCouple.setCategory(FoodCategory.COMBO);
+                    System.out.println("💰 Payment status received: " + status + " for " + bookingId);
 
-        FoodCombo comboSolo = new FoodCombo();
-        comboSolo.setId("FC002");
-        comboSolo.setName("Combo Solo");
-        comboSolo.setDescription("1 Bắp + 1 Nước");
-        comboSolo.setPrice(75000);
-        comboSolo.setCategory(FoodCategory.COMBO);
+                    if ("SUCCESS".equals(status) && bookingId.equals(currentBooking.getId())) {
+                        Platform.runLater(() -> handlePaymentSuccess(data));
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error parsing payment status: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
 
-        combos.add(new ComboOrderItem(comboCouple, 1));
-        combos.add(new ComboOrderItem(comboSolo, 2));
+            paymentSocket.on(Socket.EVENT_CONNECT, args -> {
+                System.out.println("✅ Connected to payment socket");
 
-        booking.setCombos(combos);
-        booking.setComboTotalPrice(300000);
+                // Join room của booking này
+                paymentSocket.emit("join-booking", currentBooking.getId());
+                System.out.println("📌 Joined booking room: " + currentBooking.getId());
+            });
 
-        // Khách hàng
-        Customer customer = new Customer();
-        customer.setId("CUST001");
-        customer.setFullName("Nguyễn Văn A");
-        customer.setPhoneNumber("0912345678");
-        customer.setEmail("nguyenvana@example.com");
-        booking.setCustomer(customer);
+            paymentSocket.on(Socket.EVENT_DISCONNECT, args -> {
+                System.out.println("❌ Disconnected from payment socket");
+                // Start polling backup
+                if (pollingTimeline == null && remainingSeconds > 0) {
+                    startPaymentPolling();
+                }
+            });
 
-        // Tổng tiền
-        booking.setTotalPrice(405000);
+            paymentSocket.on(Socket.EVENT_CONNECT_ERROR, args -> {
+                System.err.println("⚠️ Payment socket connection error: " + args[0]);
+                // Start polling backup
+                if (pollingTimeline == null && remainingSeconds > 0) {
+                    startPaymentPolling();
+                }
+            });
 
-        // Thông tin thanh toán
-        PaymentInfo paymentInfo = new PaymentInfo(
-                "Vietcombank",
-                "CÔNG TY TNHH CINEMA PRO",
-                "9999888877777",
-                booking.getId(),
-                "https://via.placeholder.com/400x400/ffffff/000000?text=QR+CODE",
-                booking.getTotalPrice());
-        booking.setPaymentInfo(paymentInfo);
-        booking.setPaymentStatus(PaymentStatus.PENDING);
+            paymentSocket.connect();
 
-        return booking;
+        } catch (Exception e) {
+            System.err.println("Failed to initialize payment socket: " + e.getMessage());
+            e.printStackTrace();
+            // Fallback to polling
+            startPaymentPolling();
+        }
+    }
+
+    // ✅ THÊM: Polling backup nếu Socket fail
+    private void startPaymentPolling() {
+        System.out.println("🔄 Starting payment polling backup...");
+
+        pollingTimeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            checkPaymentStatus();
+        }));
+
+        pollingTimeline.setCycleCount(180); // 15 phút = 180 * 5s
+        pollingTimeline.play();
+    }
+
+    // ✅ THÊM: Check payment status qua API
+    private void checkPaymentStatus() {
+        new Thread(() -> {
+            try {
+                // TODO: Call API /api/payment/status/{bookingId}
+                // Sử dụng BookingApiClient hoặc HTTP client
+                // Nếu paid → Platform.runLater(() -> handlePaymentSuccess(...))
+
+                System.out.println("🔍 Polling payment status for " + currentBooking.getId());
+
+            } catch (Exception e) {
+                System.err.println("Error polling payment status: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    // ✅ THÊM: Xử lý khi nhận được payment success
+    private void handlePaymentSuccess(JSONObject data) {
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
+        }
+        if (pollingTimeline != null) {
+            pollingTimeline.stop();
+        }
+
+        currentBooking.setPaymentStatus(PaymentStatus.PAID);
+
+        try {
+            int amount = data.getInt("amount");
+            String transactionId = data.optString("transactionId", "N/A");
+
+            System.out.println("✅ Payment confirmed:");
+            System.out.println("   Amount: " + amount);
+            System.out.println("   Transaction ID: " + transactionId);
+
+        } catch (Exception e) {
+            System.err.println("Error extracting payment details: " + e.getMessage());
+        }
+
+        // Hiển thị thông báo thành công
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Thanh toán thành công");
+        alert.setHeaderText("✅ Đã nhận được thanh toán!");
+        alert.setContentText(
+                "Giao dịch của bạn đã được xác nhận.\n\n" +
+                        "Mã booking: " + currentBooking.getId() + "\n" +
+                        "Số tiền: " + currentBooking.getFormattedTotalPrice() + "\n\n" +
+                        "Chúng tôi sẽ chuyển bạn đến trang xác nhận.");
+
+        alert.showAndWait();
+
+        // Chuyển sang booking success page
+        navigateToBookingSuccess();
+    }
+
+    private void navigateToBookingSuccess() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/views/cinema/booking-success.fxml"));
+            Parent successRoot = loader.load();
+
+            // TODO: Pass booking data to success controller nếu cần
+            // BookingSuccessController controller = loader.getController();
+            // controller.setBooking(currentBooking);
+
+            Stage stage = (Stage) confirmPaymentButton.getScene().getWindow();
+            Scene scene = stage.getScene();
+            boolean isFullScreen = stage.isFullScreen();
+
+            scene.setRoot(successRoot);
+
+            if (isFullScreen) {
+                Platform.runLater(() -> {
+                    stage.setFullScreen(true);
+                    stage.setFullScreenExitHint("");
+                });
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Lỗi");
+            error.setHeaderText("Không thể chuyển trang");
+            error.setContentText("Vui lòng thử lại.");
+            error.showAndWait();
+        }
     }
 
     private void loadBookingData() {
@@ -289,7 +401,7 @@ public class PaymentController implements Initializable {
 
             // Dùng Platform.runLater để tránh lỗi showAndWait trong Timeline
             Platform.runLater(() -> {
-             
+
                 // 2. Sau khi bấm OK alert → mới chuyển trang
                 try {
                     Parent successRoot = FXMLLoader.load(
@@ -335,9 +447,23 @@ public class PaymentController implements Initializable {
         confirmPaymentButton.setDisable(true);
         confirmPaymentButton.setText("Đã hết hạn");
 
+        cleanup();
         alert.showAndWait();
 
         System.out.println("Quay về trang chủ...");
         // TODO: Chuyển về trang chủ hoặc trang chọn phim
+    }
+
+    public void cleanup() {
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
+        }
+        if (pollingTimeline != null) {
+            pollingTimeline.stop();
+        }
+        if (paymentSocket != null && paymentSocket.connected()) {
+            paymentSocket.disconnect();
+            System.out.println("🔌 Payment socket disconnected");
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.cinema.utils.admin;
 
 import com.cinema.models.Cinema;
 import com.cinema.utils.adapters.LocalDateAdapter;
+import com.cinema.utils.adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,6 +13,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -32,6 +34,7 @@ public class CinemaApi {
         
         this.gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
     }
     

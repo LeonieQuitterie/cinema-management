@@ -6,16 +6,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.prefs.Preferences;
 
 public class ApiClient {
 
     private static final String BASE_URL = "http://localhost:3000/api/auth";
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
-
+    private static final HttpClient httpClient = HttpClientProvider.http1();
     private static final Gson gson = new Gson();
 
     // Preferences để lưu token và user
@@ -39,6 +37,7 @@ public class ApiClient {
     // === ĐĂNG NHẬP (chỉ dùng email) ===
     public static AuthResponse login(String email, String password) {
         String jsonBody = gson.toJson(new LoginRequest(email, password));
+        System.out.println("LOGIN JSON = " + jsonBody);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/login"))
@@ -47,6 +46,7 @@ public class ApiClient {
                 .timeout(Duration.ofSeconds(15))
                 .build();
 
+        System.err.println(11111);
         return sendRequest(request);
     }
 
@@ -55,25 +55,50 @@ public class ApiClient {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+            System.out.println("🔑 API Auth Response Code: " + response.statusCode());
+            System.out.println("   Response Body: " + response.body());
+
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 AuthResponse authResponse = gson.fromJson(response.body(), AuthResponse.class);
-                if (authResponse.success && authResponse.data != null) {
-                    // Lưu token và thông tin user
-                    prefs.put("auth_token", authResponse.data.token);
+
+                if (authResponse.success && authResponse.data != null && authResponse.data.token != null) {
+                    String token = authResponse.data.token;
+
+                    // ✅ Lưu vào Preferences (để dùng lại sau khi tắt app)
+                    prefs.put("auth_token", token);
                     prefs.put("user_id", authResponse.data.user.id);
                     prefs.put("username", authResponse.data.user.username);
                     prefs.put("full_name", authResponse.data.user.full_name);
                     prefs.put("email", authResponse.data.user.email);
                     prefs.put("role", authResponse.data.user.role);
+
+                    // ✅ ĐỒNG BỘ TOKEN SANG BookingApiService ĐỂ DÙNG CHO CÁC API KHÁC
+                    BookingApiService.setAuthToken(token);
+
+                    System.out.println("✅ Login/Register thành công!");
+                    System.out.println("   Token đã lưu (dài " + token.length() + " ký tự)");
+                    System.out.println(
+                            "   User: " + authResponse.data.user.full_name + " (" + authResponse.data.user.email + ")");
+                } else {
+                    System.err.println("⚠️ Login thành công nhưng không có token hoặc data null");
                 }
+
                 return authResponse;
+
             } else {
+                // Lỗi từ server (400, 401, 500...)
                 AuthResponse error = new AuthResponse();
                 error.success = false;
                 error.message = "Lỗi server: " + response.statusCode() + " - " + response.body();
+
+                System.err.println("❌ Auth API lỗi: " + error.message);
                 return error;
             }
+
         } catch (Exception e) {
+            System.err.println("❌ Lỗi kết nối khi gọi Auth API:");
+            e.printStackTrace();
+
             AuthResponse error = new AuthResponse();
             error.success = false;
             error.message = "Lỗi kết nối: " + e.getMessage();

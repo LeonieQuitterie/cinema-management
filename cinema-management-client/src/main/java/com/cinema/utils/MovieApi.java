@@ -34,9 +34,7 @@ import java.util.List;
 public class MovieApi {
 
     private static final String BASE_URL = "http://localhost:3000/api/movies";
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    private static final HttpClient httpClient = HttpClientProvider.http1();
 
     // Gson sử dụng các adapter riêng biệt + xử lý Double từ String
     private static final Gson gson = new GsonBuilder()

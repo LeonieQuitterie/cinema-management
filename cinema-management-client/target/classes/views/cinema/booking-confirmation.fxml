@@ -125,7 +125,7 @@
                         <VBox spacing="15" styleClass="customer-info-box">
                             <HBox alignment="CENTER_LEFT" spacing="10">
                                 <Label text="Thông tin người nhận" styleClass="section-title" HBox.hgrow="ALWAYS"/>
-                                <Button fx:id="editCustomerButton" text="Chỉnh sửa" styleClass="edit-button" onAction="#handleEditCustomer"/>
+                                <!-- <Button fx:id="editCustomerButton" text="Chỉnh sửa" styleClass="edit-button" onAction="#handleEditCustomer"/> -->
                             </HBox>
 
                             <VBox spacing="12">

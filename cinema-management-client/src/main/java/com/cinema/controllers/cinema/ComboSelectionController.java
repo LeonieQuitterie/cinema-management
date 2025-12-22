@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -17,8 +18,16 @@ import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
+
+import com.cinema.models.ComboOrderItem;
+import com.cinema.models.FoodCombo;
+import com.cinema.models.Seat;
+import com.cinema.models.Showtime;
+import com.cinema.utils.FoodComboApiClient;
+
 import javafx.scene.shape.Rectangle;
 
 public class ComboSelectionController {
@@ -36,105 +45,100 @@ public class ComboSelectionController {
     @FXML
     private Button continueButton;
 
-    // Mock data từ trang trước (seat selection)
-    private double ticketPrice = 225000; // Giá vé từ 3 ghế đã chọn (ví dụ)
-
     // Danh sách combo available
-    private List<FoodCombo> availableCombos;
+    private List<FoodCombo> availableCombos = new ArrayList<>();
 
     // Danh sách combo đã chọn với số lượng
     private Map<String, ComboOrderItem> selectedCombos = new HashMap<>();
 
     private NumberFormat currencyFormat;
 
+    // === DỮ LIỆU NHẬN TỪ TRANG CHỌN GHẾ (SeatSelection) ===
+    private String cinemaId;
+    private double ticketPrice = 0;
+    private Showtime currentShowtime;
+    private List<Seat> selectedSeats = new ArrayList<>();
+
+    public void setCinemaId(String cinemaId) {
+        this.cinemaId = cinemaId;
+    }
+
+    public void setTicketPrice(double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public void setShowtime(Showtime showtime) {
+        this.currentShowtime = showtime;
+    }
+
+    public void setSelectedSeats(List<Seat> seats) {
+        this.selectedSeats = seats;
+    }
+
     @FXML
     public void initialize() {
         currencyFormat = NumberFormat.getInstance(new Locale("vi", "VN"));
 
-        // Load mock combo data
-        loadMockCombos();
-
-        // Render combo cards
-        renderComboCards();
+        // loadRealCombos();
 
         // Update price display
         updatePriceSummary();
     }
 
-    private void loadMockCombos() {
-        availableCombos = new ArrayList<>();
+    public void initData() {
+        loadRealCombos();
+    }
 
-        // Combo 1: Combo Solo
-        availableCombos.add(new FoodCombo(
-                "CMB001",
-                "Combo Solo",
-                "1 Bắp rang bơ (M) + 1 Nước ngọt (M)",
-                89000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.COMBO));
+    private void loadRealCombos() {
+        if (cinemaId == null || cinemaId.trim().isEmpty()) {
+            showErrorMessage("Không xác định được rạp chiếu phim!");
+            return;
+        }
 
-        // Combo 2: Combo Couple
-        availableCombos.add(new FoodCombo(
-                "CMB002",
-                "Combo Couple",
-                "1 Bắp rang bơ (L) + 2 Nước ngọt (M)",
-                129000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.COMBO));
+        comboFlowPane.getChildren().clear();
+        Label loadingLabel = new Label("Đang tải danh sách combo...");
+        loadingLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #888888; -fx-padding: 20px;");
+        loadingLabel.setAlignment(Pos.CENTER);
+        comboFlowPane.getChildren().add(loadingLabel);
 
-        // Combo 3: Combo Family
-        availableCombos.add(new FoodCombo(
-                "CMB003",
-                "Combo Family",
-                "2 Bắp rang bơ (L) + 4 Nước ngọt (M)",
-                229000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.COMBO));
+        new Thread(() -> {
+            List<FoodCombo> combos = FoodComboApiClient.getFoodCombosByCinemaId(cinemaId);
 
-        // Combo 4: Combo Party
-        availableCombos.add(new FoodCombo(
-                "CMB004",
-                "Combo Party",
-                "3 Bắp rang bơ (L) + 6 Nước ngọt (M) + 2 Snack",
-                349000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg🍿",
-                FoodCategory.COMBO));
+            Platform.runLater(() -> {
+                comboFlowPane.getChildren().clear();
 
-        // Combo 5: Bắp rang bơ
-        availableCombos.add(new FoodCombo(
-                "POP001",
-                "Bắp rang bơ (L)",
-                "Bắp rang thơm ngon, vị bơ đậm đà",
-                65000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.POPCORN));
+                if (combos == null || combos.isEmpty()) {
+                    Label emptyLabel = new Label("Hiện chưa có combo nào.\nBạn vẫn có thể tiếp tục đặt vé.");
+                    emptyLabel.setStyle(
+                            "-fx-font-size: 16px; -fx-text-fill: #FF9800; -fx-text-alignment: center; -fx-padding: 20px;");
+                    emptyLabel.setAlignment(Pos.CENTER);
+                    comboFlowPane.getChildren().add(emptyLabel);
+                } else {
+                    availableCombos = combos.stream()
+                            .filter(FoodCombo::isAvailable)
+                            .toList();
 
-        // Combo 6: Nước ngọt
-        availableCombos.add(new FoodCombo(
-                "DRK001",
-                "Coca Cola (L)",
-                "Nước ngọt có ga Coca Cola size L",
-                45000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.DRINK));
+                    if (availableCombos.isEmpty()) {
+                        Label noAvailable = new Label("Hiện không có combo nào đang bán.");
+                        noAvailable.setStyle("-fx-font-size: 16px; -fx-text-fill: #FF9800; -fx-padding: 20px;");
+                        noAvailable.setAlignment(Pos.CENTER);
+                        comboFlowPane.getChildren().add(noAvailable);
+                    } else {
+                        renderComboCards();
+                    }
+                }
 
-        // Combo 7: Snack
-        availableCombos.add(new FoodCombo(
-                "SNK001",
-                "Snack Khoai tây",
-                "Snack khoai tây chiên giòn tan",
-                35000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.SNACK));
+                updatePriceSummary();
+            });
+        }).start();
+    }
 
-        // Combo 8: Combo VIP
-        availableCombos.add(new FoodCombo(
-                "CMB005",
-                "Combo VIP Deluxe",
-                "2 Bắp caramen (L) + 2 Trà sữa + 2 Hotdog",
-                299000,
-                "https://i.pinimg.com/1200x/77/ec/83/77ec8349ff9f792201787a2b9ac3f565.jpg",
-                FoodCategory.COMBO));
+    private void showErrorMessage(String message) {
+        comboFlowPane.getChildren().clear();
+        Label errorLabel = new Label(message);
+        errorLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: red; -fx-text-alignment: center;");
+        errorLabel.setAlignment(Pos.CENTER);
+        comboFlowPane.getChildren().add(errorLabel);
     }
 
     private void renderComboCards() {
@@ -172,9 +176,7 @@ public class ComboSelectionController {
             Rectangle clip = new Rectangle(290, 180);
             clip.setArcWidth(15); // Bo góc 12px
             clip.setArcHeight(15); // Bo góc 12px
-            imageView.setClip(clip
-
-            );
+            imageView.setClip(clip);
 
             imageContainer.getChildren().add(imageView);
         } catch (Exception e) {
@@ -292,124 +294,60 @@ public class ComboSelectionController {
         System.out.println("Back to seat selection");
         // TODO: Navigate back to seat selection page
     }
+
     @FXML
     private void handleContinue() {
         try {
+            System.out.println("=== DEBUG: ComboSelectionController.handleContinue() ===");
+
+            // ✅ Debug currentShowtime
+            System.out.println("currentShowtime: " + currentShowtime);
+            if (currentShowtime != null) {
+                System.out.println("  - Movie ID: " + currentShowtime.getMovieId());
+                System.out.println("  - Screen ID: " + currentShowtime.getScreenId());
+                System.out.println("  - Start Time: " + currentShowtime.getStartTime());
+                System.out.println("  - Format: " + currentShowtime.getFormat());
+                System.out.println("  - Base Price: " + currentShowtime.getBasePrice());
+            } else {
+                System.err.println("  ⚠️ currentShowtime is NULL!");
+            }
+
+            System.out.println("cinemaId: " + cinemaId);
+            System.out.println("selectedSeats: " + selectedSeats.size());
+            System.out.println("selectedCombos: " + selectedCombos.size());
+            System.out.println("ticketPrice: " + ticketPrice);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-confirmation.fxml"));
             Parent newRoot = loader.load();
+
+            BookingConfirmationController controller = loader.getController();
+
+            // Set dữ liệu
+            controller.setShowtime(currentShowtime);
+            controller.setCinemaId(cinemaId);
+            controller.setSelectedSeats(new ArrayList<>(selectedSeats));
+            controller.setSelectedCombos(new HashMap<>(selectedCombos));
+            controller.setTicketPrice(ticketPrice);
+
+            System.out.println("✓ Data transferred to BookingConfirmationController");
 
             Stage stage = (Stage) continueButton.getScene().getWindow();
             Scene currentScene = stage.getScene();
             boolean wasFullScreen = stage.isFullScreen();
 
-            currentScene.setRoot(newRoot);  // chuyển trang mượt
+            currentScene.setRoot(newRoot);
 
             if (wasFullScreen) {
                 Platform.runLater(() -> {
                     stage.setFullScreen(true);
-                    stage.setFullScreenExitHint("");  // ẩn dòng "Press ESC..."
+                    stage.setFullScreenExitHint("");
                 });
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-    // Inner classes for mock data
-
-    public static class FoodCombo {
-        private String id;
-        private String name;
-        private String description;
-        private double price;
-        private String imageUrl;
-        private FoodCategory category;
-
-        public FoodCombo(String id, String name, String description, double price,
-                String imageUrl, FoodCategory category) {
-            this.id = id;
-            this.name = name;
-            this.description = description;
-            this.price = price;
-            this.imageUrl = imageUrl;
-            this.category = category;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public String getImageUrl() {
-            return imageUrl;
-        }
-
-        public FoodCategory getCategory() {
-            return category;
+         
         }
     }
 
-    public enum FoodCategory {
-        COMBO("Combo"),
-        POPCORN("Bắp rang"),
-        DRINK("Nước uống"),
-        SNACK("Đồ ăn vặt");
-
-        private final String displayName;
-
-        FoodCategory(String displayName) {
-            this.displayName = displayName;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
-
-    public static class ComboOrderItem {
-        private FoodCombo foodCombo;
-        private int quantity;
-
-        public ComboOrderItem(FoodCombo foodCombo, int quantity) {
-            this.foodCombo = foodCombo;
-            this.quantity = quantity;
-        }
-
-        public double getTotalPrice() {
-            return foodCombo.getPrice() * quantity;
-        }
-
-        public FoodCombo getFoodCombo() {
-            return foodCombo;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        public void incrementQuantity() {
-            this.quantity++;
-        }
-
-        public void decrementQuantity() {
-            if (this.quantity > 0) {
-                this.quantity--;
-            }
-        }
-    }
 }
