@@ -561,24 +561,46 @@ public class CinemaShowTimeController {
 
     private void goToSeatSelection(Cinema cinema, Screen screen, Showtime showtime) {
         try {
-            // === DEBUG ===
-            System.out.println("Cinema truyền vào: " + cinema);
-            if (cinema != null) {
-                System.out.println("Cinema ID: " + cinema.getId());
-                System.out.println("Cinema Name: " + cinema.getName());
+            System.out.println("==========================================");
+            System.out.println("=== DEBUG: goToSeatSelection() ===");
+            System.out.println("📍 Controller context movieId: " + currentMovieId); // ✅ In ra để kiểm tra
+
+            // === DEBUG SHOWTIME TRƯỚC KHI FIX ===
+            System.out.println("📍 Showtime TRƯỚC KHI FIX:");
+            if (showtime != null) {
+                System.out.println("  Showtime ID: " + showtime.getId());
+                System.out.println("  Movie ID: " + showtime.getMovieId());
+                System.out.println("  Screen ID: " + showtime.getScreenId());
             }
-            // === END DEBUG ===
+
+            // ✅✅✅ FIX: SET MOVIEID TỪ CONTROLLER CONTEXT ✅✅✅
+            if (showtime.getMovieId() == null) {
+                if (currentMovieId != null && !currentMovieId.isEmpty()) {
+                    System.out.println("✅ Fixing movieId: " + currentMovieId);
+                    showtime.setMovieId(currentMovieId);
+                } else {
+                    System.err.println("❌ ERROR: currentMovieId is NULL!");
+                }
+            }
+
+            // ✅ FIX: SET SCREENID TỪ SCREEN PARAMETER
+            if (showtime.getScreenId() == null && screen != null) {
+                System.out.println("✅ Fixing screenId: " + screen.getId());
+                showtime.setScreenId(screen.getId());
+            }
+
+            // === DEBUG SHOWTIME SAU KHI FIX ===
+            System.out.println("📍 Showtime SAU KHI FIX:");
+            System.out.println("  Movie ID: " + showtime.getMovieId());
+            System.out.println("  Screen ID: " + showtime.getScreenId());
+            System.out.println("==========================================");
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/seat-selection.fxml"));
             Parent seatRoot = loader.load();
 
             SeatSelectionController controller = loader.getController();
 
-            // === LẤY GHẾ ĐÃ ĐẶT THẬT TỪ API ===
             List<String> bookedSeats = BookedSeatApiClient.getBookedSeats(showtime.getId());
-
-            // Nếu có lỗi, bookedSeats sẽ là danh sách rỗng → không có ghế nào bị đánh dấu
-            // booked
             showtime.setBookedSeats(bookedSeats);
 
             controller.setShowData(cinema, screen, showtime);

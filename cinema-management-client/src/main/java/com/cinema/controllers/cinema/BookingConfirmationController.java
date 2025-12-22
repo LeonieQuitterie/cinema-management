@@ -1,19 +1,21 @@
 package com.cinema.controllers.cinema;
 
+import com.cinema.models.*;
+import com.cinema.models.dto.*;
+import com.cinema.utils.BookingApiClient;
+import com.cinema.utils.BookingApiService;
+import com.cinema.utils.CinemaBankApiClient;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -23,8 +25,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import com.cinema.models.*;
 
 public class BookingConfirmationController implements Initializable {
 
@@ -82,13 +82,14 @@ public class BookingConfirmationController implements Initializable {
     private Booking currentBooking;
     private DecimalFormat currencyFormat = new DecimalFormat("#,###");
 
+    // ============ DATA RECEIVED FROM PREVIOUS SCREEN ============
     private Showtime currentShowtime;
     private String cinemaId;
     private List<Seat> selectedSeats = new ArrayList<>();
     private Map<String, ComboOrderItem> selectedCombos = new HashMap<>();
     private double ticketPrice = 0;
 
-    // Setters
+    // ============ SETTERS ============
     public void setShowtime(Showtime showtime) {
         this.currentShowtime = showtime;
     }
@@ -109,113 +110,263 @@ public class BookingConfirmationController implements Initializable {
         this.ticketPrice = price;
     }
 
+    // ============ INITIALIZE ============
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadMockData();
-        displayBookingInfo();
+        // ✅ Đợi cho tất cả setter được gọi xong
+        Platform.runLater(this::loadRealData);
     }
 
-    private void loadMockData() {
-        // Mock Customer
-        Customer customer = new Customer(
-                "CUST001",
-                "Nguyễn Văn An",
-                "0901234567",
-                "nguyenvanan@gmail.com");
+    // ============ LOAD REAL DATA FROM API ============
+    private void loadRealData() {
+        System.out.println("=== DEBUG: BookingConfirmationController.loadRealData() ===");
 
-        // Mock Food Combos
-        FoodCombo combo1 = new FoodCombo();
-        combo1.setId("COMBO001");
-        combo1.setName("Combo Couple");
-        combo1.setDescription("2 Bắp lớn + 2 Nước lớn");
-        combo1.setPrice(150000);
-        combo1.setImageUrl("https://i.pinimg.com/1200x/53/a9/20/53a920cce6c733e590fac6356a74d954.jpg");
-        combo1.setCategory(FoodCategory.COMBO);
+        // ✅ Debug dữ liệu nhận được
+        System.out.println("currentShowtime: " + currentShowtime);
+        if (currentShowtime != null) {
+            System.out.println("  - Movie ID: " + currentShowtime.getMovieId());
+            System.out.println("  - Screen ID: " + currentShowtime.getScreenId());
+            System.out.println("  - Start Time: " + currentShowtime.getStartTime());
+        } else {
+            System.err.println("  ⚠️ currentShowtime is NULL!");
+        }
 
-        FoodCombo combo2 = new FoodCombo();
-        combo2.setId("COMBO002");
-        combo2.setName("Combo Solo");
-        combo2.setDescription("1 Bắp vừa + 1 Nước vừa");
-        combo2.setPrice(85000);
-        combo2.setImageUrl("https://i.pinimg.com/1200x/53/a9/20/53a920cce6c733e590fac6356a74d954.jpg");
-        combo2.setCategory(FoodCategory.COMBO);
+        System.out.println("cinemaId: " + cinemaId);
+        System.out.println("selectedSeats: " + selectedSeats.size());
+        System.out.println("selectedCombos: " + selectedCombos.size());
+        System.out.println("ticketPrice: " + ticketPrice);
 
-        List<ComboOrderItem> combos = Arrays.asList(
-                new ComboOrderItem(combo1, 1),
-                new ComboOrderItem(combo2, 2));
+        // Kiểm tra dữ liệu đã được set chưa
+        if (currentShowtime == null) {
+            showError("❌ Showtime is NULL!");
+            return;
+        }
 
-        // Mock Booking
+        if (cinemaId == null) {
+            showError("❌ Cinema ID is NULL!");
+            return;
+        }
+
+        if (currentShowtime.getMovieId() == null) {
+            showError("❌ Movie ID trong Showtime is NULL!");
+            return;
+        }
+
+        // Hiển thị loading
+        showLoading(true);
+
+        // Chạy API calls trong background thread
+        new Thread(() -> {
+            try {
+                buildBookingData();
+
+                Platform.runLater(() -> {
+                    displayBookingInfo();
+                    showLoading(false);
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    showError("Không thể tải thông tin booking: " + e.getMessage());
+                    showLoading(false);
+                });
+            }
+        }).start();
+    }
+
+    // ============ BUILD BOOKING DATA FROM API ============
+    private void buildBookingData() throws Exception {
         currentBooking = new Booking();
-        currentBooking.setId("BOOK20251209001");
-        currentBooking.setMovieTitle("Kraven The Hunter");
-        currentBooking.setMoviePosterUrl("https://i.pinimg.com/1200x/26/8c/5d/268c5d2c935044e7b61644582ad4f426.jpg");
-        currentBooking.setAgeRating("16+");
-        currentBooking.setAgeRatingDescription("Phim được phổ biến đến người xem từ đủ 16 tuổi trở lên");
 
-        currentBooking.setCinemaName("CGV Vincom Đà Nẵng");
-        currentBooking.setCinemaLogoUrl("https://i.pinimg.com/1200x/53/a9/20/53a920cce6c733e590fac6356a74d954.jpg");
+        System.out.println("🔄 Bắt đầu load booking data...");
 
-        currentBooking.setScreenName("Cinema 4");
-        currentBooking.setShowtime(LocalDateTime.of(2025, 12, 9, 20, 20));
-        currentBooking.setFormat("2D phụ đề");
+        // ✅ BƯỚC 1: Lấy thông tin Movie
+        System.out.println("📽️ Fetching movie: " + currentShowtime.getMovieId());
+        fetchMovieDetails();
 
-        currentBooking.setSelectedSeats(Arrays.asList("H13"));
-        currentBooking.setSeatTotalPrice(85000);
+        // ✅ BƯỚC 2: Lấy thông tin Cinema
+        System.out.println("🏢 Fetching cinema: " + cinemaId);
+        fetchCinemaDetails();
 
-        currentBooking.setCombos(combos);
-        currentBooking.setComboTotalPrice(320000); // 150k + 85k*2
+        // ✅ BƯỚC 3: Lấy thông tin Screen
+        System.out.println("🎥 Fetching screen: " + currentShowtime.getScreenId());
+        fetchScreenDetails();
+
+        // ✅ BƯỚC 4: Set thông tin Showtime
+        System.out.println("⏰ Setting showtime details...");
+        setShowtimeDetails();
+
+        // ✅ BƯỚC 5: Set ghế đã chọn
+        System.out.println("💺 Setting seats: " + selectedSeats.size() + " seats");
+        setSeatDetails();
+
+        // ✅ BƯỚC 6: Set combo đã chọn
+        System.out.println("🍿 Setting combos: " + selectedCombos.size() + " combos");
+        setComboDetails();
+
+        // ✅ BƯỚC 7: Lấy thông tin Customer
+        System.out.println("👤 Fetching customer...");
+        fetchCustomerDetails();
+
+        // ✅ BƯỚC 8: Tính tổng tiền
+        System.out.println("💰 Calculating total price...");
+        calculateTotalPrice();
+
+        System.out.println("✅ Booking data loaded successfully!");
+    }
+
+    // ============ FETCH MOVIE DETAILS ============
+    private void fetchMovieDetails() throws Exception {
+        String movieId = currentShowtime.getMovieId();
+        MovieDTO movie = BookingApiService.getMovie(movieId);
+
+        currentBooking.setMovieTitle(movie.getTitle());
+        currentBooking.setMoviePosterUrl(movie.getPosterUrl());
+        currentBooking.setAgeRating(movie.getAgeRating());
+        currentBooking.setAgeRatingDescription(movie.getAgeRatingDescription());
+
+        System.out.println("  ✓ Movie: " + movie.getTitle());
+    }
+
+    // ============ FETCH CINEMA DETAILS ============
+    private void fetchCinemaDetails() throws Exception {
+        CinemaDTO cinema = BookingApiService.getCinema(cinemaId);
+
+        currentBooking.setCinemaName(cinema.getName());
+        currentBooking.setCinemaLogoUrl(cinema.getLogoUrl());
+
+        System.out.println("  ✓ Cinema: " + cinema.getName());
+    }
+
+    // ============ FETCH SCREEN DETAILS ============
+    private void fetchScreenDetails() throws Exception {
+        String screenId = currentShowtime.getScreenId();
+        ScreenDTO screen = BookingApiService.getScreen(screenId);
+
+        currentBooking.setScreenName(screen.getName());
+
+        System.out.println("  ✓ Screen: " + screen.getName());
+    }
+
+    // ============ SET SHOWTIME DETAILS ============
+    private void setShowtimeDetails() {
+        currentBooking.setShowtime(currentShowtime.getStartTime());
+        currentBooking.setFormat(currentShowtime.getFormat());
+    }
+
+    // ============ SET SEAT DETAILS ============
+    private void setSeatDetails() {
+        // Convert List<Seat> → List<String> (seat numbers only)
+        List<String> seatNumbers = new ArrayList<>();
+        for (Seat seat : selectedSeats) {
+            seatNumbers.add(seat.getSeatNumber());
+        }
+
+        currentBooking.setSelectedSeats(seatNumbers);
+        currentBooking.setSeatTotalPrice(ticketPrice);
+
+        System.out.println("  ✓ Seats: " + String.join(", ", seatNumbers));
+    }
+
+    // ============ SET COMBO DETAILS ============
+    private void setComboDetails() {
+        // Convert Map<String, ComboOrderItem> → List<ComboOrderItem>
+        List<ComboOrderItem> comboList = new ArrayList<>(selectedCombos.values());
+
+        currentBooking.setCombos(comboList);
+
+        // Tính tổng tiền combo
+        double comboTotal = 0;
+        for (ComboOrderItem item : comboList) {
+            comboTotal += item.getFoodCombo().getPrice() * item.getQuantity();
+        }
+
+        currentBooking.setComboTotalPrice(comboTotal);
+
+        System.out.println("  ✓ Combos: " + comboList.size() + " items, Total: " + comboTotal);
+    }
+
+    // ============ FETCH CUSTOMER DETAILS ============
+    private void fetchCustomerDetails() throws Exception {
+        CustomerDTO customerDTO = BookingApiService.getCurrentCustomer();
+
+        // Convert DTO → Customer model
+        Customer customer = new Customer(
+                customerDTO.getId(),
+                customerDTO.getFullName(),
+                customerDTO.getPhoneNumber(),
+                customerDTO.getEmail());
 
         currentBooking.setCustomer(customer);
-        currentBooking.setTotalPrice(405000); // 85k + 320k
+
+        System.out.println("  ✓ Customer: " + customer.getFullName());
     }
 
+    // ============ CALCULATE TOTAL PRICE ============
+    private void calculateTotalPrice() {
+        double total = currentBooking.getSeatTotalPrice()
+                + currentBooking.getComboTotalPrice();
+
+        currentBooking.setTotalPrice(total);
+
+        System.out.println("  ✓ Total: " + total);
+    }
+
+    // ============ DISPLAY BOOKING INFO ON UI ============
     private void displayBookingInfo() {
-        if (currentBooking == null)
+        if (currentBooking == null) {
+            System.err.println("❌ currentBooking is null!");
             return;
+        }
 
-        // ==================== MOVIE POSTER - FULL KHUNG + CROP ĐẸP
-        // ====================
+        System.out.println("🖼️ Displaying booking info on UI...");
+
+        // ==================== MOVIE POSTER ====================
         try {
-            Image posterImg = new Image(currentBooking.getMoviePosterUrl(), true);
-            moviePosterImage.setImage(posterImg);
+            String posterUrl = currentBooking.getMoviePosterUrl();
+            if (posterUrl != null && !posterUrl.isEmpty()) {
+                Image posterImg = new Image(posterUrl, true);
+                moviePosterImage.setImage(posterImg);
 
-            // Đảm bảo crop + bo góc khi ảnh load xong (cả lần đầu và khi cache)
-            posterImg.progressProperty().addListener((obs, oldVal, newVal) -> {
-                if (newVal.doubleValue() >= 1.0 || posterImg.isError()) {
-                    Platform.runLater(() -> {
-                        applyFullFramePoster(moviePosterImage, posterImg);
-                        applyRoundedImage(moviePosterImage, 8);
-                    });
+                posterImg.progressProperty().addListener((obs, oldVal, newVal) -> {
+                    if (newVal.doubleValue() >= 1.0 || posterImg.isError()) {
+                        Platform.runLater(() -> {
+                            applyFullFramePoster(moviePosterImage, posterImg);
+                            applyRoundedImage(moviePosterImage, 8);
+                        });
+                    }
+                });
+
+                if (posterImg.getProgress() >= 1.0) {
+                    applyFullFramePoster(moviePosterImage, posterImg);
+                    applyRoundedImage(moviePosterImage, 8);
                 }
-            });
-
-            // Trường hợp ảnh đã được cache → load ngay lập tức
-            if (posterImg.getProgress() >= 1.0) {
-                applyFullFramePoster(moviePosterImage, posterImg);
-                applyRoundedImage(moviePosterImage, 8);
             }
-
         } catch (Exception e) {
-            System.out.println("Could not load poster image: " + e.getMessage());
+            System.err.println("Could not load poster image: " + e.getMessage());
         }
 
         // ==================== CINEMA LOGO ====================
         try {
-            Image logoImg = new Image(currentBooking.getCinemaLogoUrl(), true);
-            cinemaLogoImage.setImage(logoImg);
-            applyRoundedImage(cinemaLogoImage, 8);
+            String logoUrl = currentBooking.getCinemaLogoUrl();
+            if (logoUrl != null && !logoUrl.isEmpty()) {
+                Image logoImg = new Image(logoUrl, true);
+                cinemaLogoImage.setImage(logoImg);
+                applyRoundedImage(cinemaLogoImage, 8);
+            }
         } catch (Exception e) {
-            System.out.println("Could not load cinema logo");
+            System.err.println("Could not load cinema logo: " + e.getMessage());
         }
 
-        // ==================== THÔNG TIN CƠ BẢN (giữ nguyên) ====================
+        // ==================== BASIC INFO ====================
         cinemaNameLabel.setText(currentBooking.getCinemaName());
         movieTitleLabel.setText(currentBooking.getMovieTitle());
         ageRatingBadge.setText(currentBooking.getAgeRating());
         ageRatingDescLabel.setText(currentBooking.getAgeRatingDescription());
 
         LocalDateTime showtime = currentBooking.getShowtime();
-        LocalDateTime endTime = showtime.plusMinutes(116);
+        LocalDateTime endTime = showtime.plusMinutes(120); // Adjust based on movie duration
 
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm");
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("'Thứ' E, dd/MM/yyyy", new Locale("vi", "VN"));
@@ -227,15 +378,18 @@ public class BookingConfirmationController implements Initializable {
         screenLabel.setText(currentBooking.getScreenName());
         seatsLabel.setText(String.join(", ", currentBooking.getSelectedSeats()));
 
+        // ==================== COMBOS ====================
         displayCombos();
 
+        // ==================== CUSTOMER ====================
         Customer customer = currentBooking.getCustomer();
         if (customer != null) {
             customerNameLabel.setText(customer.getFullName());
-            customerPhoneLabel.setText(customer.getPhoneNumber());
-            customerEmailLabel.setText(customer.getEmail());
+            customerPhoneLabel.setText(customer.getPhoneNumber() != null ? customer.getPhoneNumber() : "Chưa cập nhật");
+            customerEmailLabel.setText(customer.getEmail() != null ? customer.getEmail() : "Chưa cập nhật");
         }
 
+        // ==================== PRICES ====================
         seatPriceLabel.setText(currencyFormat.format(currentBooking.getSeatTotalPrice()) + " đ");
 
         if (currentBooking.getCombos() != null && !currentBooking.getCombos().isEmpty()) {
@@ -248,44 +402,11 @@ public class BookingConfirmationController implements Initializable {
         }
 
         totalPriceLabel.setText(currencyFormat.format(currentBooking.getTotalPrice()) + " đ");
+
+        System.out.println("✅ UI updated successfully!");
     }
 
-    // ==================== METHOD MỚI - CHỈ 1 LẦN DÙNG LẠI NHIỀU NƠI
-    // ====================
-    private void applyFullFramePoster(ImageView imageView, Image image) {
-        if (image == null || image.getWidth() <= 0 || image.getHeight() <= 0)
-            return;
-
-        double targetW = 270.0;
-        double targetH = 400.0;
-        double imgW = image.getWidth();
-        double imgH = image.getHeight();
-        double containerRatio = targetW / targetH;
-        double imgRatio = imgW / imgH;
-
-        Rectangle2D viewport;
-        if (imgRatio > containerRatio) {
-            // Ảnh rộng hơn → crop 2 bên
-            double scaledW = imgH * containerRatio;
-            viewport = new Rectangle2D((imgW - scaledW) / 2, 0, scaledW, imgH);
-        } else {
-            // Ảnh cao hơn hoặc vuông → crop trên/dưới
-            double scaledH = imgW / containerRatio;
-            viewport = new Rectangle2D(0, (imgH - scaledH) / 2, imgW, scaledH);
-        }
-
-        imageView.setViewport(viewport);
-    }
-
-    private void applyRoundedImage(ImageView imageView, double radius) {
-        Rectangle clip = new Rectangle();
-        clip.widthProperty().bind(imageView.fitWidthProperty());
-        clip.heightProperty().bind(imageView.fitHeightProperty());
-        clip.setArcWidth(radius * 2);
-        clip.setArcHeight(radius * 2);
-        imageView.setClip(clip);
-    }
-
+    // ==================== DISPLAY COMBOS ====================
     private void displayCombos() {
         comboListContainer.getChildren().clear();
 
@@ -295,103 +416,240 @@ public class BookingConfirmationController implements Initializable {
             return;
         }
 
+        comboSection.setVisible(true);
+        comboSection.setManaged(true);
+
         for (ComboOrderItem item : currentBooking.getCombos()) {
-            HBox comboBox = createComboItem(item);
-            comboListContainer.getChildren().add(comboBox);
+            Label comboLabel = new Label(
+                    String.format("%s x%d - %s đ",
+                            item.getFoodCombo().getName(),
+                            item.getQuantity(),
+                            currencyFormat.format(item.getFoodCombo().getPrice() * item.getQuantity())));
+            comboLabel.getStyleClass().add("combo-item-label");
+            comboListContainer.getChildren().add(comboLabel);
         }
     }
 
-    private HBox createComboItem(ComboOrderItem item) {
-        HBox container = new HBox(15);
-        container.setAlignment(Pos.CENTER_LEFT);
-        container.getStyleClass().add("combo-item-box");
+    // ==================== HELPER METHODS ====================
+    private void applyFullFramePoster(ImageView imageView, Image image) {
+        if (image.isError())
+            return;
 
-        // Combo Image
-        ImageView comboImage = new ImageView();
-        comboImage.setFitWidth(60);
-        comboImage.setFitHeight(60);
-        comboImage.setPreserveRatio(true);
-        comboImage.getStyleClass().add("combo-image");
+        double imageWidth = image.getWidth();
+        double imageHeight = image.getHeight();
+        double imageRatio = imageWidth / imageHeight;
 
-        try {
-            Image img = new Image(item.getFoodCombo().getImageUrl(), true);
-            comboImage.setImage(img);
-        } catch (Exception e) {
-            System.out.println("Could not load combo image");
+        double frameWidth = imageView.getFitWidth();
+        double frameHeight = imageView.getFitHeight();
+        double frameRatio = frameWidth / frameHeight;
+
+        if (imageRatio > frameRatio) {
+            // Ảnh rộng hơn → crop ngang
+            imageView.setViewport(new javafx.geometry.Rectangle2D(
+                    (imageWidth - imageHeight * frameRatio) / 2, 0,
+                    imageHeight * frameRatio, imageHeight));
+        } else {
+            // Ảnh cao hơn → crop dọc
+            imageView.setViewport(new javafx.geometry.Rectangle2D(
+                    0, (imageHeight - imageWidth / frameRatio) / 2,
+                    imageWidth, imageWidth / frameRatio));
         }
-
-        // Combo Info
-        VBox infoBox = new VBox(5);
-        infoBox.setAlignment(Pos.CENTER_LEFT);
-        HBox.setHgrow(infoBox, javafx.scene.layout.Priority.ALWAYS);
-
-        Label nameLabel = new Label(item.getFoodCombo().getName());
-        nameLabel.getStyleClass().add("combo-name");
-
-        Label quantityLabel = new Label("Số lượng: " + item.getQuantity());
-        quantityLabel.getStyleClass().add("combo-quantity");
-
-        infoBox.getChildren().addAll(nameLabel, quantityLabel);
-
-        // Price
-        Label priceLabel = new Label(currencyFormat.format(item.getTotalPrice()) + " đ");
-        priceLabel.getStyleClass().add("combo-price");
-
-        container.getChildren().addAll(comboImage, infoBox, priceLabel);
-
-        return container;
     }
 
+    private void applyRoundedImage(ImageView imageView, double radius) {
+        Rectangle clip = new Rectangle(
+                imageView.getFitWidth(),
+                imageView.getFitHeight());
+        clip.setArcWidth(radius * 2);
+        clip.setArcHeight(radius * 2);
+        imageView.setClip(clip);
+    }
+
+    private void showLoading(boolean show) {
+        continueButton.setDisable(show);
+        if (show) {
+            continueButton.setText("Đang tải...");
+        } else {
+            continueButton.setText("Tiếp tục");
+        }
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // ==================== BUTTON HANDLERS ====================
     @FXML
     private void handleBack() {
+        // Navigate back to combo selection
         System.out.println("Back button clicked");
-        // TODO: Navigate back to previous screen
-    }
-
-    @FXML
-    private void handleEditCustomer() {
-        System.out.println("Edit customer info clicked");
-        // TODO: Open dialog to edit customer information
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Chỉnh sửa thông tin");
-        alert.setHeaderText("Chức năng đang phát triển");
-        alert.setContentText("Tính năng chỉnh sửa thông tin người nhận sẽ được bổ sung sau.");
-        alert.showAndWait();
     }
 
     @FXML
     private void handleContinue() {
         try {
-            // Load trang booking-success.fxml
-            Parent newRoot = FXMLLoader.load(
-                    getClass().getResource("/views/cinema/payment.fxml"));
+            System.out.println("=== Navigating to Payment ===");
 
-            // Lấy Stage hiện tại
-            Stage stage = (Stage) continueButton.getScene().getWindow();
-            Scene scene = stage.getScene();
-            boolean isFullScreen = stage.isFullScreen();
-
-            // Chuyển trang mượt mà
-            scene.setRoot(newRoot);
-
-            // Giữ lại chế độ fullscreen nếu đang bật
-            if (isFullScreen) {
-                Platform.runLater(() -> {
-                    stage.setFullScreen(true);
-                    stage.setFullScreenExitHint(""); // ẩn dòng "Press ESC to exit full screen"
-                });
+            // ✅ Validate booking data
+            if (currentBooking == null) {
+                showError("Không có thông tin booking!");
+                return;
             }
 
-            System.out.println("Đã chuyển sang trang Booking Success");
+            if (cinemaId == null || cinemaId.isEmpty()) {
+                showError("Không xác định được rạp chiếu!");
+                return;
+            }
+
+            // 🔥 SET BOOKING ID Ở ĐÂY
+            if (currentBooking.getId() == null || currentBooking.getId().isEmpty()) {
+                currentBooking.setId("BOOK_" + System.currentTimeMillis());
+            }
+
+            currentBooking.setMovieId(currentShowtime.getMovieId());
+
+            BookingDB bookingDB = new BookingDB(currentBooking);
+            bookingDB.setCinemaId(cinemaId);
+            bookingDB.setScreenId(currentShowtime.getScreenId());
+            bookingDB.setShowtimeId(currentShowtime.getId());
+
+            String customerId = currentBooking.getCustomer().getId();
+            bookingDB.setCustomerId(customerId);
+
+            System.out.println("📌 Booking ID: " + currentBooking.getId());
+            System.out.println("📌 Cinema ID: " + cinemaId);
+            System.out.println("📌 Total Price: " + currentBooking.getTotalPrice());
+
+            // ✅ Disable button để tránh double-click
+            continueButton.setDisable(true);
+            continueButton.setText("Đang xử lý...");
+
+            // ✅ Gọi API lấy bank info trong background thread
+            new Thread(() -> {
+                try {
+                    // 1. Lấy thông tin ngân hàng
+                    BankInfoDTO bankInfo = CinemaBankApiClient.getBankInfo(cinemaId);
+
+                    if (bankInfo == null) {
+                        Platform.runLater(() -> {
+                            showError("Không thể lấy thông tin tài khoản ngân hàng!");
+                            continueButton.setDisable(false);
+                            continueButton.setText("Tiếp tục");
+                        });
+                        return;
+                    }
+
+                    // 2. Tạo QR Code URL động
+                    String qrUrl = CinemaBankApiClient.generateDynamicQRUrl(
+                            bankInfo,
+                            currentBooking.getId(),
+                            currentBooking.getTotalPrice());
+
+                    // 3. Tạo PaymentInfo
+                    PaymentInfo paymentInfo = new PaymentInfo(
+                            bankInfo.getBankName(), // "Vietcombank"
+                            bankInfo.getBankAccountHolder(), // "CONG TY TNHH CINEMA MANAGEMENT"
+                            bankInfo.getBankAccountNumber(), // "0123456789"
+                            currentBooking.getId(), // "BOOK20251209001" - Nội dung CK
+                            qrUrl, // QR Code URL
+                            currentBooking.getTotalPrice() // Số tiền
+                    );
+
+                    currentBooking.setPaymentInfo(paymentInfo);
+                    currentBooking.setPaymentStatus(PaymentStatus.PENDING);
+                    currentBooking.setBookingTime(LocalDateTime.now());
+                    currentBooking.setPaymentDeadline(LocalDateTime.now().plusMinutes(15));
+
+                    System.out.println("✅ Payment info created successfully");
+
+                    // 3.5. LƯU BOOKING VÀO CSDL
+                    try {
+                        System.err.println(bookingDB.getMovieId());
+
+                        System.err.println(bookingDB);
+                        BookingApiClient.createBooking(bookingDB);
+                        System.out.println("💾 Booking saved to database");
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        Platform.runLater(() -> {
+                            showError("Không thể lưu booking: " + ex.getMessage());
+                            continueButton.setDisable(false);
+                            continueButton.setText("Tiếp tục");
+                        });
+                        return;
+                    }
+
+                    // 4. Chuyển sang Payment screen (trên JavaFX thread)
+                    Platform.runLater(() -> {
+                        try {
+                            FXMLLoader loader = new FXMLLoader(
+                                    getClass().getResource("/views/cinema/payment.fxml"));
+                            Parent paymentRoot = loader.load();
+
+                            // Get controller và truyền booking
+                            PaymentController controller = loader.getController();
+                            controller.setBooking(currentBooking);
+
+                            System.out.println("✓ Data transferred to PaymentController");
+
+                            // Chuyển scene
+                            Stage stage = (Stage) continueButton.getScene().getWindow();
+                            Scene currentScene = stage.getScene();
+                            boolean wasFullScreen = stage.isFullScreen();
+
+                            currentScene.setRoot(paymentRoot);
+
+                            if (wasFullScreen) {
+                                Platform.runLater(() -> {
+                                    stage.setFullScreen(true);
+                                    stage.setFullScreenExitHint("");
+                                });
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            showError("Không thể chuyển sang trang thanh toán: " + e.getMessage());
+                            continueButton.setDisable(false);
+                            continueButton.setText("Tiếp tục");
+                        }
+                    });
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() -> {
+                        showError("Lỗi xử lý: " + e.getMessage());
+                        continueButton.setDisable(false);
+                        continueButton.setText("Tiếp tục");
+                    });
+                }
+            }).start();
 
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText("Không thể chuyển trang");
-            alert.setContentText("Vui lòng kiểm tra file booking-success.fxml có tồn tại không.");
-            alert.showAndWait();
+            showError("Lỗi không xác định: " + e.getMessage());
+            continueButton.setDisable(false);
+            continueButton.setText("Tiếp tục");
         }
+    }
+
+    // Helper method để hiển thị error
+    // private void showError(String message) {
+    // Platform.runLater(() -> {
+    // Alert alert = new Alert(Alert.AlertType.ERROR);
+    // alert.setTitle("Lỗi");
+    // alert.setHeaderText(null);
+    // alert.setContentText(message);
+    // alert.showAndWait();
+    // });
+    // }
+
+    @FXML
+    private void handleEditCustomer() {
+        // Open customer edit dialog
+        System.out.println("Edit customer button clicked");
     }
 }

@@ -5,8 +5,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Booking {
     private String id;
+    @SerializedName("movie_id")
+    
     private String movieId;
     private String movieTitle;
     private String moviePosterUrl;

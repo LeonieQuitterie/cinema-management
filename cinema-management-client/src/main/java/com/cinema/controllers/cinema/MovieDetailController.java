@@ -197,7 +197,7 @@ public class MovieDetailController {
         }
 
         loadRatingBars();
-        loadCast(); 
+        loadCast();
         loadComments(); // tạm giữ mock
 
     }
@@ -831,6 +831,8 @@ public class MovieDetailController {
 
             // 2. Gửi ID phim qua controller trang showtime
             CinemaShowTimeController controller = loader.getController();
+            System.out.println("🔍 DEBUG: Truyền movieId sang CinemaShowTimeController = " + currentMovieId);
+            // ← In ra console giá trị currentMovieId ngay tại thời điểm truyền
             controller.setMovieId(currentMovieId); // ĐÚNG – dùng biến đã có
 
             // 3. Lấy Stage hiện tại

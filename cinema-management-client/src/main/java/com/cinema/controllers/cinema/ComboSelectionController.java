@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
@@ -17,6 +18,7 @@ import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -296,39 +298,55 @@ public class ComboSelectionController {
     @FXML
     private void handleContinue() {
         try {
+            System.out.println("=== DEBUG: ComboSelectionController.handleContinue() ===");
+
+            // ✅ Debug currentShowtime
+            System.out.println("currentShowtime: " + currentShowtime);
+            if (currentShowtime != null) {
+                System.out.println("  - Movie ID: " + currentShowtime.getMovieId());
+                System.out.println("  - Screen ID: " + currentShowtime.getScreenId());
+                System.out.println("  - Start Time: " + currentShowtime.getStartTime());
+                System.out.println("  - Format: " + currentShowtime.getFormat());
+                System.out.println("  - Base Price: " + currentShowtime.getBasePrice());
+            } else {
+                System.err.println("  ⚠️ currentShowtime is NULL!");
+            }
+
+            System.out.println("cinemaId: " + cinemaId);
+            System.out.println("selectedSeats: " + selectedSeats.size());
+            System.out.println("selectedCombos: " + selectedCombos.size());
+            System.out.println("ticketPrice: " + ticketPrice);
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-confirmation.fxml"));
             Parent newRoot = loader.load();
 
             BookingConfirmationController controller = loader.getController();
 
-            // Truyền data
-            controller.setShowtime(currentShowtime); // 1. Showtime
-            controller.setCinemaId(cinemaId); // 2. Cinema ID
-            controller.setSelectedSeats(selectedSeats); // 3. Ghế
-            controller.setSelectedCombos(selectedCombos); // 4. Combo
-            controller.setTicketPrice(ticketPrice); // 5. Giá vé
+            // Set dữ liệu
+            controller.setShowtime(currentShowtime);
+            controller.setCinemaId(cinemaId);
+            controller.setSelectedSeats(new ArrayList<>(selectedSeats));
+            controller.setSelectedCombos(new HashMap<>(selectedCombos));
+            controller.setTicketPrice(ticketPrice);
 
-            // controller.initData(); // ✅ Load data sau khi set xong
+            System.out.println("✓ Data transferred to BookingConfirmationController");
 
-
-
-
-            
             Stage stage = (Stage) continueButton.getScene().getWindow();
             Scene currentScene = stage.getScene();
             boolean wasFullScreen = stage.isFullScreen();
 
-            currentScene.setRoot(newRoot); // chuyển trang mượt
+            currentScene.setRoot(newRoot);
 
             if (wasFullScreen) {
                 Platform.runLater(() -> {
                     stage.setFullScreen(true);
-                    stage.setFullScreenExitHint(""); // ẩn dòng "Press ESC..."
+                    stage.setFullScreenExitHint("");
                 });
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+         
         }
     }
 

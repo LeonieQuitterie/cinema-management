@@ -45,17 +45,40 @@ app.use("/api/combos", foodComboRoutes);
 const customerRoutes = require('./routes/customerRoutes');
 app.use('/api/customers', customerRoutes);
 
+
+const bookingConfirmRoutes =    require('./routes/bookingConfirmRouter');
+app.use('/api/booking-confirm', bookingConfirmRoutes);
+
+const cinemaBankRouter = require('./routes/cinemaBankRouter');
+app.use('/api/cinema-bank', cinemaBankRouter);
+
+const bookingRoutes = require('./routes/bookingRoutes');
+app.use('/api/bookings', bookingRoutes);
+
+
+// ✅ THÊM: Payment routes
+const { router: paymentRouter, setPaymentNamespace } = require('./routes/paymentRoutes');
+app.use('/api/payment', paymentRouter);
+
 // === SOCKET.IO SETUP ===
 const setupSeatSocket = require('./socket/seatSocket');
+const setupPaymentSocket = require('./socket/paymentSocket'); // ✅ THÊM
+
 
 
 // ✅ SỬA THÀNH ASYNC/AWAIT
 (async () => {
-    await setupSeatSocket(io); // ✅ Đợi clear xong mới tiếp tục
+    await setupSeatSocket(io);
+    
+    // ✅ THÊM: Setup payment socket
+    const paymentNamespace = setupPaymentSocket(io);
+    setPaymentNamespace(paymentNamespace); // Inject vào payment routes
     
     const PORT = process.env.PORT || 3000;
     server.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
         console.log(`WebSocket available at ws://localhost:${PORT}`);
+        console.log(`  - Seats: ws://localhost:${PORT}/seats`);
+        console.log(`  - Payment: ws://localhost:${PORT}/payment`); // ✅ THÊM
     });
 })();
