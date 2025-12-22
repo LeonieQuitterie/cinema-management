@@ -26,9 +26,7 @@ import java.util.List;
 public class CinemaApiClient {
 
     private static final String BASE_URL = "http://localhost:3000/api";
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    private static final HttpClient httpClient = HttpClientProvider.http1();
     private static final Gson gson = new Gson();
 
     /**

@@ -6,16 +6,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.prefs.Preferences;
 
 public class ApiClient {
 
     private static final String BASE_URL = "http://localhost:3000/api/auth";
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
-
+    private static final HttpClient httpClient = HttpClientProvider.http1();
     private static final Gson gson = new Gson();
 
     // Preferences để lưu token và user
@@ -39,6 +37,7 @@ public class ApiClient {
     // === ĐĂNG NHẬP (chỉ dùng email) ===
     public static AuthResponse login(String email, String password) {
         String jsonBody = gson.toJson(new LoginRequest(email, password));
+        System.out.println("LOGIN JSON = " + jsonBody);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/login"))
@@ -47,6 +46,7 @@ public class ApiClient {
                 .timeout(Duration.ofSeconds(15))
                 .build();
 
+                System.err.println(11111);
         return sendRequest(request);
     }
 
@@ -54,6 +54,7 @@ public class ApiClient {
     private static AuthResponse sendRequest(HttpRequest request) {
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.err.println(11111);
 
             if (response.statusCode() == 200 || response.statusCode() == 201) {
                 AuthResponse authResponse = gson.fromJson(response.body(), AuthResponse.class);
@@ -77,6 +78,7 @@ public class ApiClient {
             AuthResponse error = new AuthResponse();
             error.success = false;
             error.message = "Lỗi kết nối: " + e.getMessage();
+            e.printStackTrace();
             return error;
         }
     }

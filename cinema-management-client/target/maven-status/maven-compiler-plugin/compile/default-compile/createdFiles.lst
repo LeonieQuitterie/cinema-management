@@ -10,6 +10,7 @@ com\cinema\controllers\auth\RegisterController.class
 com\cinema\utils\RatingStatsResponse.class
 com\cinema\utils\UserInfo.class
 com\cinema\controllers\cinema\MovieDetailController.class
+com\cinema\utils\SocketIOClient$1.class
 com\cinema\controllers\admin\cinema\CinemaListController.class
 com\cinema\models\PaymentStatus.class
 com\cinema\utils\MovieApi$DoubleStringAdapter.class
@@ -76,6 +77,7 @@ com\cinema\utils\ApiClient$RegisterRequest.class
 com\cinema\controllers\admin\dashboard\DashboardController.class
 com\cinema\controllers\cinema\CinemaShowTimeController.class
 com\cinema\models\Booking.class
+com\cinema\utils\HttpClientProvider.class
 com\cinema\controllers\admin\dashboard\DashboardController$BookingRow.class
 com\cinema\controllers\admin\movie\MovieFormController.class
 com\cinema\controllers\cinema\ComboSelectionController$FoodCombo.class
@@ -87,6 +89,7 @@ com\cinema\models\User$UserRole.class
 com\cinema\controllers\admin\cinema\CinemaDetailController.class
 com\cinema\models\Seat.class
 com\cinema\controllers\admin\cinema\CinemaDetailController$1.class
+com\cinema\utils\SocketIOClient.class
 com\cinema\controllers\admin\schedule\ScheduleFormController$DateSchedule.class
 com\cinema\utils\BookedSeatApiClient.class
 com\cinema\utils\RatingStatsResponse$RatingStatsData.class

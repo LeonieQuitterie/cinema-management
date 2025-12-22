@@ -44,31 +44,36 @@ class AuthService {
 
   // === HÀM LOGIN MỚI: Nhận email thay vì username ===
   static async login(email, password) {
-    const user = await this.findUserByEmail(email);
-    if (!user) {
-      throw new Error("Email hoặc mật khẩu không đúng");
+    try {
+      const user = await this.findUserByEmail(email);
+      if (!user) {
+        throw new Error("Email hoặc mật khẩu không đúng");
+      }
+
+      const isValid = await this.validatePassword(password, user.password_hash);
+      if (!isValid) {
+        throw new Error("Email hoặc mật khẩu không đúng");
+      }
+
+      await this.updateLastLogin(user.id);
+
+      const token = this.generateToken(user);
+
+      return {
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+          full_name: user.full_name,
+          email: user.email,
+          role: user.role,
+          avatar_url: user.avatar_url,
+        },
+      };
+    } catch (err) {
+      console.error("LOGIN SERVICE ERROR:", err);
+      throw err; // QUAN TRỌNG
     }
-
-    const isValid = await this.validatePassword(password, user.password_hash);
-    if (!isValid) {
-      throw new Error("Email hoặc mật khẩu không đúng");
-    }
-
-    await this.updateLastLogin(user.id);
-
-    const token = this.generateToken(user);
-
-    return {
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-        full_name: user.full_name,
-        email: user.email,
-        role: user.role,
-        avatar_url: user.avatar_url,
-      },
-    };
   }
 
   // Kiểm tra trùng username hoặc email khi đăng ký (giữ nguyên)

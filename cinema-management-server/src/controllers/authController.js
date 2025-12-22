@@ -4,7 +4,10 @@ const AuthService = require("../services/authService");
 class AuthController {
   static async login(req, res) {
     try {
-      const { email, password } = req.body;  // ← Đổi từ username → email
+      console.log("HEADERS:", req.headers);
+      console.log("BODY:", req.body);
+
+      const { email, password } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({
@@ -13,7 +16,7 @@ class AuthController {
         });
       }
 
-      const result = await AuthService.login(email, password);  // ← Truyền email
+      const result = await AuthService.login(email, password);
 
       return res.status(200).json({
         success: true,
@@ -21,12 +24,14 @@ class AuthController {
         data: result,
       });
     } catch (error) {
-      return res.status(401).json({
+      console.error("LOGIN CONTROLLER ERROR:", error);
+      return res.status(500).json({
         success: false,
         message: error.message || "Đăng nhập thất bại",
       });
     }
   }
+
 
   // Register giữ nguyên (vẫn cần username)
   static async register(req, res) {

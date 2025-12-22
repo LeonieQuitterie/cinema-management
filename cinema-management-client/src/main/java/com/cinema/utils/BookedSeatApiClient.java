@@ -25,9 +25,7 @@ import java.util.List;
 public class BookedSeatApiClient {
 
     private static final String BASE_URL = "http://localhost:3000/api";
-    private static final HttpClient httpClient = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+    private static final HttpClient httpClient = HttpClientProvider.http1();
 
     /**
      * Lấy danh sách ghế đã đặt cho một suất chiếu cụ thể

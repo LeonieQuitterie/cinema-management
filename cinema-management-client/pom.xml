@@ -32,11 +32,12 @@
             <version>${javafx.version}</version>
         </dependency>
 
-        <!-- HTTP Client để gọi API -->
+     
+
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
+            <groupId>io.socket</groupId>
+            <artifactId>socket.io-client</artifactId>
+            <version>2.1.0</version>
         </dependency>
 
         <!-- JSON Processing -->
@@ -45,7 +46,7 @@
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
-        
+
 
         <!-- Logging -->
         <dependency>
@@ -66,7 +67,7 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Ikonli for Icons in JavaFX -->
         <dependency>
             <groupId>org.kordamp.ikonli</groupId>

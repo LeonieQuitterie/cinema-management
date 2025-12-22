@@ -32,6 +32,7 @@ D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\Rat
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\cinema\CinemaFormController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Cinema.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Seat.java
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\SocketIOClient.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\MainAdminController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Customer.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\adapters\LocalDateAdapter.java
@@ -43,6 +44,7 @@ D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controlle
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\MovieDetailController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\SeatSelectionController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\RatingBreakdown.java
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\HttpClientProvider.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\CinemaShowTimeController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\screen\ScreenManagementController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\CastListResponse.java
