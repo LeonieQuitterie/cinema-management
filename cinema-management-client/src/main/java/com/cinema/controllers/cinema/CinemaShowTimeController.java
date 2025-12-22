@@ -561,6 +561,14 @@ public class CinemaShowTimeController {
 
     private void goToSeatSelection(Cinema cinema, Screen screen, Showtime showtime) {
         try {
+            // === DEBUG ===
+            System.out.println("Cinema truyền vào: " + cinema);
+            if (cinema != null) {
+                System.out.println("Cinema ID: " + cinema.getId());
+                System.out.println("Cinema Name: " + cinema.getName());
+            }
+            // === END DEBUG ===
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/seat-selection.fxml"));
             Parent seatRoot = loader.load();
 

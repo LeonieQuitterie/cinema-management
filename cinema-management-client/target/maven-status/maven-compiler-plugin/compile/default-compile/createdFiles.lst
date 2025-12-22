@@ -28,7 +28,6 @@ com\cinema\data\MovieDetailMockData.class
 com\cinema\controllers\admin\fnb\FnbMenuController$2.class
 com\cinema\controllers\admin\movie\MovieListController$2.class
 com\cinema\models\ScreenView.class
-com\cinema\controllers\cinema\ComboSelectionController$FoodCategory.class
 com\cinema\controllers\admin\fnb\FnbFormController$3.class
 com\cinema\controllers\admin\booking\BookingListController$2.class
 com\cinema\controllers\admin\schedule\ScheduleCalendarController$1.class
@@ -59,6 +58,7 @@ com\cinema\utils\MovieApi.class
 com\cinema\models\SeatType.class
 com\cinema\controllers\admin\cinema\CinemaListController$2.class
 com\cinema\controllers\admin\schedule\ScheduleCalendarController.class
+com\cinema\utils\FoodComboApiClient.class
 com\cinema\models\Showtime.class
 com\cinema\models\Movie$MovieStatus.class
 com\cinema\models\Movie.class
@@ -71,7 +71,6 @@ com\cinema\controllers\auth\LoginController.class
 com\cinema\utils\AuthResponse.class
 com\cinema\controllers\admin\schedule\ScheduleCalendarController$ShowtimeDisplay.class
 com\cinema\utils\adapters\LocalDateTimeAdapter.class
-com\cinema\controllers\cinema\ComboSelectionController$ComboOrderItem.class
 com\cinema\controllers\admin\cinema\CinemaFormController.class
 com\cinema\utils\ApiClient$RegisterRequest.class
 com\cinema\controllers\admin\dashboard\DashboardController.class
@@ -80,7 +79,6 @@ com\cinema\models\Booking.class
 com\cinema\utils\HttpClientProvider.class
 com\cinema\controllers\admin\dashboard\DashboardController$BookingRow.class
 com\cinema\controllers\admin\movie\MovieFormController.class
-com\cinema\controllers\cinema\ComboSelectionController$FoodCombo.class
 com\cinema\controllers\cinema\MovieDetailController$IconPair.class
 com\cinema\models\Screen.class
 com\cinema\utils\CinemaApiClient.class
@@ -94,6 +92,7 @@ com\cinema\controllers\admin\schedule\ScheduleFormController$DateSchedule.class
 com\cinema\utils\BookedSeatApiClient.class
 com\cinema\utils\RatingStatsResponse$RatingStatsData.class
 com\cinema\data\MovieDetailMockData$DuneMockMovie.class
+com\cinema\utils\SocketManager.class
 com\cinema\controllers\admin\fnb\FnbMenuController$3.class
 com\cinema\controllers\customer\CustomerHomeController$1.class
 com\cinema\data\MovieDetailMockData$QAMock.class

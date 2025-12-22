@@ -19,6 +19,12 @@ public class SocketIOClient {
     private final Map<String, Consumer<JsonObject>> eventHandlers = new HashMap<>();
     private static final String SOCKET_URL = "http://localhost:3000/seats"; // HTTP không phải WS
 
+    private Runnable onConnectCallback;
+
+    public void onConnect(Runnable callback) {
+        this.onConnectCallback = callback;
+    }
+
     public SocketIOClient() throws URISyntaxException {
         IO.Options options = new IO.Options();
         options.reconnection = true;
@@ -39,6 +45,15 @@ public class SocketIOClient {
             System.err.println("❌ Connection error: " + args[0]);
             if (args.length > 1) {
                 System.err.println("Additional info: " + args[1]);
+            }
+        });
+
+        socket.on(Socket.EVENT_CONNECT, args -> {
+            System.out.println("✅ Socket.io connected - ID: " + socket.id());
+
+            // ✅ Notify listeners khi connect xong
+            if (onConnectCallback != null) {
+                Platform.runLater(() -> onConnectCallback.run());
             }
         });
 

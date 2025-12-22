@@ -1,3 +1,4 @@
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\FoodComboApiClient.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Comment.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\CommentReaction.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\FoodCombo.java
@@ -40,6 +41,7 @@ D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Co
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\BookedSeatApiClient.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\models\Movie.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\fnb\FnbFormController.java
+D:\cinema-management\cinema-management-client\src\main\java\com\cinema\utils\SocketManager.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\admin\movie\MovieListController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\MovieDetailController.java
 D:\cinema-management\cinema-management-client\src\main\java\com\cinema\controllers\cinema\SeatSelectionController.java

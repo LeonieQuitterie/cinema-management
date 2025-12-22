@@ -24,10 +24,10 @@ public class Main extends Application {
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-confirmation.fxml"));
             // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cinema/booking-success.fxml"));
             
-            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/admin/MainAdmin.fxml"));
 
                         
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/auth/login.fxml"));
+            // FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/auth/login.fxml"));
             Parent root = loader.load();
 
             // Create scene

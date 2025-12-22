@@ -24,6 +24,7 @@ import com.cinema.models.SeatStatus;
 import com.cinema.models.SeatType;
 import com.cinema.models.Showtime;
 import com.cinema.utils.SocketIOClient;
+import com.cinema.utils.SocketManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -53,6 +54,8 @@ public class SeatSelectionController {
     private List<Seat> selectedSeats = new ArrayList<>();
 
     private NumberFormat currencyFormat;
+
+    private Cinema currentCinema;
 
     @FXML
     public void initialize() {
@@ -191,31 +194,37 @@ public class SeatSelectionController {
         String seatNumber = seat.getSeatNumber();
 
         if (seat.getStatus() == SeatStatus.SELECTED) {
-            // === BỎ CHỌN → EMIT RELEASE ===
+            // Bỏ chọn
             seat.setStatus(SeatStatus.AVAILABLE);
             seatPane.getStyleClass().remove("seat-selected");
             selectedSeats.remove(seat);
 
-            if (socket != null && socket.isConnected()) { // ← SỬA ĐÂY
+            if (socket != null && socket.isConnected()) {
                 JsonObject data = new JsonObject();
                 data.addProperty("showtimeId", currentShowtime.getId());
                 data.addProperty("seatNumber", seatNumber);
                 socket.emit("release-seat", data);
+                System.out.println("📤 Emitted release-seat: " + seatNumber);
+            } else {
+                System.err.println("❌ Cannot emit release-seat: socket not ready");
             }
 
         } else {
-            // === CHỌN GHẾ → EMIT HOLD ===
+            // Chọn ghế
             seat.setStatus(SeatStatus.SELECTED);
             if (!seatPane.getStyleClass().contains("seat-selected")) {
                 seatPane.getStyleClass().add("seat-selected");
             }
             selectedSeats.add(seat);
 
-            if (socket != null && socket.isConnected()) { // ← SỬA ĐÂY
+            if (socket != null && socket.isConnected()) {
                 JsonObject data = new JsonObject();
                 data.addProperty("showtimeId", currentShowtime.getId());
                 data.addProperty("seatNumber", seatNumber);
                 socket.emit("hold-seat", data);
+                System.out.println("📤 Emitted hold-seat: " + seatNumber);
+            } else {
+                System.err.println("❌ Cannot emit hold-seat: socket not ready");
             }
         }
 
@@ -255,12 +264,21 @@ public class SeatSelectionController {
     @FXML
     private void handleContinue() {
         try {
+            // === DEBUG ===
+            System.out.println("currentCinema: " + currentCinema);
+            if (currentCinema != null) {
+                System.out.println("currentCinema.getId(): " + currentCinema.getId());
+                System.out.println("currentCinema.getName(): " + currentCinema.getName());
+            }
+            // === END DEBUG ===
+
+            SocketIOClient socket = SocketManager.getInstance().getSocket();
+
             // === EMIT BOOK SEATS TRƯỚC KHI CHUYỂN TRANG ===
-            if (socket != null && socket.isConnected()) { // ← SỬA ĐÂY
-                List<String> seatNumbers = new ArrayList<>();
-                for (Seat seat : selectedSeats) {
-                    seatNumbers.add(seat.getSeatNumber());
-                }
+            if (socket != null && socket.isConnected()) {
+                List<String> seatNumbers = selectedSeats.stream()
+                        .map(Seat::getSeatNumber)
+                        .toList();
 
                 JsonObject data = new JsonObject();
                 data.addProperty("showtimeId", currentShowtime.getId());
@@ -268,10 +286,26 @@ public class SeatSelectionController {
                 socket.emit("book-seats", data);
             }
 
+            // === TÍNH TỔNG TIỀN VÉ THẬT ===
+            double totalTicketPrice = selectedSeats.stream()
+                    .mapToDouble(Seat::getPrice)
+                    .sum();
+
+            // Load trang Combo
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/views/cinema/combo-selection.fxml"));
             Parent newRoot = loader.load();
 
+            // === TRUYỀN DỮ LIỆU CHO COMBO CONTROLLER ===
+            ComboSelectionController comboCtrl = loader.getController();
+
+            comboCtrl.setCinemaId(currentCinema.getId()); // 1. cinemaId
+            comboCtrl.setTicketPrice(totalTicketPrice); // 2. giá vé thật
+            comboCtrl.setShowtime(currentShowtime); // 3. showtime
+            comboCtrl.setSelectedSeats(new ArrayList<>(selectedSeats)); // 4. ghế đã chọn
+            comboCtrl.initData();
+
+            // Chuyển scene
             Stage stage = (Stage) continueButton.getScene().getWindow();
             Scene currentScene = stage.getScene();
             boolean wasFullScreen = stage.isFullScreen();
@@ -295,6 +329,7 @@ public class SeatSelectionController {
     }
 
     public void setShowData(Cinema cinema, Screen screen, Showtime showtime) {
+        this.currentCinema = cinema;
         this.currentScreen = screen;
         this.currentShowtime = showtime;
         this.selectedSeats.clear();
@@ -319,50 +354,50 @@ public class SeatSelectionController {
         renderSeatGrid();
         updatePriceSummary();
 
-        // === KẾT NỐI WEBSOCKET ===
-        connectToSocket(showtime.getId());
-    }
+        // === CONNECT & SETUP SOCKET ===
+        SocketManager socketManager = SocketManager.getInstance();
+        socketManager.connect(showtime.getId());
 
-    private void connectToSocket(String showtimeId) {
-        // === CHẠY ASYNC ĐỂ KHÔNG BLOCK UI ===
+        // ✅ Retry để đợi socket ready
         new Thread(() -> {
             try {
-                Thread.sleep(300); // Delay 300ms để chắc chắn server đã sẵn sàng
-
-                socket = new SocketIOClient();
-                socket.connect();
-
-                // Đợi kết nối thành công (max 3 giây)
                 int retries = 0;
-                while (!socket.isConnected() && retries < 30) {
+                while (retries < 30) { // Max 3 giây
                     Thread.sleep(100);
+                    SocketIOClient sock = socketManager.getSocket();
+
+                    if (sock != null && sock.isConnected() && sock.getSocketId() != null) {
+                        // ✅ GÁN VÀO INSTANCE VARIABLE
+                        this.socket = sock;
+                        this.mySocketId = sock.getSocketId();
+
+                        // Setup listeners trên JavaFX thread
+                        Platform.runLater(() -> setupSocketListeners());
+
+                        System.out.println("✅ Socket setup complete: " + mySocketId);
+                        break;
+                    }
                     retries++;
                 }
 
-                if (!socket.isConnected()) {
-                    System.err.println("❌ Cannot connect to Socket.io after 3 seconds");
-                    return;
+                if (this.socket == null) {
+                    System.err.println("❌ Socket setup failed!");
                 }
 
-                // Join room
-                JsonObject joinData = new JsonObject();
-                joinData.addProperty("showtimeId", showtimeId);
-                socket.emit("join-showtime", joinData);
-
-                // Setup listeners
-                Platform.runLater(() -> setupSocketListeners());
-
-                System.out.println("✅ Connected to Socket.io for showtime: " + showtimeId);
-
             } catch (Exception e) {
-                System.err.println("❌ Socket.io connection failed: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();
     }
 
     private void setupSocketListeners() {
-        // 1. Nhận danh sách ghế đang held
+        if (socket == null) {
+            System.err.println("❌ setupSocketListeners: socket is null!");
+            return;
+        }
+
+        System.out.println("🔧 Setting up listeners for socket: " + mySocketId);
+
         socket.on("initial-held-seats", data -> {
             if (data.has("seats")) {
                 JsonArray seats = data.getAsJsonArray("seats");
@@ -374,51 +409,49 @@ public class SeatSelectionController {
             }
         });
 
-        // 2. Khi có người hold ghế
         socket.on("seat-held", data -> {
             String seatNumber = data.get("seatNumber").getAsString();
             String holderId = data.get("holderId").getAsString();
 
-            if (mySocketId == null) {
-                mySocketId = socket.getSocketId();
-            }
+            System.out.println("📥 seat-held: " + seatNumber + " by " + holderId +
+                    " (me: " + mySocketId + ")");
 
-            if (holderId.equals(mySocketId)) {
+            // ✅ Dùng instance variable mySocketId
+            if (mySocketId != null && mySocketId.equals(holderId)) {
                 updateSeatSelectedByMe(seatNumber);
             } else {
                 updateSeatHeldByOthers(seatNumber);
             }
         });
 
-        // 3. Khi có người release ghế
         socket.on("seat-released", data -> {
             String seatNumber = data.get("seatNumber").getAsString();
+            System.out.println("📥 seat-released: " + seatNumber);
             resetSeatToAvailable(seatNumber);
         });
 
-        // 4. Release batch
         socket.on("seats-released-batch", data -> {
             JsonArray seatNumbers = data.getAsJsonArray("seatNumbers");
+            System.out.println("📥 seats-released-batch: " + seatNumbers.size() + " seats");
             for (int i = 0; i < seatNumbers.size(); i++) {
                 String seatNumber = seatNumbers.get(i).getAsString();
                 resetSeatToAvailable(seatNumber);
             }
         });
 
-        // 5. Khi có người book ghế
         socket.on("seats-booked", data -> {
             JsonArray seatNumbers = data.getAsJsonArray("seatNumbers");
+            System.out.println("📥 seats-booked: " + seatNumbers.size() + " seats");
             for (int i = 0; i < seatNumbers.size(); i++) {
                 String seatNumber = seatNumbers.get(i).getAsString();
                 updateSeatBooked(seatNumber);
             }
         });
 
-        // 6. Hold failed
         socket.on("hold-failed", data -> {
             String seatNumber = data.get("seatNumber").getAsString();
             String reason = data.get("reason").getAsString();
-            System.out.println("⚠️ Không thể chọn ghế " + seatNumber + ": " + reason);
+            System.out.println("⚠️ hold-failed: " + seatNumber + " - " + reason);
 
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -551,10 +584,6 @@ public class SeatSelectionController {
 
     @FXML
     private void handleBack() {
-        // Đóng socket trước khi thoát
-        if (socket != null && socket.isConnected()) { // ← SỬA ĐÂY
-            socket.disconnect(); // ← close() → disconnect()
-        }
 
         // TODO: Navigate back
         System.out.println("Back button clicked");

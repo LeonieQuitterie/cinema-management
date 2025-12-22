@@ -39,12 +39,23 @@ app.use("/api/cinemas", cinemaRoutes);
 const bookedSeatRoutes = require('./routes/bookedSeatRoutes');
 app.use('/api/showtimes/:showtimeId', bookedSeatRoutes);
 
+const foodComboRoutes = require("./routes/foodComboRoutes");
+app.use("/api/combos", foodComboRoutes);
+
+const customerRoutes = require('./routes/customerRoutes');
+app.use('/api/customers', customerRoutes);
+
 // === SOCKET.IO SETUP ===
 const setupSeatSocket = require('./socket/seatSocket');
-setupSeatSocket(io);
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`WebSocket available at ws://localhost:${PORT}`);
-});
+
+// ✅ SỬA THÀNH ASYNC/AWAIT
+(async () => {
+    await setupSeatSocket(io); // ✅ Đợi clear xong mới tiếp tục
+    
+    const PORT = process.env.PORT || 3000;
+    server.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`WebSocket available at ws://localhost:${PORT}`);
+    });
+})();

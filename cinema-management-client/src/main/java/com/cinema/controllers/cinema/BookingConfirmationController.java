@@ -82,6 +82,33 @@ public class BookingConfirmationController implements Initializable {
     private Booking currentBooking;
     private DecimalFormat currencyFormat = new DecimalFormat("#,###");
 
+    private Showtime currentShowtime;
+    private String cinemaId;
+    private List<Seat> selectedSeats = new ArrayList<>();
+    private Map<String, ComboOrderItem> selectedCombos = new HashMap<>();
+    private double ticketPrice = 0;
+
+    // Setters
+    public void setShowtime(Showtime showtime) {
+        this.currentShowtime = showtime;
+    }
+
+    public void setCinemaId(String cinemaId) {
+        this.cinemaId = cinemaId;
+    }
+
+    public void setSelectedSeats(List<Seat> seats) {
+        this.selectedSeats = seats;
+    }
+
+    public void setSelectedCombos(Map<String, ComboOrderItem> combos) {
+        this.selectedCombos = combos;
+    }
+
+    public void setTicketPrice(double price) {
+        this.ticketPrice = price;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadMockData();
